@@ -1,0 +1,31 @@
+# Python virtual environment
+.venv/
+
+# External project or dataset
+3d-object-detection-main/
+vision/
+
+# Rust build output
+target/
+
+# Rust lockfile (ignore only if this is intentional)
+Cargo.lock
+
+# Documentation / guides
+INDEX.md
+IMPLEMENTATION_STATUS.md
+CONFIG_GUIDE.md
+QUICK_START.md
+SETUP_COMPLETE.md
+
+# Scripts
+install_torch.sh
+build_wasmtime_pytorch.sh
+examine_model.py
+
+# Rust template / misc
+OUTPUT_PARSING_TEMPLATE.rs
+
+*:Zone.Identifier
+
+models/*.pt

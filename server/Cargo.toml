@@ -1,0 +1,22 @@
+[package]
+name = "host_server"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+#wasmtime = { path = "/home/gjardim/wasmtime/crates/wasmtime" }
+#wasi-common = { path = "/home/gjardim/wasmtime/crates/wasi-common" }
+#wasmtime-wasi = { path = "/home/gjardim/wasmtime/crates/wasi" }
+#wasmtime-wasi-nn = { path = "/home/gjardim/wasmtime/crates/wasi-nn", features = ["pytorch"] }
+wasmtime = { version = "32.0.1"}
+wasi-common = { version = "32.0.1" }
+wasmtime-wasi = { version = "32.0.1"}
+wasmtime-wasi-threads = { version = "32.0.1" }
+wasmtime-wasi-nn = { version = "32.0.1", features = ["pytorch"] }
+tokio = { version = "1", features = ["full"] }
+tokio-tungstenite = "0.20"
+tungstenite = { version = "0.20", features = ["__rustls-tls"] }
+futures = "0.3"
+serde_json = "1.0"
+anyhow = "1.0"
+bytes = "1.5"
