@@ -5,67 +5,89 @@ use anyhow::Result;
 use std::sync::Arc;
 use tokio::sync::Mutex;
 use wasmtime::*;
-use wasmtime_wasi::WasiCtxBuilder;
+use wasi_common::WasiCtx;
 use wasmtime_wasi_nn::witx::WasiNnCtx;
 
 // Combined context that holds both WASI and WASI-NN
-struct HostContext {
-    wasi: wasmtime_wasi::WasiCtx,
-    wasi_nn: WasiNnCtx,
+struct StoreState {
+    wasi: WasiCtx,
+    wasi_nn_witx: WasiNnCtx,
 }
 
 #[tokio::main]
 async fn main() -> Result<()> {
+    println!("[DEBUG] Server starting...");
+    
     // Path to WASM module
     let wasm_path = "../inference/target/wasm32-wasip1/release/wasm_inference.wasm";
+    println!("[DEBUG] WASM module path: {}", wasm_path);
     
     // Create Wasmtime engine
     let engine = Engine::default();
+    println!("[DEBUG] Wasmtime engine created");
     
     // Load the WASM module
     let module = Module::from_file(&engine, wasm_path)?;
+    println!("[DEBUG] WASM module loaded successfully");
+
+    // Create a dir for models access
+    let models_dir = wasi_common::sync::Dir::open_ambient_dir(
+        "../models", 
+        wasi_common::sync::ambient_authority()
+    )?;
+    println!("[DEBUG] Models directory opened: ../models");
 
     // Create WASI context with stdio and directory access
-    let wasi = WasiCtxBuilder::new()
+    let wasi = wasi_common::sync::WasiCtxBuilder::new()
         .inherit_stdio()
-        .preopened_dir(
-            wasmtime_wasi::sync::Dir::open_ambient_dir("../models", wasmtime_wasi::sync::ambient_authority()),
-            "/models",
-            wasmtime_wasi::sync::DirPerms::all(),
-            wasmtime_wasi::sync::FilePerms::all(),
-        )?
+        .inherit_env()?
+        .preopened_dir(models_dir, "/models")?
+        .inherit_args()?
         .build();
+    println!("[DEBUG] WASI context created with /models mapped");
 
     // Create WASI-NN context
-    let wasi_nn = WasiNnCtx::new(vec![], wasmtime_wasi_nn::backend::BackendRegistry::default());
+    let graphs: Vec<(String, String)> = vec![];
+    let (backends, registry) = wasmtime_wasi_nn::preload(&graphs)?;
+    let wasi_nn = WasiNnCtx::new(backends, registry);
+    println!("[DEBUG] WASI-NN context created");
 
-    // Create host context combining both
-    let host_ctx = HostContext { wasi, wasi_nn };
-    
-    // Create store with host context
-    let mut store = Store::new(&engine, host_ctx);
+    // Create store with state
+    let mut store = Store::new(
+        &engine,
+        StoreState {
+            wasi,
+            wasi_nn_witx: wasi_nn,
+        },
+    );
+    println!("[DEBUG] Store created with combined state");
     
     // Create linker and add WASI + WASI-NN
-    let mut linker = Linker::new(&engine);
-    wasmtime_wasi::add_to_linker(&mut linker, |ctx: &mut HostContext| &mut ctx.wasi)?;
-    wasmtime_wasi_nn::witx::add_to_linker(&mut linker, |ctx: &mut HostContext| &mut ctx.wasi_nn)?;
+    let mut linker: Linker<StoreState> = Linker::new(&engine);
+    wasi_common::sync::add_to_linker(&mut linker, |state: &mut StoreState| &mut state.wasi)?;
+    wasmtime_wasi_nn::witx::add_to_linker(&mut linker, |state: &mut StoreState| &mut state.wasi_nn_witx)?;
+    println!("[DEBUG] Linker created with WASI and WASI-NN");
 
     // Instantiate the module
     let instance = linker.instantiate(&mut store, &module)?;
+    println!("[DEBUG] WASM module instantiated");
     
     // Get the _start function
     let start_func = instance.get_typed_func::<(), ()>(&mut store, "_start")?;
+    println!("[DEBUG] _start function retrieved");
 
     // Wrap store and instance for shared access
     let wasm_state = Arc::new(Mutex::new((store, instance, start_func)));
 
     // Spawn background task to call _start
+    println!("[DEBUG] Spawning background task to execute _start...");
     let wasm_clone = Arc::clone(&wasm_state);
     tokio::task::spawn_blocking(move || {
+        println!("[DEBUG] Background task started, calling _start...");
         let mut state = wasm_clone.blocking_lock();
         let (ref mut store, _, ref start) = *state;
         if let Err(e) = start.call(store, ()) {
-            eprintln!("WASM _start error: {:?}", e);
+            eprintln!("[ERROR] WASM _start error: {:#?}", e);
         }
     });
 

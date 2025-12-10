@@ -63,31 +63,51 @@ fn img_to_nchw(img_bytes: &[u8]) -> Result<Vec<f32>> {
 
 fn load_graph(model_name: &str) -> Result<Graph> {
     let model_path = format!("/models/{}", model_name);
+    eprintln!("[DEBUG] Attempting to read model from: {}", model_path);
+    
     let model_bytes = fs::read(&model_path)
         .with_context(|| format!("failed to read model at {}", model_path))?;
 
     eprintln!(
-        "[wasi-nn] loading graph: path={}, bytes={}",
+        "[DEBUG] Model file read successfully: path={}, bytes={}",
         model_path,
         model_bytes.len()
     );
+    
+    // Check first few bytes (magic number)
+    if model_bytes.len() >= 8 {
+        eprintln!("[DEBUG] First 8 bytes (hex): {:02x?}", &model_bytes[0..8]);
+    }
 
+    eprintln!("[DEBUG] Creating GraphBuilder for GPU with PyTorch encoding");
     let try_gpu = GraphBuilder::new(GraphEncoding::Pytorch, ExecutionTarget::GPU)
         .build_from_bytes(&[&model_bytes]);
 
     match try_gpu {
         Ok(g) => {
-            eprintln!("[wasi-nn] graph loaded on GPU");
+            eprintln!("[SUCCESS] Graph loaded on GPU");
             Ok(g)
         }
         Err(e) => {
             eprintln!(
-                "[wasi-nn] GPU load failed: {:?} (falling back to CPU)",
+                "[WARN] GPU load failed with error: {:?}",
                 e
             );
-            GraphBuilder::new(GraphEncoding::Pytorch, ExecutionTarget::CPU)
-                .build_from_bytes(&[&model_bytes])
-                .map_err(|err| anyhow!("failed to load PyTorch graph: {:?}", err))
+            eprintln!("[DEBUG] Attempting CPU fallback...");
+            
+            let cpu_result = GraphBuilder::new(GraphEncoding::Pytorch, ExecutionTarget::CPU)
+                .build_from_bytes(&[&model_bytes]);
+            
+            match cpu_result {
+                Ok(g) => {
+                    eprintln!("[SUCCESS] Graph loaded on CPU");
+                    Ok(g)
+                }
+                Err(e) => {
+                    eprintln!("[ERROR] CPU load also failed with error: {:?}", e);
+                    Err(anyhow!("failed to load PyTorch graph on both GPU and CPU: {:?}", e))
+                }
+            }
         }
     }
 }
@@ -122,17 +142,22 @@ fn to_detections(output: &[f32]) -> Vec<Det> {
 
 #[no_mangle]
 pub extern "C" fn _start() {
+    eprintln!("[DEBUG] WASM _start function called");
     if let Err(e) = run_loop() {
-        eprintln!("guest error: {:?}", e);
+        eprintln!("[ERROR] Guest error: {:#?}", e);
     }
 }
 
 fn run_loop() -> Result<()> {
-    let graph = load_graph("cubercnn_Res34_FPN_cuda.pt").context("load graph")?;
+    eprintln!("[DEBUG] Starting run_loop, attempting to load model...");
+    let graph = load_graph("yolov8n.pt").context("load graph")?;
+    
+    eprintln!("[DEBUG] Graph loaded successfully, initializing execution context...");
     let mut ctx = graph
         .init_execution_context()
         .map_err(|e| anyhow!("init_execution_context failed: {:?}", e))?;
 
+    eprintln!("[SUCCESS] Execution context initialized, entering inference loop");
     loop {
         let img_bytes = match read_exact_len() {
             Ok(b) => b,
