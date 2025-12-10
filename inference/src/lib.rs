@@ -150,7 +150,7 @@ pub extern "C" fn _start() {
 
 fn run_loop() -> Result<()> {
     eprintln!("[DEBUG] Starting run_loop, attempting to load model...");
-    let graph = load_graph("yolov8n.pt").context("load graph")?;
+    let graph = load_graph("yolov8n.torchscript").context("load graph")?;
     
     eprintln!("[DEBUG] Graph loaded successfully, initializing execution context...");
     let mut ctx = graph
