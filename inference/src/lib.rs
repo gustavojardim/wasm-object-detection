@@ -2,7 +2,7 @@ use std::io::{self, Read, Write};
 use anyhow::{anyhow, Context, Result};
 use image::{imageops::FilterType, GenericImageView};
 use serde::Serialize;
-use wasi_nn::{ExecutionTarget, Graph, GraphBuilder, GraphEncoding, GraphExecutionContext, TensorType};
+use wasi_nn::{ExecutionTarget, Graph, GraphBuilder, GraphEncoding, TensorType};
 
 // YOLOv8n standard input size
 const TARGET_SIZE: u32 = 640;
@@ -92,7 +92,6 @@ fn load_graph(model_name: &str) -> Result<Graph> {
 // Parse YOLO Output [1, 84, 8400] -> [cx, cy, w, h, class_probs...]
 fn process_output(output: &[f32]) -> Vec<Det> {
     let num_elements = 8400; // Number of predictions
-    let num_channels = 84;   // 4 bbox + 80 classes
     
     // The output is usually flattened, representing shape [1, 84, 8400]
     // We iterate "columns" (predictions)

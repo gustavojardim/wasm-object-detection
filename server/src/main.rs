@@ -2,10 +2,10 @@ use tokio::net::TcpListener;
 use tokio_tungstenite::accept_async;
 use futures::{SinkExt, StreamExt};
 use anyhow::Result;
-use std::sync::Arc;
+use std::{fs::File, path::PathBuf, sync::Arc};
 use tokio::sync::Mutex;
 use wasmtime::*;
-use wasi_common::WasiCtx;
+use wasi_common::{WasiCtx, sync::Dir};
 use wasmtime_wasi_nn::witx::WasiNnCtx;
 use std::io::{Read, Write};
 use wasi_common::pipe::{ReadPipe, WritePipe};
@@ -24,25 +24,28 @@ struct WasmBridge {
 #[tokio::main]
 async fn main() -> Result<()> {
     println!("[DEBUG] Server starting...");
-
-    let engine = Engine::default();
+    let server_dir = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
     
+    // Path to WASM module
+    let wasm_path = server_dir.join("inference.wasm");
+    println!("[DEBUG] WASM module path: {}", wasm_path.display());
+    
+    // Create Wasmtime engine
+    let engine = Engine::default();
+    println!("[DEBUG] Wasmtime engine created");
+    
+    // Load the WASM module
+    let module = Module::from_file(&engine, wasm_path)?;
+    println!("[DEBUG] WASM module loaded successfully");
+
+    let models_dir = Dir::from_std_file(File::open(server_dir.join("../models"))?);
+
     // 1. Create Pipes
     // Host writes to input_writer -> Guest reads from guest_stdin_reader
     let (guest_stdin_reader, host_stdin_writer) = os_pipe::pipe()?;
     // Guest writes to guest_stdout_writer -> Host reads from output_reader
     let (output_reader, guest_stdout_writer) = os_pipe::pipe()?;
 
-    // 2. Setup WASI
-    let wasm_path = "../inference/target/wasm32-wasip1/release/wasm_inference.wasm";
-    let module = Module::from_file(&engine, wasm_path)?;
-
-    let models_dir = wasi_common::sync::Dir::open_ambient_dir(
-        "../models", 
-        wasi_common::sync::ambient_authority()
-    )?;
-
-    // FIX: Use ::new() instead of ::from() to wrap the generic Read/Write types
     let stdin = ReadPipe::new(guest_stdin_reader);
     let stdout = WritePipe::new(guest_stdout_writer);
 
@@ -57,6 +60,7 @@ async fn main() -> Result<()> {
     let (backends, registry) = wasmtime_wasi_nn::preload(&graphs)?;
     let wasi_nn = WasiNnCtx::new(backends, registry);
 
+    
     let mut store = Store::new(
         &engine,
         StoreState {
@@ -69,6 +73,7 @@ async fn main() -> Result<()> {
     wasi_common::sync::add_to_linker(&mut linker, |s| &mut s.wasi)?;
     wasmtime_wasi_nn::witx::add_to_linker(&mut linker, |s| &mut s.wasi_nn_witx)?;
 
+    
     let instance = linker.instantiate(&mut store, &module)?;
     let start_func = instance.get_typed_func::<(), ()>(&mut store, "_start")?;
 

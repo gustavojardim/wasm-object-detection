@@ -1,0 +1,6 @@
+[workspace]
+members = [
+    "server",
+    "inference",
+]
+resolver = "2"
