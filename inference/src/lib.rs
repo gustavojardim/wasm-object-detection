@@ -1,21 +1,34 @@
-use std::{
-    fs,
-    io::{self, Read, Write},
-};
+use std::io::{self, Read, Write};
 use anyhow::{anyhow, Context, Result};
-use image::{self, imageops::FilterType};
+use image::{imageops::FilterType, GenericImageView};
 use serde::Serialize;
 use wasi_nn::{ExecutionTarget, Graph, GraphBuilder, GraphEncoding, GraphExecutionContext, TensorType};
 
-const TARGET_H: u32 = 480;
-const TARGET_W: u32 = 640;
+// YOLOv8n standard input size
+const TARGET_SIZE: u32 = 640;
 
-#[derive(Serialize)]
+#[derive(Serialize, Debug, Clone)]
 struct Det {
-    class: String,
+    class_id: usize,
+    class_name: String,
     score: f32,
-    bbox: [f32; 4],
+    bbox: [f32; 4], // [x, y, w, h] normalized
 }
+
+// Hardcoded COCO classes (Standard for YOLOv8)
+const CLASSES: &[&str] = &[
+    "person", "bicycle", "car", "motorcycle", "airplane", "bus", "train", "truck", "boat",
+    "traffic light", "fire hydrant", "stop sign", "parking meter", "bench", "bird", "cat",
+    "dog", "horse", "sheep", "cow", "elephant", "bear", "zebra", "giraffe", "backpack",
+    "umbrella", "handbag", "tie", "suitcase", "frisbee", "skis", "snowboard", "sports ball",
+    "kite", "baseball bat", "baseball glove", "skateboard", "surfboard", "tennis racket",
+    "bottle", "wine glass", "cup", "fork", "knife", "spoon", "bowl", "banana", "apple",
+    "sandwich", "orange", "broccoli", "carrot", "hot dog", "pizza", "donut", "cake", "chair",
+    "couch", "potted plant", "bed", "dining table", "toilet", "tv", "laptop", "mouse",
+    "remote", "keyboard", "cell phone", "microwave", "oven", "toaster", "sink",
+    "refrigerator", "book", "clock", "vase", "scissors", "teddy bear", "hair drier",
+    "toothbrush",
+];
 
 fn read_exact_len() -> Result<Vec<u8>> {
     let mut len_buf = [0u8; 4];
@@ -36,26 +49,25 @@ fn write_json_result(r: &serde_json::Value) -> Result<()> {
     Ok(())
 }
 
+// Prepare image for YOLO (Resize 640x640 + Normalize 0-1)
 fn img_to_nchw(img_bytes: &[u8]) -> Result<Vec<f32>> {
     let img = image::load_from_memory(img_bytes).context("decode image")?;
-    let img = img
-        .resize_exact(TARGET_W, TARGET_H, FilterType::Lanczos3)
-        .to_rgb8();
+    let img = img.resize_exact(TARGET_SIZE, TARGET_SIZE, FilterType::Triangle);
+    
+    let (w, h) = img.dimensions();
+    let mut nchw = vec![0f32; 3 * (w * h) as usize];
 
-    let (w, h) = (TARGET_W as usize, TARGET_H as usize);
-    let mut nchw = vec![0f32; 3 * w * h];
+    for (x, y, pixel) in img.pixels() {
+        let r = pixel[0] as f32 / 255.0;
+        let g = pixel[1] as f32 / 255.0;
+        let b = pixel[2] as f32 / 255.0;
 
-    const MEAN: [f32; 3] = [0.485, 0.456, 0.406];
-    const STD: [f32; 3] = [0.229, 0.224, 0.225];
-
-    for y in 0..h {
-        for x in 0..w {
-            let p = img.get_pixel(x as u32, y as u32);
-            for c in 0..3 {
-                let v = (p[c] as f32 / 255.0 - MEAN[c]) / STD[c];
-                nchw[c * w * h + y * w + x] = v;
-            }
-        }
+        let idx = (y * w + x) as usize;
+        let size = (w * h) as usize;
+        
+        nchw[idx] = r;
+        nchw[idx + size] = g;
+        nchw[idx + 2 * size] = b;
     }
 
     Ok(nchw)
@@ -63,112 +75,134 @@ fn img_to_nchw(img_bytes: &[u8]) -> Result<Vec<f32>> {
 
 fn load_graph(model_name: &str) -> Result<Graph> {
     let model_path = format!("/models/{}", model_name);
-    eprintln!("[DEBUG] Attempting to read model from: {}", model_path);
-    
-    let model_bytes = fs::read(&model_path)
+    let model_bytes = std::fs::read(&model_path)
         .with_context(|| format!("failed to read model at {}", model_path))?;
-
-    eprintln!(
-        "[DEBUG] Model file read successfully: path={}, bytes={}",
-        model_path,
-        model_bytes.len()
-    );
     
-    // Check first few bytes (magic number)
-    if model_bytes.len() >= 8 {
-        eprintln!("[DEBUG] First 8 bytes (hex): {:02x?}", &model_bytes[0..8]);
-    }
+    // Try GPU first, fallback to CPU
+    GraphBuilder::new(GraphEncoding::Pytorch, ExecutionTarget::GPU)
+        .build_from_bytes(&[&model_bytes])
+        .or_else(|_| {
+            eprintln!("[INFO] GPU load failed, falling back to CPU...");
+            GraphBuilder::new(GraphEncoding::Pytorch, ExecutionTarget::CPU)
+                .build_from_bytes(&[&model_bytes])
+        })
+        .map_err(|e| anyhow!("Failed to load graph: {:?}", e))
+}
 
-    eprintln!("[DEBUG] Creating GraphBuilder for GPU with PyTorch encoding");
-    let try_gpu = GraphBuilder::new(GraphEncoding::Pytorch, ExecutionTarget::GPU)
-        .build_from_bytes(&[&model_bytes]);
+// Parse YOLO Output [1, 84, 8400] -> [cx, cy, w, h, class_probs...]
+fn process_output(output: &[f32]) -> Vec<Det> {
+    let num_elements = 8400; // Number of predictions
+    let num_channels = 84;   // 4 bbox + 80 classes
+    
+    // The output is usually flattened, representing shape [1, 84, 8400]
+    // We iterate "columns" (predictions)
+    
+    let mut detections = Vec::new();
 
-    match try_gpu {
-        Ok(g) => {
-            eprintln!("[SUCCESS] Graph loaded on GPU");
-            Ok(g)
-        }
-        Err(e) => {
-            eprintln!(
-                "[WARN] GPU load failed with error: {:?}",
-                e
-            );
-            eprintln!("[DEBUG] Attempting CPU fallback...");
-            
-            let cpu_result = GraphBuilder::new(GraphEncoding::Pytorch, ExecutionTarget::CPU)
-                .build_from_bytes(&[&model_bytes]);
-            
-            match cpu_result {
-                Ok(g) => {
-                    eprintln!("[SUCCESS] Graph loaded on CPU");
-                    Ok(g)
-                }
-                Err(e) => {
-                    eprintln!("[ERROR] CPU load also failed with error: {:?}", e);
-                    Err(anyhow!("failed to load PyTorch graph on both GPU and CPU: {:?}", e))
-                }
+    for i in 0..num_elements {
+        // Find the class with max score
+        let mut max_score = 0.0;
+        let mut best_class = 0;
+
+        // Channels 4..84 are class probabilities
+        for c in 0..80 {
+            // Index logic: channel * width + column
+            let idx = (4 + c) * num_elements + i; 
+            let score = output[idx];
+            if score > max_score {
+                max_score = score;
+                best_class = c;
             }
         }
+
+        if max_score > 0.5 { // Confidence Threshold
+            let cx = output[0 * num_elements + i];
+            let cy = output[1 * num_elements + i];
+            let w  = output[2 * num_elements + i];
+            let h  = output[3 * num_elements + i];
+
+            // Convert center-wh to top-left-wh normalized (0.0-1.0)
+            let x = (cx - w / 2.0) / TARGET_SIZE as f32;
+            let y = (cy - h / 2.0) / TARGET_SIZE as f32;
+            let w = w / TARGET_SIZE as f32;
+            let h = h / TARGET_SIZE as f32;
+
+            detections.push(Det {
+                class_id: best_class,
+                class_name: CLASSES.get(best_class).unwrap_or(&"?").to_string(),
+                score: max_score,
+                bbox: [x, y, w, h],
+            });
+        }
     }
+    
+    // Simple NMS (Non-Maximum Suppression)
+    nms(detections, 0.45)
 }
 
-fn run_inference(ctx: &mut GraphExecutionContext<'_>, input: &[f32]) -> Result<Vec<f32>> {
-    let dims = [1usize, 3, TARGET_H as usize, TARGET_W as usize];
+fn nms(mut dets: Vec<Det>, iou_thresh: f32) -> Vec<Det> {
+    dets.sort_by(|a, b| b.score.partial_cmp(&a.score).unwrap());
+    let mut keep = Vec::new();
 
-    ctx.set_input(0, TensorType::F32, &dims, input)
-        .map_err(|e| anyhow!("set_input failed: {:?}", e))?;
-
-    ctx.compute()
-        .map_err(|e| anyhow!("compute failed: {:?}", e))?;
-
-    let mut output = vec![0f32; 200_000];
-    let bytes = ctx
-        .get_output(0, &mut output)
-        .map_err(|e| anyhow!("get_output failed: {:?}", e))?;
-
-    let elements = bytes / std::mem::size_of::<f32>();
-    output.truncate(elements);
-    Ok(output)
+    while let Some(current) = dets.pop() {
+        keep.push(current.clone());
+        dets.retain(|other| iou(&current.bbox, &other.bbox) < iou_thresh);
+    }
+    keep
 }
 
-fn to_detections(output: &[f32]) -> Vec<Det> {
-    let score = output.first().copied().unwrap_or(0.5);
-    vec![Det {
-        class: "car".to_string(),
-        score,
-        bbox: [0.1, 0.2, 0.4, 0.3],
-    }]
+fn iou(b1: &[f32; 4], b2: &[f32; 4]) -> f32 {
+    let (x1, y1, w1, h1) = (b1[0], b1[1], b1[2], b1[3]);
+    let (x2, y2, w2, h2) = (b2[0], b2[1], b2[2], b2[3]);
+
+    let xi1 = x1.max(x2);
+    let yi1 = y1.max(y2);
+    let xi2 = (x1 + w1).min(x2 + w2);
+    let yi2 = (y1 + h1).min(y2 + h2);
+
+    let inter_w = (xi2 - xi1).max(0.0);
+    let inter_h = (yi2 - yi1).max(0.0);
+    let inter_area = inter_w * inter_h;
+
+    let b1_area = w1 * h1;
+    let b2_area = w2 * h2;
+    let union_area = b1_area + b2_area - inter_area;
+
+    if union_area == 0.0 { 0.0 } else { inter_area / union_area }
+}
+
+fn run_loop() -> Result<()> {
+    eprintln!("[DEBUG] Loading YOLOv8n...");
+    let graph = load_graph("yolov8n.torchscript")?; 
+    let mut ctx = graph.init_execution_context()?;
+
+    eprintln!("[SUCCESS] Ready for inference");
+
+    loop {
+        let img_bytes = read_exact_len()?;
+        let input = img_to_nchw(&img_bytes)?;
+
+        let dims = [1, 3, TARGET_SIZE as usize, TARGET_SIZE as usize];
+        ctx.set_input(0, TensorType::F32, &dims, &input)?;
+        ctx.compute()?;
+
+        // Output buffer size: 1 * 84 * 8400 * 4 bytes ≈ 2.8 MB
+        let mut output_buffer = vec![0f32; 1 * 84 * 8400]; 
+        let bytes_written = ctx.get_output(0, &mut output_buffer)?;
+        
+        // Truncate to actual data length
+        let elements = bytes_written / std::mem::size_of::<f32>();
+        output_buffer.truncate(elements);
+
+        let detections = process_output(&output_buffer);
+        let json = serde_json::to_value(&detections)?;
+        write_json_result(&json)?;
+    }
 }
 
 #[no_mangle]
 pub extern "C" fn _start() {
-    eprintln!("[DEBUG] WASM _start function called");
     if let Err(e) = run_loop() {
-        eprintln!("[ERROR] Guest error: {:#?}", e);
-    }
-}
-
-fn run_loop() -> Result<()> {
-    eprintln!("[DEBUG] Starting run_loop, attempting to load model...");
-    let graph = load_graph("yolov8n.torchscript").context("load graph")?;
-    
-    eprintln!("[DEBUG] Graph loaded successfully, initializing execution context...");
-    let mut ctx = graph
-        .init_execution_context()
-        .map_err(|e| anyhow!("init_execution_context failed: {:?}", e))?;
-
-    eprintln!("[SUCCESS] Execution context initialized, entering inference loop");
-    loop {
-        let img_bytes = match read_exact_len() {
-            Ok(b) => b,
-            Err(e) => return Err(e),
-        };
-
-        let input = img_to_nchw(&img_bytes)?;
-        let output = run_inference(&mut ctx, &input)?;
-        let dets = to_detections(&output);
-
-        let json = serde_json::to_value(&dets)?;
-        write_json_result(&json)?;
+        eprintln!("[ERROR] {:?}", e);
     }
 }
