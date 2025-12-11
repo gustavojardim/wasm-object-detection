@@ -9,6 +9,7 @@ wasi-common = { version = "32.0.1" }
 wasmtime-wasi = { version = "32.0.1"}
 wasmtime-wasi-threads = { version = "32.0.1" }
 wasmtime-wasi-nn = { version = "32.0.1", features = ["pytorch"] }
+os_pipe = "1.1" # <--- NEW: For creating pipes
 tokio = { version = "1", features = ["full"] }
 tokio-tungstenite = "0.20"
 tungstenite = { version = "0.20", features = ["__rustls-tls"] }

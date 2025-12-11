@@ -2,16 +2,23 @@ use tokio::net::TcpListener;
 use tokio_tungstenite::accept_async;
 use futures::{SinkExt, StreamExt};
 use anyhow::Result;
-use std::{path::PathBuf, sync::Arc};
+use std::{fs::File, path::PathBuf, sync::Arc};
 use tokio::sync::Mutex;
 use wasmtime::*;
-use wasi_common::WasiCtx;
+use wasi_common::{WasiCtx, sync::Dir};
 use wasmtime_wasi_nn::witx::WasiNnCtx;
+use std::io::{Read, Write};
+use wasi_common::pipe::{ReadPipe, WritePipe};
 
-// Combined context that holds both WASI and WASI-NN
 struct StoreState {
     wasi: WasiCtx,
     wasi_nn_witx: WasiNnCtx,
+}
+
+// FIX: Use the specific os_pipe types, not std::fs::File
+struct WasmBridge {
+    input_writer: os_pipe::PipeWriter, 
+    output_reader: os_pipe::PipeReader, 
 }
 
 #[tokio::main]
@@ -31,31 +38,30 @@ async fn main() -> Result<()> {
     let module = Module::from_file(&engine, wasm_path)?;
     println!("[DEBUG] WASM module loaded successfully");
 
-    let models_dir = server_dir.join("../models");
+    let models_dir = Dir::from_std_file(File::open(server_dir.join("../models"))?);
 
-    // Create a dir for models access
-    let models_dir = wasi_common::sync::Dir::open_ambient_dir(
-        models_dir, 
-        wasi_common::sync::ambient_authority()
-    )?;
-    println!("[DEBUG] Models directory opened: ../models");
+    let engine = Engine::default();
+    
+    // 1. Create Pipes
+    // Host writes to input_writer -> Guest reads from guest_stdin_reader
+    let (guest_stdin_reader, host_stdin_writer) = os_pipe::pipe()?;
+    // Guest writes to guest_stdout_writer -> Host reads from output_reader
+    let (output_reader, guest_stdout_writer) = os_pipe::pipe()?;
 
-    // Create WASI context with stdio and directory access
+    let stdin = ReadPipe::new(guest_stdin_reader);
+    let stdout = WritePipe::new(guest_stdout_writer);
+
     let wasi = wasi_common::sync::WasiCtxBuilder::new()
-        .inherit_stdio()
-        .inherit_env()?
+        .inherit_stderr()
+        .stdin(Box::new(stdin))
+        .stdout(Box::new(stdout))
         .preopened_dir(models_dir, "/models")?
-        .inherit_args()?
         .build();
-    println!("[DEBUG] WASI context created with /models mapped");
 
-    // Create WASI-NN context
     let graphs: Vec<(String, String)> = vec![];
     let (backends, registry) = wasmtime_wasi_nn::preload(&graphs)?;
     let wasi_nn = WasiNnCtx::new(backends, registry);
-    println!("[DEBUG] WASI-NN context created");
 
-    // Create store with state
     let mut store = Store::new(
         &engine,
         StoreState {
@@ -63,50 +69,39 @@ async fn main() -> Result<()> {
             wasi_nn_witx: wasi_nn,
         },
     );
-    println!("[DEBUG] Store created with combined state");
-    
-    // Create linker and add WASI + WASI-NN
+
     let mut linker: Linker<StoreState> = Linker::new(&engine);
-    wasi_common::sync::add_to_linker(&mut linker, |state: &mut StoreState| &mut state.wasi)?;
-    wasmtime_wasi_nn::witx::add_to_linker(&mut linker, |state: &mut StoreState| &mut state.wasi_nn_witx)?;
-    println!("[DEBUG] Linker created with WASI and WASI-NN");
+    wasi_common::sync::add_to_linker(&mut linker, |s| &mut s.wasi)?;
+    wasmtime_wasi_nn::witx::add_to_linker(&mut linker, |s| &mut s.wasi_nn_witx)?;
 
-    // Instantiate the module
     let instance = linker.instantiate(&mut store, &module)?;
-    println!("[DEBUG] WASM module instantiated");
-    
-    // Get the _start function
     let start_func = instance.get_typed_func::<(), ()>(&mut store, "_start")?;
-    println!("[DEBUG] _start function retrieved");
 
-    // Wrap store and instance for shared access
-    let wasm_state = Arc::new(Mutex::new((store, instance, start_func)));
-
-    // Spawn background task to call _start
-    println!("[DEBUG] Spawning background task to execute _start...");
-    let wasm_clone = Arc::clone(&wasm_state);
-    tokio::task::spawn_blocking(move || {
-        println!("[DEBUG] Background task started, calling _start...");
-        let mut state = wasm_clone.blocking_lock();
-        let (ref mut store, _, ref start) = *state;
-        if let Err(e) = start.call(store, ()) {
-            eprintln!("[ERROR] WASM _start error: {:#?}", e);
+    // 3. Spawn WASM Guest
+    std::thread::spawn(move || {
+        println!("[GUEST] Starting WASM loop...");
+        if let Err(e) = start_func.call(&mut store, ()) {
+            eprintln!("[GUEST] Error: {:?}", e);
         }
     });
 
-    // Give the WASM module a moment to initialize
-    tokio::time::sleep(tokio::time::Duration::from_millis(100)).await;
+    // 4. Create Bridge
+    let bridge = Arc::new(Mutex::new(WasmBridge {
+        input_writer: host_stdin_writer,
+        output_reader: output_reader,
+    }));
 
-    // Start WebSocket server
+    // 5. Start WebSocket Server
     let listener = TcpListener::bind("127.0.0.1:9001").await?;
     println!("WebSocket server listening on ws://127.0.0.1:9001");
 
     loop {
         let (stream, _) = listener.accept().await?;
-
+        let bridge_clone = bridge.clone();
+        
         tokio::spawn(async move {
-            if let Err(e) = handle_client(stream).await {
-                eprintln!("client error: {:?}", e);
+            if let Err(e) = handle_client(stream, bridge_clone).await {
+                eprintln!("Client error: {:?}", e);
             }
         });
     }
@@ -114,40 +109,53 @@ async fn main() -> Result<()> {
 
 async fn handle_client(
     stream: tokio::net::TcpStream,
+    bridge: Arc<Mutex<WasmBridge>>,
 ) -> Result<()> {
     let ws_stream = accept_async(stream).await?;
     let (mut ws_sender, mut ws_receiver) = ws_stream.split();
-    println!("client connected");
+    println!("Client connected");
 
     while let Some(msg) = ws_receiver.next().await {
         match msg {
             Ok(m) if m.is_binary() => {
-                let _img_bytes = m.into_data();
-                
-                // For now, return a placeholder response
-                // The WASM module is running in background and reads from stdin
-                let response = serde_json::json!([
-                    {
-                        "class": "car",
-                        "score": 0.95,
-                        "bbox": [0.1, 0.2, 0.4, 0.3]
-                    }
-                ]);
-                
-                let json_str = serde_json::to_string(&response)?;
-                ws_sender.send(tokio_tungstenite::tungstenite::Message::Text(json_str)).await?;
-            }
-            Ok(m) if m.is_text() => {
-                eprintln!("text messages not yet implemented");
+                let img_bytes = m.into_data();
+                println!("[HOST] Received {} bytes from client", img_bytes.len());
+
+                let response_json = {
+                    let bridge = bridge.clone();
+                    let img_bytes = img_bytes.clone();
+                    
+                    tokio::task::spawn_blocking(move || -> Result<String> {
+                        let mut guard = bridge.blocking_lock();
+                        
+                        // 1. Write Length
+                        let len_bytes = (img_bytes.len() as u32).to_le_bytes();
+                        guard.input_writer.write_all(&len_bytes)?;
+                        
+                        // 2. Write Data
+                        guard.input_writer.write_all(&img_bytes)?;
+                        guard.input_writer.flush()?;
+                        
+                        // 3. Read Response Length
+                        let mut resp_len_buf = [0u8; 4];
+                        guard.output_reader.read_exact(&mut resp_len_buf)?;
+                        let resp_len = u32::from_le_bytes(resp_len_buf) as usize;
+
+                        // 4. Read Response JSON
+                        let mut resp_buf = vec![0u8; resp_len];
+                        guard.output_reader.read_exact(&mut resp_buf)?;
+                        
+                        let s = String::from_utf8(resp_buf)?;
+                        Ok(s)
+                    }).await??
+                };
+
+                println!("[HOST] Received result from WASM: {}", response_json);
+                ws_sender.send(tokio_tungstenite::tungstenite::Message::Text(response_json)).await?;
             }
             Ok(_) => {}
-            Err(e) => {
-                eprintln!("websocket error: {:?}", e);
-                break;
-            }
+            Err(_e) => break, // FIX: Added underscore
         }
     }
-
-    println!("client disconnected");
     Ok(())
 }
