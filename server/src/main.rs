@@ -2,7 +2,7 @@ use tokio::net::TcpListener;
 use tokio_tungstenite::accept_async;
 use futures::{SinkExt, StreamExt};
 use anyhow::Result;
-use std::sync::Arc;
+use std::{path::PathBuf, sync::Arc};
 use tokio::sync::Mutex;
 use wasmtime::*;
 use wasi_common::WasiCtx;
@@ -17,10 +17,11 @@ struct StoreState {
 #[tokio::main]
 async fn main() -> Result<()> {
     println!("[DEBUG] Server starting...");
+    let server_dir = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
     
     // Path to WASM module
-    let wasm_path = "../inference/target/wasm32-wasip1/release/wasm_inference.wasm";
-    println!("[DEBUG] WASM module path: {}", wasm_path);
+    let wasm_path = server_dir.join("inference.wasm");
+    println!("[DEBUG] WASM module path: {}", wasm_path.display());
     
     // Create Wasmtime engine
     let engine = Engine::default();
@@ -30,9 +31,11 @@ async fn main() -> Result<()> {
     let module = Module::from_file(&engine, wasm_path)?;
     println!("[DEBUG] WASM module loaded successfully");
 
+    let models_dir = server_dir.join("../models");
+
     // Create a dir for models access
     let models_dir = wasi_common::sync::Dir::open_ambient_dir(
-        "../models", 
+        models_dir, 
         wasi_common::sync::ambient_authority()
     )?;
     println!("[DEBUG] Models directory opened: ../models");

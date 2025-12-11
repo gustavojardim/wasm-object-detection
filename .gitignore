@@ -29,3 +29,6 @@ OUTPUT_PARSING_TEMPLATE.rs
 *:Zone.Identifier
 
 models/*.pt
+
+# Wasm files
+server/inference.wasm
