@@ -73,10 +73,8 @@ async fn main() -> Result<()> {
     wasi_common::sync::add_to_linker(&mut linker, |s| &mut s.wasi)?;
     wasmtime_wasi_nn::witx::add_to_linker(&mut linker, |s| &mut s.wasi_nn_witx)?;
 
-    println!("oi");
     
     let instance = linker.instantiate(&mut store, &module)?;
-    println!("oi");
     let start_func = instance.get_typed_func::<(), ()>(&mut store, "_start")?;
 
     // 3. Spawn WASM Guest
