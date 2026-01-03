@@ -32,3 +32,6 @@ models/*.pt
 
 # Wasm files
 server/inference.wasm
+
+# built package
+bundle/

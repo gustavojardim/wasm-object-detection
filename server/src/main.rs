@@ -27,7 +27,10 @@ async fn main() -> Result<()> {
     let server_dir = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
     
     // Path to WASM module
-    let wasm_path = server_dir.join("inference.wasm");
+    let wasm_path = std::env::var("WASM_MODULE")
+        .map(PathBuf::from)
+        .unwrap_or_else(|_| PathBuf::from("/opt/wasm/apps/inference.wasm"));
+
     println!("[DEBUG] WASM module path: {}", wasm_path.display());
     
     // Create Wasmtime engine
@@ -38,7 +41,11 @@ async fn main() -> Result<()> {
     let module = Module::from_file(&engine, wasm_path)?;
     println!("[DEBUG] WASM module loaded successfully");
 
-    let models_dir = Dir::from_std_file(File::open(server_dir.join("../models"))?);
+    let models_path = std::env::var("MODELS_DIR")
+        .map(PathBuf::from)
+        .unwrap_or_else(|_| PathBuf::from("/opt/wasm/models"));
+
+    let models_dir = Dir::from_std_file(File::open(&models_path)?);
 
     // 1. Create Pipes
     // Host writes to input_writer -> Guest reads from guest_stdin_reader
@@ -92,8 +99,8 @@ async fn main() -> Result<()> {
     }));
 
     // 5. Start WebSocket Server
-    let listener = TcpListener::bind("127.0.0.1:9001").await?;
-    println!("WebSocket server listening on ws://127.0.0.1:9001");
+    let listener = TcpListener::bind("0.0.0.0:9001").await?;
+    println!("WebSocket server listening on ws://0.0.0.0:9001");
 
     loop {
         let (stream, _) = listener.accept().await?;
