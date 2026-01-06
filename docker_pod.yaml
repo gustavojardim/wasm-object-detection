@@ -1,0 +1,28 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: wasm-server-docker
+  labels:
+    app: wasm-server
+spec:
+  restartPolicy: Always
+  containers:
+    - name: server
+      image: 192.168.0.118:32000/wasm-server:latest
+      ports:
+        - containerPort: 9001
+      env:
+        - name: WASM_MODULE
+          value: /opt/wasm/apps/inference.wasm
+        - name: MODELS_DIR
+          value: /opt/wasm/models
+        - name: LD_LIBRARY_PATH
+          value: /opt/libtorch/lib
+      volumeMounts:
+        - name: wasm
+          mountPath: /opt/wasm
+  volumes:
+    - name: wasm
+      hostPath:
+        path: /opt/wasm
+        type: DirectoryOrCreate

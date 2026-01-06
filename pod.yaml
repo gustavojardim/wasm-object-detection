@@ -2,57 +2,75 @@ apiVersion: v1
 kind: Pod
 metadata:
   name: wasm-server
+  labels:
+    app: wasm-server
 spec:
   restartPolicy: Always
 
   initContainers:
-  - name: oras-pull
-    image: debian:bookworm-slim
-    command:
-      - /bin/sh
-      - -c
-      - |
-        set -e
-        apt-get update
-        apt-get install -y ca-certificates curl tar
+    - name: oras-pull
+      image: debian:bookworm-slim
+      command:
+        - /bin/sh
+        - -c
+        - |
+          set -e
 
-        curl -L https://github.com/oras-project/oras/releases/download/v1.2.0/oras_1.2.0_linux_amd64.tar.gz \
-          | tar -xz -C /usr/local/bin oras
+          export PATH="/usr/local/bin:$PATH"
 
-        rm -rf /opt/wasm/*
-        oras pull --plain-http 192.168.0.118:32000/wasm-inference:debug -o /opt/wasm
+          echo "Using host-installed ORAS:"
+          oras version
 
-        mv /opt/wasm/bundle/* /opt/wasm/
-        rmdir /opt/wasm/bundle
+          if [ -x /opt/wasm/apps/server ]; then
+            echo "WASM bundle already present, skipping oras pull"
+            exit 0
+          fi
 
-        ls -R /opt/wasm
-    volumeMounts:
-      - name: wasm
-        mountPath: /opt/wasm
+          echo "WASM bundle not found, pulling from registry..."
+
+          rm -rf /opt/wasm/*
+          oras pull --plain-http 192.168.0.118:32000/wasm-inference:debug -o /opt/wasm
+
+          mv /opt/wasm/bundle/* /opt/wasm/
+          rmdir /opt/wasm/bundle
+
+          ls -R /opt/wasm
+      volumeMounts:
+        - name: wasm
+          mountPath: /opt/wasm
+        - name: host-bin
+          mountPath: /usr/local/bin
+          readOnly: true
 
   containers:
-  - name: server
-    image: debian:bookworm-slim
-    command: ["/opt/wasm/apps/server"]
-    env:
-      - name: WASM_MODULE
-        value: /opt/wasm/apps/inference.wasm
-      - name: MODELS_DIR
-        value: /opt/wasm/models
-      - name: LD_LIBRARY_PATH
-        value: /home/node1/libtorch/lib
-    volumeMounts:
-      - name: wasm
-        mountPath: /opt/wasm
-      - name: libtorch
-        mountPath: /home/node1/libtorch
+    - name: server
+      image: debian:bookworm-slim
+      command: ["/opt/wasm/apps/server"]
+      env:
+        - name: WASM_MODULE
+          value: /opt/wasm/apps/inference.wasm
+        - name: MODELS_DIR
+          value: /opt/wasm/models
+        - name: LD_LIBRARY_PATH
+          value: /opt/libtorch/lib
+      volumeMounts:
+        - name: wasm
+          mountPath: /opt/wasm
+        - name: libtorch
+          mountPath: /opt/libtorch
 
   volumes:
     - name: wasm
       hostPath:
         path: /opt/wasm
         type: DirectoryOrCreate
+
     - name: libtorch
       hostPath:
-        path: /home/node1/libtorch
+        path: /opt/libtorch
+        type: Directory
+
+    - name: host-bin
+      hostPath:
+        path: /usr/local/bin
         type: Directory
