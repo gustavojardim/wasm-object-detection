@@ -20,4 +20,4 @@ bundle/
 # Other files
 output_detection.mp4
 install_torch.sh
-.torchscript
+*.torchscript
