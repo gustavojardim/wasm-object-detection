@@ -92,25 +92,23 @@ fn img_to_nchw(img_bytes: &[u8]) -> Result<Vec<f32>> {
     Ok(nchw)
 }
 
-fn load_graph(model_name: &str) -> Result<Graph> {
-    let model_path = format!("/models/{}", model_name);
+fn load_graph(device: &str, debug: bool) -> Result<Graph> {
+    let (model_file, target) = if device == "cpu" {
+        ("yolov8n.torchscript", ExecutionTarget::Cpu)
+    } else {
+        ("yolov8n_cuda.torchscript", ExecutionTarget::Gpu)
+    };
+    let model_path = format!("/models/{}", model_file);
     let model_bytes = std::fs::read(&model_path)
         .with_context(|| format!("failed to read model at {}", model_path))?;
-    
-    // Try GPU first, fallback to CPU
+    if debug {
+        eprintln!("[DEBUG] Loading model: {} (target: {:?})", model_file, target);
+    }
     let graph = graph::load(
-        &[model_bytes.clone()],
+        &[model_bytes],
         GraphEncoding::Pytorch,
-        ExecutionTarget::Gpu,
-    ).or_else(|_| {
-        eprintln!("[INFO] GPU load failed, falling back to CPU...");
-        graph::load(
-            &[model_bytes],
-            GraphEncoding::Pytorch,
-            ExecutionTarget::Cpu,
-        )
-    }).map_err(|e| anyhow!("Failed to load graph: {:?}", e))?;
-    
+        target,
+    ).map_err(|e| anyhow!("Failed to load graph: {:?}", e))?;
     Ok(graph)
 }
 
@@ -188,14 +186,15 @@ fn box_iou(b1: &BBox, b2: &BBox) -> f32 {
     if union_area == 0.0 { 0.0 } else { inter_area / union_area }
 }
 
-fn handle_client(mut stream: TcpStream, graph: &Graph) -> Result<()> {
+fn handle_client(mut stream: TcpStream, graph: &Graph, debug: bool) -> Result<()> {
     let peer = stream.peer_addr()?;
     eprintln!("[INFO] Client connected: {}", peer);
 
     let ctx = graph.init_execution_context()
         .map_err(|e| anyhow!("Failed to init execution context: {:?}", e))?;
-    
-    eprintln!("[DEBUG] Created execution context: {:?}", ctx);
+    if debug {
+        eprintln!("[DEBUG] Created execution context: {:?}", ctx);
+    }
 
     loop {
         // Read image data from client
@@ -207,7 +206,9 @@ fn handle_client(mut stream: TcpStream, graph: &Graph) -> Result<()> {
             }
         };
 
-        eprintln!("[DEBUG] Received {} bytes from {}", img_bytes.len(), peer);
+        if debug {
+            eprintln!("[DEBUG] Received {} bytes from {}", img_bytes.len(), peer);
+        }
 
         // Preprocess image
         let input = img_to_nchw(&img_bytes)?;
@@ -255,9 +256,41 @@ fn handle_client(mut stream: TcpStream, graph: &Graph) -> Result<()> {
 }
 
 fn run_server() -> Result<()> {
-    eprintln!("[INIT] Loading YOLOv8n model via wasi-nn...");
-    let graph = load_graph("yolov8n_cuda.torchscript")?;
-    eprintln!("[SUCCESS] Model loaded successfully");
+    use std::env;
+    let args: Vec<String> = env::args().collect();
+    let mut device = "gpu";
+    let mut debug = false;
+    for i in 0..args.len() {
+        if args[i] == "--device" {
+            if let Some(val) = args.get(i + 1) {
+                if val == "cpu" || val == "gpu" {
+                    device = val;
+                }
+            }
+        }
+        if args[i] == "--debug" {
+            debug = true;
+        }
+    }
+
+    eprintln!("[INIT] Loading YOLOv8n model via wasi-nn (device: {})...", device);
+    let graph = match load_graph(device, debug) {
+        Ok(g) => {
+            eprintln!("[SUCCESS] Model loaded for device: {}", device);
+            g
+        },
+        Err(e) => {
+            if device == "gpu" {
+                eprintln!("[WARN] Failed to load GPU model: {}. Falling back to CPU model...", e);
+                let g = load_graph("cpu", debug)
+                    .map_err(|e| anyhow!("Failed to load fallback CPU model: {:?}", e))?;
+                eprintln!("[SUCCESS] Model loaded for device: cpu");
+                g
+            } else {
+                return Err(anyhow!("Failed to load model: {:?}", e));
+            }
+        }
+    };
 
     eprintln!("[INIT] Starting TCP server on {}...", TCP_ADDR);
     let listener = TcpListener::bind(TCP_ADDR)?;
@@ -266,7 +299,7 @@ fn run_server() -> Result<()> {
     for stream in listener.incoming() {
         match stream {
             Ok(stream) => {
-                if let Err(e) = handle_client(stream, &graph) {
+                if let Err(e) = handle_client(stream, &graph, debug) {
                     eprintln!("[ERROR] Client handler error: {:?}", e);
                 }
             }

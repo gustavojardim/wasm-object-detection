@@ -49,8 +49,8 @@ fi
 echo
 echo "=== 6) Checking model files ==="
 MODEL_DIR="./models"
-CPU_MODEL="$MODEL_DIR/cubercnn_Res34_FPN_cpu.pt"
-CUDA_MODEL="$MODEL_DIR/cubercnn_Res34_FPN_cuda.pt"
+CPU_MODEL="$MODEL_DIR/yolov8n.torchscript"
+CUDA_MODEL="$MODEL_DIR/yolov8n_cuda.torchscript"
 
 if [ -f "$CPU_MODEL" ]; then
     echo "[OK] CPU model present"
