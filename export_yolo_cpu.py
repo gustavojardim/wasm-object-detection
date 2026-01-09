@@ -4,9 +4,11 @@ Export YOLOv8n to CPU-compatible TorchScript format.
 This creates a portable model that can run on any system without GPU-specific kernels.
 """
 
-import torch
 from ultralytics import YOLO
+
 import os
+import torch
+import shutil
 
 def export_yolo_cpu():
     print(f"PyTorch Version: {torch.__version__}")
@@ -26,13 +28,16 @@ def export_yolo_cpu():
     )
     
     # Check if file was exported successfully
-    import shutil
-    if os.path.exists("models/yolov8n.torchscript"):
-        print(f"✓ Model exported successfully to: models/yolov8n.torchscript")
+    out_path = "models/yolov8n_cpu.torchscript"
+    src_path1 = "models/yolov8n.torchscript"
+    src_path2 = "yolov8n.torchscript"
+    if os.path.exists(src_path1):
+        shutil.copy(src_path1, out_path)
+        print(f"✓ CPU model copied to: {out_path}")
         print("  This CPU-compatible model can run on any system")
-    elif os.path.exists("yolov8n.torchscript"):
-        shutil.move("yolov8n.torchscript", "models/yolov8n.torchscript")
-        print(f"✓ Model exported successfully to: models/yolov8n.torchscript")
+    elif os.path.exists(src_path2):
+        shutil.copy(src_path2, out_path)
+        print(f"✓ CPU model copied to: {out_path}")
         print("  This CPU-compatible model can run on any system")
     else:
         print("ERROR: Export failed - output file not found")
