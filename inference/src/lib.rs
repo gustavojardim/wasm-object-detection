@@ -94,7 +94,7 @@ fn img_to_nchw(img_bytes: &[u8]) -> Result<Vec<f32>> {
 
 fn load_graph(device: &str, debug: bool) -> Result<Graph> {
     let (model_file, target) = if device == "cpu" {
-        ("yolov8n.torchscript", ExecutionTarget::Cpu)
+        ("yolov8n_cpu.torchscript", ExecutionTarget::Cpu)
     } else {
         ("yolov8n_cuda.torchscript", ExecutionTarget::Gpu)
     };
