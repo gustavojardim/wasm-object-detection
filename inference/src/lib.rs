@@ -1,18 +1,38 @@
-use std::io::{self, Read, Write};
+use std::io::{Read, Write};
+use std::net::{TcpListener, TcpStream};
 use anyhow::{anyhow, Context, Result};
 use image::{imageops::FilterType, GenericImageView};
 use serde::Serialize;
-use wasi_nn::{ExecutionTarget, Graph, GraphBuilder, GraphEncoding, TensorType};
+
+// Generate wasi-nn bindings from WIT  
+wit_bindgen::generate!({
+    path: "wit/deps/wasi-nn",
+    world: "ml",
+    default_bindings_module: "inference::bindings"
+});
+
+// The generated bindings create a `wasi` module
+use self::wasi::nn::graph::{self, Graph, ExecutionTarget, GraphEncoding};
+use self::wasi::nn::tensor::{Tensor, TensorType};
 
 // YOLOv8n standard input size
 const TARGET_SIZE: u32 = 640;
+const TCP_ADDR: &str = "0.0.0.0:8080";
+
+#[derive(Serialize, Debug, Clone)]
+struct BBox {
+    x1: f32,
+    y1: f32,
+    x2: f32,
+    y2: f32,
+}
 
 #[derive(Serialize, Debug, Clone)]
 struct Det {
     class_id: usize,
-    class_name: String,
-    score: f32,
-    bbox: [f32; 4], // [x, y, w, h] normalized
+    class: String,
+    confidence: f32,
+    bbox: BBox,
 }
 
 // Hardcoded COCO classes (Standard for YOLOv8)
@@ -30,22 +50,21 @@ const CLASSES: &[&str] = &[
     "toothbrush",
 ];
 
-fn read_exact_len() -> Result<Vec<u8>> {
+fn read_exact_len_from_stream(stream: &mut TcpStream) -> Result<Vec<u8>> {
     let mut len_buf = [0u8; 4];
-    io::stdin().read_exact(&mut len_buf)?;
+    stream.read_exact(&mut len_buf)?;
     let len = u32::from_le_bytes(len_buf) as usize;
     let mut buf = vec![0u8; len];
-    io::stdin().read_exact(&mut buf)?;
+    stream.read_exact(&mut buf)?;
     Ok(buf)
 }
 
-fn write_json_result(r: &serde_json::Value) -> Result<()> {
+fn write_json_result_to_stream(stream: &mut TcpStream, r: &serde_json::Value) -> Result<()> {
     let s = serde_json::to_vec(r)?;
     let len = (s.len() as u32).to_le_bytes();
-    let mut out = io::stdout();
-    out.write_all(&len)?;
-    out.write_all(&s)?;
-    out.flush()?;
+    stream.write_all(&len)?;
+    stream.write_all(&s)?;
+    stream.flush()?;
     Ok(())
 }
 
@@ -79,22 +98,25 @@ fn load_graph(model_name: &str) -> Result<Graph> {
         .with_context(|| format!("failed to read model at {}", model_path))?;
     
     // Try GPU first, fallback to CPU
-    GraphBuilder::new(GraphEncoding::Pytorch, ExecutionTarget::GPU)
-        .build_from_bytes(&[&model_bytes])
-        .or_else(|_| {
-            eprintln!("[INFO] GPU load failed, falling back to CPU...");
-            GraphBuilder::new(GraphEncoding::Pytorch, ExecutionTarget::CPU)
-                .build_from_bytes(&[&model_bytes])
-        })
-        .map_err(|e| anyhow!("Failed to load graph: {:?}", e))
+    let graph = graph::load(
+        &[model_bytes.clone()],
+        GraphEncoding::Pytorch,
+        ExecutionTarget::Gpu,
+    ).or_else(|_| {
+        eprintln!("[INFO] GPU load failed, falling back to CPU...");
+        graph::load(
+            &[model_bytes],
+            GraphEncoding::Pytorch,
+            ExecutionTarget::Cpu,
+        )
+    }).map_err(|e| anyhow!("Failed to load graph: {:?}", e))?;
+    
+    Ok(graph)
 }
 
 // Parse YOLO Output [1, 84, 8400] -> [cx, cy, w, h, class_probs...]
 fn process_output(output: &[f32]) -> Vec<Det> {
     let num_elements = 8400; // Number of predictions
-    
-    // The output is usually flattened, representing shape [1, 84, 8400]
-    // We iterate "columns" (predictions)
     
     let mut detections = Vec::new();
 
@@ -105,7 +127,6 @@ fn process_output(output: &[f32]) -> Vec<Det> {
 
         // Channels 4..84 are class probabilities
         for c in 0..80 {
-            // Index logic: channel * width + column
             let idx = (4 + c) * num_elements + i; 
             let score = output[idx];
             if score > max_score {
@@ -120,17 +141,17 @@ fn process_output(output: &[f32]) -> Vec<Det> {
             let w  = output[2 * num_elements + i];
             let h  = output[3 * num_elements + i];
 
-            // Convert center-wh to top-left-wh normalized (0.0-1.0)
-            let x = (cx - w / 2.0) / TARGET_SIZE as f32;
-            let y = (cy - h / 2.0) / TARGET_SIZE as f32;
-            let w = w / TARGET_SIZE as f32;
-            let h = h / TARGET_SIZE as f32;
+            // Convert center-wh to corner coordinates normalized (0.0-1.0)
+            let x1 = (cx - w / 2.0) / TARGET_SIZE as f32;
+            let y1 = (cy - h / 2.0) / TARGET_SIZE as f32;
+            let x2 = (cx + w / 2.0) / TARGET_SIZE as f32;
+            let y2 = (cy + h / 2.0) / TARGET_SIZE as f32;
 
             detections.push(Det {
                 class_id: best_class,
-                class_name: CLASSES.get(best_class).unwrap_or(&"?").to_string(),
-                score: max_score,
-                bbox: [x, y, w, h],
+                class: CLASSES.get(best_class).unwrap_or(&"?").to_string(),
+                confidence: max_score,
+                bbox: BBox { x1, y1, x2, y2 },
             });
         }
     }
@@ -140,68 +161,128 @@ fn process_output(output: &[f32]) -> Vec<Det> {
 }
 
 fn nms(mut dets: Vec<Det>, iou_thresh: f32) -> Vec<Det> {
-    dets.sort_by(|a, b| b.score.partial_cmp(&a.score).unwrap());
+    dets.sort_by(|a, b| b.confidence.partial_cmp(&a.confidence).unwrap());
     let mut keep = Vec::new();
 
     while let Some(current) = dets.pop() {
         keep.push(current.clone());
-        dets.retain(|other| iou(&current.bbox, &other.bbox) < iou_thresh);
+        dets.retain(|other| box_iou(&current.bbox, &other.bbox) < iou_thresh);
     }
     keep
 }
 
-fn iou(b1: &[f32; 4], b2: &[f32; 4]) -> f32 {
-    let (x1, y1, w1, h1) = (b1[0], b1[1], b1[2], b1[3]);
-    let (x2, y2, w2, h2) = (b2[0], b2[1], b2[2], b2[3]);
-
-    let xi1 = x1.max(x2);
-    let yi1 = y1.max(y2);
-    let xi2 = (x1 + w1).min(x2 + w2);
-    let yi2 = (y1 + h1).min(y2 + h2);
+fn box_iou(b1: &BBox, b2: &BBox) -> f32 {
+    let xi1 = b1.x1.max(b2.x1);
+    let yi1 = b1.y1.max(b2.y1);
+    let xi2 = b1.x2.min(b2.x2);
+    let yi2 = b1.y2.min(b2.y2);
 
     let inter_w = (xi2 - xi1).max(0.0);
     let inter_h = (yi2 - yi1).max(0.0);
     let inter_area = inter_w * inter_h;
 
-    let b1_area = w1 * h1;
-    let b2_area = w2 * h2;
+    let b1_area = (b1.x2 - b1.x1) * (b1.y2 - b1.y1);
+    let b2_area = (b2.x2 - b2.x1) * (b2.y2 - b2.y1);
     let union_area = b1_area + b2_area - inter_area;
 
     if union_area == 0.0 { 0.0 } else { inter_area / union_area }
 }
 
-fn run_loop() -> Result<()> {
-    eprintln!("[DEBUG] Loading YOLOv8n...");
-    let graph = load_graph("yolov8n.torchscript")?; 
-    let mut ctx = graph.init_execution_context()?;
+fn handle_client(mut stream: TcpStream, graph: &Graph) -> Result<()> {
+    let peer = stream.peer_addr()?;
+    eprintln!("[INFO] Client connected: {}", peer);
 
-    eprintln!("[SUCCESS] Ready for inference");
+    let ctx = graph.init_execution_context()
+        .map_err(|e| anyhow!("Failed to init execution context: {:?}", e))?;
+    
+    eprintln!("[DEBUG] Created execution context: {:?}", ctx);
 
     loop {
-        let img_bytes = read_exact_len()?;
+        // Read image data from client
+        let img_bytes = match read_exact_len_from_stream(&mut stream) {
+            Ok(bytes) => bytes,
+            Err(e) => {
+                eprintln!("[INFO] Client {} disconnected: {}", peer, e);
+                break;
+            }
+        };
+
+        eprintln!("[DEBUG] Received {} bytes from {}", img_bytes.len(), peer);
+
+        // Preprocess image
         let input = img_to_nchw(&img_bytes)?;
 
-        let dims = [1, 3, TARGET_SIZE as usize, TARGET_SIZE as usize];
-        ctx.set_input(0, TensorType::F32, &dims, &input)?;
-        ctx.compute()?;
+        // Prepare tensor data (convert f32 to bytes)
+        let tensor_data: Vec<u8> = input
+            .iter()
+            .flat_map(|f| f.to_le_bytes())
+            .collect();
 
-        // Output buffer size: 1 * 84 * 8400 * 4 bytes ≈ 2.8 MB
-        let mut output_buffer = vec![0f32; 1 * 84 * 8400]; 
-        let bytes_written = ctx.get_output(0, &mut output_buffer)?;
+        // Create tensor
+        let tensor = Tensor::new(
+            &vec![1, 3, TARGET_SIZE, TARGET_SIZE],
+            TensorType::Fp32,
+            &tensor_data,
+        );
+
+        // Run inference using wasi-nn - new API takes inputs and returns outputs
+        let inputs = vec![("images".to_string(), tensor)];
+        let outputs = ctx.compute(inputs)
+            .map_err(|e| anyhow!("Failed to compute: {:?}", e))?;
+
+        // Get first output tensor reference
+        let output_tensor = &outputs.get(0)
+            .ok_or_else(|| anyhow!("No output tensor"))?
+            .1;
         
-        // Truncate to actual data length
-        let elements = bytes_written / std::mem::size_of::<f32>();
-        output_buffer.truncate(elements);
+        // Convert bytes back to f32
+        let output_floats: Vec<f32> = output_tensor
+            .data()
+            .chunks_exact(4)
+            .map(|chunk| f32::from_le_bytes([chunk[0], chunk[1], chunk[2], chunk[3]]))
+            .collect();
 
-        let detections = process_output(&output_buffer);
+        // Post-process detections
+        let detections = process_output(&output_floats);
+        eprintln!("[SUCCESS] Detected {} objects", detections.len());
+
+        // Send result back to client
         let json = serde_json::to_value(&detections)?;
-        write_json_result(&json)?;
+        write_json_result_to_stream(&mut stream, &json)?;
     }
+
+    Ok(())
+}
+
+fn run_server() -> Result<()> {
+    eprintln!("[INIT] Loading YOLOv8n model via wasi-nn...");
+    let graph = load_graph("yolov8n_cuda.torchscript")?;
+    eprintln!("[SUCCESS] Model loaded successfully");
+
+    eprintln!("[INIT] Starting TCP server on {}...", TCP_ADDR);
+    let listener = TcpListener::bind(TCP_ADDR)?;
+    eprintln!("[SUCCESS] Server listening on {}", TCP_ADDR);
+
+    for stream in listener.incoming() {
+        match stream {
+            Ok(stream) => {
+                if let Err(e) = handle_client(stream, &graph) {
+                    eprintln!("[ERROR] Client handler error: {:?}", e);
+                }
+            }
+            Err(e) => {
+                eprintln!("[ERROR] Connection failed: {:?}", e);
+            }
+        }
+    }
+
+    Ok(())
 }
 
 #[no_mangle]
 pub extern "C" fn _start() {
-    if let Err(e) = run_loop() {
-        eprintln!("[ERROR] {:?}", e);
+    if let Err(e) = run_server() {
+        eprintln!("[FATAL] Server error: {:?}", e);
+        std::process::exit(1);
     }
 }
