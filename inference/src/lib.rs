@@ -97,23 +97,25 @@ fn write_json_result_to_stream(stream: &mut TcpStream, r: &serde_json::Value) ->
     Ok(())
 }
 
-/// Prepare image for YOLO (resize 640x640, normalize 0-1, NCHW)
-fn img_to_nchw(img_bytes: &[u8]) -> Result<Vec<f32>> {
+/// Prepare image for YOLO (resize 640x640 if needed, normalize 0-1, NCHW) with buffer reuse
+fn img_to_nchw(img_bytes: &[u8], nchw: &mut [f32]) -> Result<()> {
     let img = image::load_from_memory(img_bytes).context("decode image")?;
-    let img = img.resize_exact(TARGET_SIZE, TARGET_SIZE, FilterType::Triangle);
     let (w, h) = img.dimensions();
-    let mut nchw = vec![0f32; 3 * (w * h) as usize];
+    let img = if w == TARGET_SIZE && h == TARGET_SIZE {
+        img
+    } else {
+        img.resize_exact(TARGET_SIZE, TARGET_SIZE, FilterType::Triangle)
+    };
+    let (w, h) = img.dimensions();
+    let size = (w * h) as usize;
+    debug_assert_eq!(nchw.len(), 3 * size);
     for (x, y, pixel) in img.pixels() {
-        let r = pixel[0] as f32 / 255.0;
-        let g = pixel[1] as f32 / 255.0;
-        let b = pixel[2] as f32 / 255.0;
         let idx = (y * w + x) as usize;
-        let size = (w * h) as usize;
-        nchw[idx] = r;
-        nchw[idx + size] = g;
-        nchw[idx + 2 * size] = b;
+        nchw[idx] = pixel[0] as f32 / 255.0;
+        nchw[idx + size] = pixel[1] as f32 / 255.0;
+        nchw[idx + 2 * size] = pixel[2] as f32 / 255.0;
     }
-    Ok(nchw)
+    Ok(())
 }
 
 /// Load YOLOv8n model graph for the given device
@@ -211,6 +213,10 @@ fn handle_client(mut stream: TcpStream, graph: &Graph, debug: bool) -> Result<()
     debug_log!(debug, "Created execution context: {:?}", ctx);
     use std::time::Instant;
     let profile = debug; // For now, profile logs follow debug, can be separated if needed
+    // Pre-allocate buffers
+    let size = (3 * TARGET_SIZE * TARGET_SIZE) as usize;
+    let mut nchw = vec![0f32; size];
+    let mut tensor_data = vec![0u8; size * 4];
     loop {
         // --- TCP Read ---
         let t_tcp_read_start = Instant::now();
@@ -225,10 +231,12 @@ fn handle_client(mut stream: TcpStream, graph: &Graph, debug: bool) -> Result<()
         debug_log!(debug, "Received {} bytes from {} (TCP read: {:?})", img_bytes.len(), peer, t_tcp_read);
         // --- Preprocessing ---
         let t_pre_start = Instant::now();
-        let input = img_to_nchw(&img_bytes)?;
+        img_to_nchw(&img_bytes, &mut nchw)?;
         let t_pre = t_pre_start.elapsed();
-        // Prepare tensor data (convert f32 to bytes)
-        let tensor_data: Vec<u8> = input.iter().flat_map(|f| f.to_le_bytes()).collect();
+        // Prepare tensor data (convert f32 to bytes) using pre-allocated buffer
+        for (i, f) in nchw.iter().enumerate() {
+            tensor_data[i * 4..(i + 1) * 4].copy_from_slice(&f.to_le_bytes());
+        }
         // Create tensor
         let tensor = Tensor::new(&vec![1, 3, TARGET_SIZE, TARGET_SIZE], TensorType::Fp32, &tensor_data);
         // --- Inference ---
@@ -265,22 +273,24 @@ fn run_udp_server(graph: &Graph, debug: bool, profile: bool) -> Result<()> {
     let socket = UdpSocket::bind(UDP_ADDR)?;
     eprintln!("[SUCCESS] UDP server listening on {}", UDP_ADDR);
     let mut buf = vec![0u8; 1024 * 1024]; // 1MB buffer
+    let size = (3 * TARGET_SIZE * TARGET_SIZE) as usize;
+    let mut nchw = vec![0f32; size];
+    let mut tensor_data = vec![0u8; size * 4];
     loop {
         let (len, src) = socket.recv_from(&mut buf)?;
         debug_log!(debug, "Received {} bytes from {}", len, src);
         let img_bytes = &buf[..len];
         // Preprocessing
         let t_pre_start = std::time::Instant::now();
-        let input = match img_to_nchw(img_bytes) {
-            Ok(i) => i,
-            Err(e) => {
-                eprintln!("[ERROR] Image decode error: {}", e);
-                continue;
-            }
-        };
+        if let Err(e) = img_to_nchw(img_bytes, &mut nchw) {
+            eprintln!("[ERROR] Image decode error: {}", e);
+            continue;
+        }
         let t_pre = t_pre_start.elapsed();
-        // Prepare tensor data
-        let tensor_data: Vec<u8> = input.iter().flat_map(|f| f.to_le_bytes()).collect();
+        // Prepare tensor data using pre-allocated buffer
+        for (i, f) in nchw.iter().enumerate() {
+            tensor_data[i * 4..(i + 1) * 4].copy_from_slice(&f.to_le_bytes());
+        }
         let tensor = Tensor::new(&vec![1, 3, TARGET_SIZE, TARGET_SIZE], TensorType::Fp32, &tensor_data);
         // Inference
         let t_inf_start = std::time::Instant::now();

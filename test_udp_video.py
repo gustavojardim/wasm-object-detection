@@ -80,18 +80,25 @@ def process_video(source, display=True, save_output=None):
     start_time = time.time()
     inference_times = []
     try:
-        udp_size = (480, 270)
+        udp_size = (640, 640)
+        frame_interval = 1.0 / fps if fps > 0 else 1.0 / 30
         while True:
+            loop_start = time.time()
             ret, frame = cap.read()
             if not ret:
                 break
             frame_count += 1
-            # Resize for UDP safety (send), but keep original for display/output
+            # Resize to 640x640 for server compatibility
             frame_udp = cv2.resize(frame, udp_size)
-            _, buffer = cv2.imencode('.jpg', frame_udp, [cv2.IMWRITE_JPEG_QUALITY, 50])
-            frame_bytes = buffer.tobytes()
-            if len(frame_bytes) > 60000:
-                print(f"[WARN] Skipping frame: encoded size {len(frame_bytes)} > 60KB UDP limit")
+            # Try multiple JPEG qualities until frame fits under 60KB
+            for quality in [35, 30, 25, 20]:
+                encode_param = [cv2.IMWRITE_JPEG_QUALITY, quality]
+                _, buffer = cv2.imencode('.jpg', frame_udp, encode_param)
+                frame_bytes = buffer.tobytes()
+                if len(frame_bytes) <= 60000:
+                    break
+            else:
+                print(f"[WARN] Skipping frame: encoded size {len(frame_bytes)} > 60KB UDP limit (even at lowest quality)")
                 continue
             frame_start = time.time()
             detections = send_frame_get_detections(sock, frame_bytes, server_addr)
@@ -117,6 +124,11 @@ def process_video(source, display=True, save_output=None):
                 elapsed = time.time() - start_time
                 progress = (frame_count / total_frames * 100) if total_frames > 0 else 0
                 print(f"Progress: {frame_count}/{total_frames} ({progress:.1f}%) | Avg FPS: {fps_actual:.1f} | Elapsed: {elapsed:.1f}s")
+            # Throttle to match original FPS
+            elapsed_loop = time.time() - loop_start
+            sleep_time = frame_interval - elapsed_loop
+            if sleep_time > 0:
+                time.sleep(sleep_time)
     except KeyboardInterrupt:
         print("\nInterrupted by user")
     except Exception as e:
@@ -135,6 +147,7 @@ def process_video(source, display=True, save_output=None):
         avg_inference = np.mean(inference_times) if inference_times else 0
         print(f"\nProcessed {frame_count} frames in {elapsed:.1f}s")
         print(f"Average FPS: {avg_fps:.1f}")
+        print(f"Average inference time: {avg_inference*1000:.0f}ms")
         print(f"Average inference time: {avg_inference*1000:.0f}ms")
 
 if __name__ == "__main__":
