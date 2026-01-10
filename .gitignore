@@ -21,3 +21,4 @@ bundle/
 output_detection.mp4
 install_torch.sh
 *.torchscript
+.vscode/
