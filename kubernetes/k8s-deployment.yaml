@@ -13,11 +13,14 @@ spec:
     - name: inference
       image: 192.168.0.105:32000/wasm-inference:latest
       imagePullPolicy: Always
-      command: ["app.wasm"]
+      command: ["app.wasm", "--udp"]
       ports:
         - containerPort: 8080
           name: tcp
           protocol: TCP
+        - containerPort: 8081
+          name: udp
+          protocol: UDP
 ---
 apiVersion: v1
 kind: Service
@@ -33,3 +36,8 @@ spec:
       targetPort: 8080
       nodePort: 30080
       protocol: TCP
+    - name: udp
+      port: 8081
+      targetPort: 8081
+      nodePort: 30081
+      protocol: UDP

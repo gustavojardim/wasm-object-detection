@@ -11,7 +11,7 @@ import numpy as np
 import sys
 import time
 
-# Constants
+# Constants (default values)
 HOST = "127.0.0.1"
 PORT = 8081  # UDP port
 CONFIDENCE_THRESHOLD = 0.5
@@ -55,7 +55,7 @@ def draw_detections(frame, detections):
         cv2.putText(frame, label, (x1, y1 - 5), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 1)
 
 
-def process_video(source, display=True, save_output=None):
+def process_video(source, display=True, save_output=None, host="127.0.0.1", port=8081):
     """Process video file or webcam stream via UDP"""
     video_source = 0 if source == "0" else source
     cap = cv2.VideoCapture(video_source)
@@ -72,9 +72,9 @@ def process_video(source, display=True, save_output=None):
         fourcc = cv2.VideoWriter_fourcc(*'mp4v')
         out = cv2.VideoWriter(save_output, fourcc, fps, (width, height))
         print(f"Saving output to: {save_output}")
-    print(f"Connecting to {HOST}:{PORT} (UDP)...")
+    print(f"Connecting to {host}:{port} (UDP)...")
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    server_addr = (HOST, PORT)
+    server_addr = (host, port)
     print("Connected! Processing video...")
     frame_count = 0
     start_time = time.time()
@@ -151,18 +151,29 @@ def process_video(source, display=True, save_output=None):
         print(f"Average inference time: {avg_inference*1000:.0f}ms")
 
 if __name__ == "__main__":
-    if len(sys.argv) < 2:
-        print("Usage: python test_udp_video.py <video_path|0> [--no-display] [--save output.mp4]")
-        print("Examples:")
-        print("  python test_udp_video.py samples/walking_people_hd.mp4")
-        print("  python test_udp_video.py 0  # Use webcam")
-        print("  python test_udp_video.py samples/walking_people_hd.mp4 --save output.mp4")
-        sys.exit(1)
-    source = sys.argv[1]
-    display = "--no-display" not in sys.argv
-    save_output = None
-    if "--save" in sys.argv:
-        save_idx = sys.argv.index("--save")
-        if save_idx + 1 < len(sys.argv):
-            save_output = sys.argv[save_idx + 1]
-    process_video(source, display, save_output)
+    import argparse
+    parser = argparse.ArgumentParser(description="UDP Video client for WASM Object Detection.")
+    parser.add_argument("source", help="Video file path or 0 for webcam")
+    parser.add_argument("--no-display", action="store_true", help="Disable video display window")
+    parser.add_argument("--save", type=str, default=None, help="Save output video to file")
+    parser.add_argument("--remote", nargs="?", const="auto", default=None, help="Test against Kubernetes app. Optionally specify NODE_IP (default: auto)")
+    args = parser.parse_args()
+
+    display = not args.no_display
+    save_output = args.save
+    source = args.source
+
+    # If --remote is passed, set host and port for Kubernetes NodePort
+    host = "127.0.0.1"
+    port = 8081
+    if args.remote is not None:
+        port = 30081
+        if args.remote == "auto":
+            import os
+            host = os.environ.get("K8S_NODE_IP", "127.0.0.1")
+            print(f"[INFO] --remote: Using HOST={host}, PORT={port} (set K8S_NODE_IP env to override)")
+        else:
+            host = args.remote
+            print(f"[INFO] --remote: Using HOST={host}, PORT={port}")
+
+    process_video(source, display, save_output, host=host, port=port)
