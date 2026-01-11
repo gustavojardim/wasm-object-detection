@@ -3,7 +3,8 @@
 
 set -e
 
-cd "$(dirname "$0")"
+# Always run from project root
+cd "$(dirname "$0")/.."
 
 REG="${REGISTRY:-192.168.0.105:32000}"
 NAME="${IMAGE_NAME:-wasm-inference}"
@@ -11,12 +12,29 @@ TAG="${IMAGE_TAG:-latest}"
 
 echo "Packaging WASM bundle for ${REG}/${NAME}:${TAG}..."
 
-# Change to bundle directory
-cd bundle
+# Create package directory at project root
+PKGDIR="package"
+mkdir -p "$PKGDIR"
+cd "$PKGDIR"
+
+
+# Find or build app.wasm
+if [ -f ../bundle/apps/app.wasm ]; then
+  cp ../bundle/apps/app.wasm app.wasm
+elif [ -f ../target/wasm32-wasip2/release/inference.wasm ]; then
+  echo "[INFO] Using ../target/wasm32-wasip2/release/inference.wasm as app.wasm"
+  cp ../target/wasm32-wasip2/release/inference.wasm app.wasm
+else
+  echo "[ERROR] Could not find app.wasm (../bundle/apps/app.wasm or ../target/wasm32-wasip2/release/inference.wasm)"
+  exit 1
+fi
+
+mkdir -p models
+cp ../models/yolov8n_cpu.torchscript models/
 
 # Create a single-layer tar with both app.wasm and model
 echo "Creating tar layer..."
-tar -cf wasm-bundle.tar app.wasm models/yolov8n.torchscript
+tar -cf wasm-bundle.tar app.wasm models/yolov8n_cpu.torchscript
 LAYER_SHA=$(sha256sum wasm-bundle.tar | awk '{print $1}')
 
 # Create OCI config.json
@@ -45,9 +63,6 @@ oras push --plain-http ${REG}/${NAME}:${TAG} \
 echo ""
 echo "Verifying push..."
 oras manifest fetch --plain-http ${REG}/${NAME}:${TAG} | jq .
-
-# Cleanup
-rm -f wasm-bundle.tar config.json
 
 echo ""
 echo "✅ Successfully pushed ${REG}/${NAME}:${TAG}"
