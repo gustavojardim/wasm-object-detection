@@ -15,7 +15,7 @@ OUTPUT_PARSING_TEMPLATE.rs
 server/inference.wasm
 
 # Built package that is sent to k8s
-bundle/
+package/
 
 # Other files
 output_detection.mp4
