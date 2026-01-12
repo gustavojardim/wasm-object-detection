@@ -3,6 +3,8 @@ kind: DaemonSet
 metadata:
   name: latency-probe
   namespace: kube-system
+  labels:
+    app: latency-probe-nodeport
 spec:
   selector:
     matchLabels:
@@ -37,3 +39,19 @@ spec:
           initialDelaySeconds: 2
           periodSeconds: 10
       restartPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: latency-probe-nodeport
+  namespace: kube-system
+spec:
+  selector:
+    app: latency-probe
+  type: NodePort
+  ports:
+    - name: http
+      port: 8080
+      targetPort: 8080
+      nodePort: 30088
+      protocol: TCP

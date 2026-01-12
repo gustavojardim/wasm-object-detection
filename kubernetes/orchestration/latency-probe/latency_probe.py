@@ -8,4 +8,4 @@ def ping():
     return {'timestamp': time.time()}, 200
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=8080)from flask import Flask
+    app.run(host='0.0.0.0', port=8080)

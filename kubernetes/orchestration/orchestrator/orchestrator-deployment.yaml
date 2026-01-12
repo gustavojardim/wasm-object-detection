@@ -1,33 +1,68 @@
-apiVersion: apps/v1
-kind: Deployment
+apiVersion: v1
+kind: Pod
 metadata:
   name: orchestrator
   namespace: kube-system
+  labels:
+    app: orchestrator
 spec:
-  replicas: 1
+  containers:
+  - name: orchestrator
+    image: 127.0.0.1:32000/orchestrator:latest
+    ports:
+    - containerPort: 5000
+    resources:
+      requests:
+        cpu: 50m
+        memory: 64Mi
+      limits:
+        cpu: 200m
+        memory: 256Mi
+  restartPolicy: Always
+  tolerations:
+    - key: "node-role.kubernetes.io/master"
+      operator: "Exists"
+      effect: "NoSchedule"
+    - key: "node-role.kubernetes.io/control-plane"
+      operator: "Exists"
+      effect: "NoSchedule"
+  nodeSelector:
+    kubernetes.io/hostname: master
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: orchestrator-service
+  namespace: kube-system
+spec:
   selector:
-    matchLabels:
-      app: orchestrator
-  template:
-    metadata:
-      labels:
-        app: orchestrator
-    spec:
-      containers:
-      - name: orchestrator
-        image: 192.168.0.105:32000/orchestrator:latest
-        ports:
-        - containerPort: 5000
-        resources:
-          requests:
-            cpu: 50m
-            memory: 64Mi
-          limits:
-            cpu: 200m
-            memory: 256Mi
-        env:
-        - name: KUBERNETES_SERVICE_HOST
-          valueFrom:
-            fieldRef:
-              fieldPath: status.hostIP
-      restartPolicy: Always
+    app: orchestrator
+  type: NodePort
+  ports:
+    - name: http
+      port: 5000
+      targetPort: 5000
+      nodePort: 30500
+      protocol: TCP
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: orchestrator-node-reader
+rules:
+- apiGroups: [""]
+  resources: ["nodes"]
+  verbs: ["get", "list", "watch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: orchestrator-node-reader-binding
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: orchestrator-node-reader
+subjects:
+- kind: ServiceAccount
+  name: default
+  namespace: kube-system
