@@ -270,64 +270,98 @@ fn handle_client(mut stream: TcpStream, graph: &Graph, debug: bool) -> Result<()
 
 /// UDP server: receive image, run inference, send JSON result
 fn run_udp_server(graph: &Graph, debug: bool, profile: bool) -> Result<()> {
+    use std::collections::HashMap;
+    use std::time::{Duration, Instant};
     let socket = UdpSocket::bind(UDP_ADDR)?;
     eprintln!("[SUCCESS] UDP server listening on {}", UDP_ADDR);
-    let mut buf = vec![0u8; 1024 * 1024]; // 1MB buffer
+    let mut buf = vec![0u8; 2048]; // 2KB buffer for fragments
     let size = (3 * TARGET_SIZE * TARGET_SIZE) as usize;
     let mut nchw = vec![0f32; size];
     let mut tensor_data = vec![0u8; size * 4];
+    // Frame reassembly state: (frame_id, src) -> (received_at, total_chunks, Vec<Option<Vec<u8>>>)
+    let mut frames: HashMap<(u32, std::net::SocketAddr), (Instant, u16, Vec<Option<Vec<u8>>>)> = HashMap::new();
+    let header_len = 8; // 4 bytes frame_id, 2 bytes chunk_idx, 2 bytes total_chunks
+    let frame_timeout = Duration::from_secs(2);
     loop {
         let (len, src) = socket.recv_from(&mut buf)?;
-        debug_log!(debug, "Received {} bytes from {}", len, src);
-        let img_bytes = &buf[..len];
-        // Preprocessing
-        let t_pre_start = std::time::Instant::now();
-        if let Err(e) = img_to_nchw(img_bytes, &mut nchw) {
-            eprintln!("[ERROR] Image decode error: {}", e);
+        if len < header_len {
+            eprintln!("[WARN] Received too-short UDP packet from {}", src);
             continue;
         }
-        let t_pre = t_pre_start.elapsed();
-        // Prepare tensor data using pre-allocated buffer
-        for (i, f) in nchw.iter().enumerate() {
-            tensor_data[i * 4..(i + 1) * 4].copy_from_slice(&f.to_le_bytes());
+        // Parse header
+        let frame_id = u32::from_be_bytes([buf[0], buf[1], buf[2], buf[3]]);
+        let chunk_idx = u16::from_be_bytes([buf[4], buf[5]]);
+        let total_chunks = u16::from_be_bytes([buf[6], buf[7]]);
+        let payload = &buf[header_len..len];
+        let key = (frame_id, src);
+        // Insert or update frame state
+        let entry = frames.entry(key).or_insert_with(|| (Instant::now(), total_chunks, vec![None; total_chunks as usize]));
+        entry.0 = Instant::now(); // update timestamp
+        entry.1 = total_chunks; // update total_chunks (should be same)
+        if (chunk_idx as usize) < entry.2.len() {
+            entry.2[chunk_idx as usize] = Some(payload.to_vec());
         }
-        let tensor = Tensor::new(&vec![1, 3, TARGET_SIZE, TARGET_SIZE], TensorType::Fp32, &tensor_data);
-        // Inference
-        let t_inf_start = std::time::Instant::now();
-        let ctx = match graph.init_execution_context() {
-            Ok(c) => c,
-            Err(e) => {
-                eprintln!("[ERROR] Failed to init execution context: {:?}", e);
+        // Check if frame is complete
+        if entry.2.iter().all(|c| c.is_some()) {
+            // Reassemble
+            let mut img_bytes = Vec::with_capacity(entry.2.iter().map(|c| c.as_ref().unwrap().len()).sum());
+            for chunk in &entry.2 {
+                img_bytes.extend_from_slice(chunk.as_ref().unwrap());
+            }
+            frames.remove(&key);
+            debug_log!(debug, "Reassembled frame {} ({} bytes) from {}:{}", frame_id, img_bytes.len(), src.ip(), src.port());
+            // Preprocessing
+            let t_pre_start = std::time::Instant::now();
+            if let Err(e) = img_to_nchw(&img_bytes, &mut nchw) {
+                eprintln!("[ERROR] Image decode error: {}", e);
                 continue;
             }
-        };
-        let inputs = vec![("images".to_string(), tensor)];
-        let outputs = match ctx.compute(inputs) {
-            Ok(o) => o,
-            Err(e) => {
-                eprintln!("[ERROR] Failed to compute: {:?}", e);
-                continue;
+            let t_pre = t_pre_start.elapsed();
+            // Prepare tensor data using pre-allocated buffer
+            for (i, f) in nchw.iter().enumerate() {
+                tensor_data[i * 4..(i + 1) * 4].copy_from_slice(&f.to_le_bytes());
             }
-        };
-        let t_inf = t_inf_start.elapsed();
-        // Postprocessing
-        let t_post_start = std::time::Instant::now();
-        let output_tensor = &outputs.get(0).ok_or_else(|| anyhow!("No output tensor"))?.1;
-        let output_floats: Vec<f32> = output_tensor.data().chunks_exact(4)
-            .map(|chunk| f32::from_le_bytes([chunk[0], chunk[1], chunk[2], chunk[3]])).collect();
-        let detections = process_output(&output_floats);
-        let t_post = t_post_start.elapsed();
-        debug_log!(debug, "Detected {} objects", detections.len());
-        // Send result back as JSON
-        let json = match serde_json::to_vec(&detections) {
-            Ok(j) => j,
-            Err(e) => {
-                eprintln!("[ERROR] JSON encode error: {}", e);
-                continue;
-            }
-        };
-        let _ = socket.send_to(&json, src);
-        profile_log!(profile, "UDP Preprocessing: {:?}, Inference: {:?}, Postprocessing: {:?}, UDP write: {} bytes", t_pre, t_inf, t_post, json.len());
+            let tensor = Tensor::new(&vec![1, 3, TARGET_SIZE, TARGET_SIZE], TensorType::Fp32, &tensor_data);
+            // Inference
+            let t_inf_start = std::time::Instant::now();
+            let ctx = match graph.init_execution_context() {
+                Ok(c) => c,
+                Err(e) => {
+                    eprintln!("[ERROR] Failed to init execution context: {:?}", e);
+                    continue;
+                }
+            };
+            let inputs = vec![("images".to_string(), tensor)];
+            let outputs = match ctx.compute(inputs) {
+                Ok(o) => o,
+                Err(e) => {
+                    eprintln!("[ERROR] Failed to compute: {:?}", e);
+                    continue;
+                }
+            };
+            let t_inf = t_inf_start.elapsed();
+            // Postprocessing
+            let t_post_start = std::time::Instant::now();
+            let output_tensor = &outputs.get(0).ok_or_else(|| anyhow!("No output tensor"))?.1;
+            let output_floats: Vec<f32> = output_tensor.data().chunks_exact(4)
+                .map(|chunk| f32::from_le_bytes([chunk[0], chunk[1], chunk[2], chunk[3]])).collect();
+            let detections = process_output(&output_floats);
+            let t_post = t_post_start.elapsed();
+            debug_log!(debug, "Detected {} objects", detections.len());
+            // Send result back as JSON
+            let json = match serde_json::to_vec(&detections) {
+                Ok(j) => j,
+                Err(e) => {
+                    eprintln!("[ERROR] JSON encode error: {}", e);
+                    continue;
+                }
+            };
+            let _ = socket.send_to(&json, src);
+            profile_log!(profile, "UDP Preprocessing: {:?}, Inference: {:?}, Postprocessing: {:?}, UDP write: {} bytes", t_pre, t_inf, t_post, json.len());
+        }
+        // Clean up old/incomplete frames
+        let now = Instant::now();
+        frames.retain(|_, (ts, _, _)| now.duration_since(*ts) < frame_timeout);
     }
 }
 

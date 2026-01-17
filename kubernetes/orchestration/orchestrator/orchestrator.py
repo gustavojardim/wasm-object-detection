@@ -17,7 +17,7 @@ if os.getenv('KUBERNETES_SERVICE_HOST'):
     config.load_incluster_config()
     configuration = client.Configuration.get_default_copy()
     configuration.verify_ssl = False
-    configuration.host = 'https://192.168.0.105:16443'
+    configuration.host = 'https://192.168.0.108:16443'
     v1 = client.CoreV1Api(client.ApiClient(configuration))
 else:
     config.load_kube_config()
@@ -84,7 +84,7 @@ def filtered_nodes():
             containers=[
                 client.V1Container(
                     name='inference',
-                    image='192.168.0.105:32000/wasm-inference:latest',
+                    image='192.168.0.108:32000/wasm-inference:latest',
                     image_pull_policy='Always',
                     command=['app.wasm', '--tcp'],
                     ports=[

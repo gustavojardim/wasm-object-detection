@@ -6,7 +6,7 @@ set -e
 # Always run from project root
 cd "$(dirname "$0")/.."
 
-REG="${REGISTRY:-192.168.0.105:32000}"
+REG="${REGISTRY:-192.168.0.108:32000}"
 NAME="${IMAGE_NAME:-wasm-inference}"
 TAG="${IMAGE_TAG:-latest}"
 
@@ -30,7 +30,13 @@ else
 fi
 
 mkdir -p models
-cp ../models/yolov8n_cpu.torchscript models/
+if [ -f ../models/yolov8n_cpu.torchscript ]; then
+  cp ../models/yolov8n_cpu.torchscript models/
+fi
+
+if [ -f ../models/yolov8n_cuda.torchscript ]; then
+  cp ../models/yolov8n_cuda.torchscript models/
+fi
 
 # Create a single-layer tar with both app.wasm and model
 echo "Creating tar layer..."

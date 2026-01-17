@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: latency-probe
-        image: 192.168.0.105:32000/latency-probe:latest
+        image: 192.168.0.108:32000/latency-probe:latest
         ports:
         - containerPort: 8080
         resources:

@@ -20,10 +20,28 @@ CONFIDENCE_THRESHOLD = 0.5
 np.random.seed(42)  # For consistent colors
 COLORS = np.random.uniform(0, 255, size=(80, 3))
 
-
 def send_frame_get_detections(sock, frame_bytes, server_addr, timeout=2.0):
-    """Send frame to server and receive detections via UDP"""
-    sock.sendto(frame_bytes, server_addr)
+    """Send frame to server using UDP fragmentation and receive detections"""
+    import struct
+    MTU = 1400  # Safe UDP payload size
+    HEADER_FMT = '!IHH'  # frame_id:uint32, chunk_idx:uint16, total_chunks:uint16
+    HEADER_SIZE = struct.calcsize(HEADER_FMT)
+    MAX_PAYLOAD = MTU - HEADER_SIZE
+    # Use a static frame_id counter
+    if not hasattr(send_frame_get_detections, "frame_id"):
+        send_frame_get_detections.frame_id = 1
+    frame_id = send_frame_get_detections.frame_id
+    send_frame_get_detections.frame_id += 1
+
+    # Fragment frame_bytes
+    chunks = [frame_bytes[i:i+MAX_PAYLOAD] for i in range(0, len(frame_bytes), MAX_PAYLOAD)]
+    total_chunks = len(chunks)
+    for idx, chunk in enumerate(chunks):
+        header = struct.pack(HEADER_FMT, frame_id, idx, total_chunks)
+        packet = header + chunk
+        sock.sendto(packet, server_addr)
+
+    # Receive response (unchanged)
     sock.settimeout(timeout)
     try:
         data, _ = sock.recvfrom(1024 * 1024)  # 1MB buffer
