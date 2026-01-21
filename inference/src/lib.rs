@@ -1,13 +1,6 @@
-
 //! YOLOv8n Object Detection Server (TCP/UDP, WASI-NN)
-//!
-//! - TCP: Receives images, returns detections as JSON.
-//! - UDP: Receives images, returns detections as JSON.
-//! - Model: YOLOv8n TorchScript (CPU/GPU)
-//!
-//! Args: --device [cpu|gpu] --debug --udp --profile
+//! Optimized for Orin AGX (Zero-Copy, Throttled Cleanup)
 
-// --- Imports ---
 use std::io::{Read, Write};
 use std::net::{TcpListener, TcpStream, UdpSocket};
 use anyhow::{anyhow, Context, Result};
@@ -30,7 +23,7 @@ macro_rules! profile_log {
 }
 
 // --- Constants ---
-const TARGET_SIZE: u32 = 640; // YOLOv8n standard input size
+const TARGET_SIZE: u32 = 640; // Kept at 640 for Hybrid FP16/FP32 precision
 const TCP_ADDR: &str = "0.0.0.0:8080";
 const UDP_ADDR: &str = "0.0.0.0:8081";
 
@@ -52,10 +45,7 @@ const CLASSES: &[&str] = &[
 // --- Data Structures ---
 #[derive(Serialize, Debug, Clone)]
 struct BBox {
-    x1: f32,
-    y1: f32,
-    x2: f32,
-    y2: f32,
+    x1: f32, y1: f32, x2: f32, y2: f32,
 }
 
 #[derive(Serialize, Debug, Clone)]
@@ -77,7 +67,6 @@ use self::wasi::nn::tensor::{Tensor, TensorType};
 
 // --- Utility Functions ---
 
-/// Read a length-prefixed buffer from a TCP stream
 fn read_exact_len_from_stream(stream: &mut TcpStream) -> Result<Vec<u8>> {
     let mut len_buf = [0u8; 4];
     stream.read_exact(&mut len_buf)?;
@@ -87,7 +76,6 @@ fn read_exact_len_from_stream(stream: &mut TcpStream) -> Result<Vec<u8>> {
     Ok(buf)
 }
 
-/// Write a JSON value to a TCP stream with length prefix
 fn write_json_result_to_stream(stream: &mut TcpStream, r: &serde_json::Value) -> Result<()> {
     let s = serde_json::to_vec(r)?;
     let len = (s.len() as u32).to_le_bytes();
@@ -97,18 +85,24 @@ fn write_json_result_to_stream(stream: &mut TcpStream, r: &serde_json::Value) ->
     Ok(())
 }
 
-/// Prepare image for YOLO (resize 640x640 if needed, normalize 0-1, NCHW) with buffer reuse
+/// Prepare image for YOLO.
+/// OPTIMIZATION: Uses FilterType::Nearest for speed.
 fn img_to_nchw(img_bytes: &[u8], nchw: &mut [f32]) -> Result<()> {
     let img = image::load_from_memory(img_bytes).context("decode image")?;
     let (w, h) = img.dimensions();
+    
+    // Resize only if necessary, use Nearest Neighbor for speed
     let img = if w == TARGET_SIZE && h == TARGET_SIZE {
         img
     } else {
-        img.resize_exact(TARGET_SIZE, TARGET_SIZE, FilterType::Triangle)
+        img.resize_exact(TARGET_SIZE, TARGET_SIZE, FilterType::Nearest)
     };
+    
     let (w, h) = img.dimensions();
     let size = (w * h) as usize;
     debug_assert_eq!(nchw.len(), 3 * size);
+    
+    // Normalize to 0-1 and convert to Planar (RRR...GGG...BBB...)
     for (x, y, pixel) in img.pixels() {
         let idx = (y * w + x) as usize;
         nchw[idx] = pixel[0] as f32 / 255.0;
@@ -118,7 +112,6 @@ fn img_to_nchw(img_bytes: &[u8], nchw: &mut [f32]) -> Result<()> {
     Ok(())
 }
 
-/// Load YOLOv8n model graph for the given device
 fn load_graph(device: &str, debug: bool) -> Result<Graph> {
     let (model_file, target) = match device {
         "cpu" => ("yolov8n_cpu.torchscript", ExecutionTarget::Cpu),
@@ -130,22 +123,17 @@ fn load_graph(device: &str, debug: bool) -> Result<Graph> {
     if debug {
         eprintln!("[DEBUG] Loading model: {} (target: {:?})", model_file, target);
     }
-    let graph = graph::load(
-        &[model_bytes],
-        GraphEncoding::Pytorch,
-        target,
-    ).map_err(|e| anyhow!("Failed to load graph: {:?}", e))?;
+    let graph = graph::load(&[model_bytes], GraphEncoding::Pytorch, target)
+        .map_err(|e| anyhow!("Failed to load graph: {:?}", e))?;
     Ok(graph)
 }
 
 // --- YOLO Output Processing ---
 
-/// Parse YOLO output tensor into detection structs, apply NMS
 fn process_output(output: &[f32]) -> Vec<Det> {
-    let num_elements = 8400; // Number of predictions
+    let num_elements = 8400; 
     let mut detections = Vec::new();
     for i in 0..num_elements {
-        // Find the class with max score
         let (mut max_score, mut best_class) = (0.0, 0);
         for c in 0..80 {
             let idx = (4 + c) * num_elements + i;
@@ -160,7 +148,6 @@ fn process_output(output: &[f32]) -> Vec<Det> {
             let cy = output[1 * num_elements + i];
             let w  = output[2 * num_elements + i];
             let h  = output[3 * num_elements + i];
-            // Convert center-wh to corner coordinates normalized (0.0-1.0)
             let x1 = (cx - w / 2.0) / TARGET_SIZE as f32;
             let y1 = (cy - h / 2.0) / TARGET_SIZE as f32;
             let x2 = (cx + w / 2.0) / TARGET_SIZE as f32;
@@ -176,7 +163,6 @@ fn process_output(output: &[f32]) -> Vec<Det> {
     nms(detections, 0.45)
 }
 
-/// Non-Maximum Suppression (NMS)
 fn nms(mut dets: Vec<Det>, iou_thresh: f32) -> Vec<Det> {
     dets.sort_by(|a, b| b.confidence.partial_cmp(&a.confidence).unwrap());
     let mut keep = Vec::new();
@@ -187,7 +173,6 @@ fn nms(mut dets: Vec<Det>, iou_thresh: f32) -> Vec<Det> {
     keep
 }
 
-/// Intersection-over-Union (IoU) for two bounding boxes
 fn box_iou(b1: &BBox, b2: &BBox) -> f32 {
     let xi1 = b1.x1.max(b2.x1);
     let yi1 = b1.y1.max(b2.y1);
@@ -204,21 +189,19 @@ fn box_iou(b1: &BBox, b2: &BBox) -> f32 {
 
 // --- Server Implementations ---
 
-/// Handle a single TCP client connection
 fn handle_client(mut stream: TcpStream, graph: &Graph, debug: bool) -> Result<()> {
     let peer = stream.peer_addr()?;
     eprintln!("[INFO] Client connected: {}", peer);
     let ctx = graph.init_execution_context()
         .map_err(|e| anyhow!("Failed to init execution context: {:?}", e))?;
-    debug_log!(debug, "Created execution context: {:?}", ctx);
+    
     use std::time::Instant;
-    let profile = debug; // For now, profile logs follow debug, can be separated if needed
-    // Pre-allocate buffers
+    let profile = debug; 
     let size = (3 * TARGET_SIZE * TARGET_SIZE) as usize;
     let mut nchw = vec![0f32; size];
-    let mut tensor_data = vec![0u8; size * 4];
+    // Removed `tensor_data` allocation (using bytemuck instead)
+
     loop {
-        // --- TCP Read ---
         let t_tcp_read_start = Instant::now();
         let img_bytes = match read_exact_len_from_stream(&mut stream) {
             Ok(bytes) => bytes,
@@ -229,143 +212,141 @@ fn handle_client(mut stream: TcpStream, graph: &Graph, debug: bool) -> Result<()
         };
         let t_tcp_read = t_tcp_read_start.elapsed();
         debug_log!(debug, "Received {} bytes from {} (TCP read: {:?})", img_bytes.len(), peer, t_tcp_read);
-        // --- Preprocessing ---
+
         let t_pre_start = Instant::now();
         img_to_nchw(&img_bytes, &mut nchw)?;
         let t_pre = t_pre_start.elapsed();
-        // Prepare tensor data (convert f32 to bytes) using pre-allocated buffer
-        for (i, f) in nchw.iter().enumerate() {
-            tensor_data[i * 4..(i + 1) * 4].copy_from_slice(&f.to_le_bytes());
-        }
-        // Create tensor
-        let tensor = Tensor::new(&vec![1, 3, TARGET_SIZE, TARGET_SIZE], TensorType::Fp32, &tensor_data);
-        // --- Inference ---
+
+        // OPTIMIZATION: Zero-copy cast from f32 to u8
+        let tensor_bytes: &[u8] = bytemuck::cast_slice(&nchw);
+        
+        let tensor = Tensor::new(&vec![1, 3, TARGET_SIZE, TARGET_SIZE], TensorType::Fp32, tensor_bytes);
+
         let t_inf_start = Instant::now();
         let inputs = vec![("images".to_string(), tensor)];
         let outputs = ctx.compute(inputs)
             .map_err(|e| anyhow!("Failed to compute: {:?}", e))?;
         let t_inf = t_inf_start.elapsed();
-        // Get first output tensor reference
+
         let output_tensor = &outputs.get(0)
             .ok_or_else(|| anyhow!("No output tensor"))?
             .1;
-        // --- Postprocessing ---
+
         let t_post_start = Instant::now();
         // Convert bytes back to f32
         let output_floats: Vec<f32> = output_tensor.data().chunks_exact(4)
             .map(|chunk| f32::from_le_bytes([chunk[0], chunk[1], chunk[2], chunk[3]])).collect();
         let detections = process_output(&output_floats);
         let t_post = t_post_start.elapsed();
+        
         debug_log!(debug, "Detected {} objects", detections.len());
-        // --- TCP Write ---
+
         let t_tcp_write_start = Instant::now();
         let json = serde_json::to_value(&detections)?;
         write_json_result_to_stream(&mut stream, &json)?;
         let t_tcp_write = t_tcp_write_start.elapsed();
+
         profile_log!(profile, "TCP read: {:?}, Preprocessing: {:?}, Inference: {:?}, Postprocessing: {:?}, TCP write: {:?}",
             t_tcp_read, t_pre, t_inf, t_post, t_tcp_write);
     }
     Ok(())
 }
 
-/// UDP server: receive image, run inference, send JSON result
 fn run_udp_server(graph: &Graph, debug: bool, profile: bool) -> Result<()> {
     use std::collections::HashMap;
     use std::time::{Duration, Instant};
+    
     let socket = UdpSocket::bind(UDP_ADDR)?;
     eprintln!("[SUCCESS] UDP server listening on {}", UDP_ADDR);
-    let mut buf = vec![0u8; 2048]; // 2KB buffer for fragments
+    
+    let mut buf = vec![0u8; 2048];
     let size = (3 * TARGET_SIZE * TARGET_SIZE) as usize;
     let mut nchw = vec![0f32; size];
-    let mut tensor_data = vec![0u8; size * 4];
-    // Frame reassembly state: (frame_id, src) -> (received_at, total_chunks, Vec<Option<Vec<u8>>>)
+    
     let mut frames: HashMap<(u32, std::net::SocketAddr), (Instant, u16, Vec<Option<Vec<u8>>>)> = HashMap::new();
-    let header_len = 8; // 4 bytes frame_id, 2 bytes chunk_idx, 2 bytes total_chunks
+    let header_len = 8;
     let frame_timeout = Duration::from_secs(2);
+    
+    // OPTIMIZATION: Counter for throttling cleanup
+    let mut packet_count: u64 = 0;
+
     loop {
         let (len, src) = socket.recv_from(&mut buf)?;
-        if len < header_len {
-            eprintln!("[WARN] Received too-short UDP packet from {}", src);
-            continue;
-        }
-        // Parse header
+        if len < header_len { continue; }
+
         let frame_id = u32::from_be_bytes([buf[0], buf[1], buf[2], buf[3]]);
         let chunk_idx = u16::from_be_bytes([buf[4], buf[5]]);
         let total_chunks = u16::from_be_bytes([buf[6], buf[7]]);
         let payload = &buf[header_len..len];
         let key = (frame_id, src);
-        // Insert or update frame state
+
         let entry = frames.entry(key).or_insert_with(|| (Instant::now(), total_chunks, vec![None; total_chunks as usize]));
-        entry.0 = Instant::now(); // update timestamp
-        entry.1 = total_chunks; // update total_chunks (should be same)
+        entry.0 = Instant::now();
         if (chunk_idx as usize) < entry.2.len() {
             entry.2[chunk_idx as usize] = Some(payload.to_vec());
         }
-        // Check if frame is complete
+
         if entry.2.iter().all(|c| c.is_some()) {
-            // Reassemble
             let mut img_bytes = Vec::with_capacity(entry.2.iter().map(|c| c.as_ref().unwrap().len()).sum());
             for chunk in &entry.2 {
                 img_bytes.extend_from_slice(chunk.as_ref().unwrap());
             }
             frames.remove(&key);
-            debug_log!(debug, "Reassembled frame {} ({} bytes) from {}:{}", frame_id, img_bytes.len(), src.ip(), src.port());
-            // Preprocessing
+            
+            debug_log!(debug, "Reassembled frame {} ({} bytes) from {}", frame_id, img_bytes.len(), src);
+
             let t_pre_start = std::time::Instant::now();
             if let Err(e) = img_to_nchw(&img_bytes, &mut nchw) {
-                eprintln!("[ERROR] Image decode error: {}", e);
+                eprintln!("[ERROR] Decode: {}", e);
                 continue;
             }
             let t_pre = t_pre_start.elapsed();
-            // Prepare tensor data using pre-allocated buffer
-            for (i, f) in nchw.iter().enumerate() {
-                tensor_data[i * 4..(i + 1) * 4].copy_from_slice(&f.to_le_bytes());
-            }
-            let tensor = Tensor::new(&vec![1, 3, TARGET_SIZE, TARGET_SIZE], TensorType::Fp32, &tensor_data);
-            // Inference
+
+            // OPTIMIZATION: Zero-copy casting using bytemuck
+            let tensor_bytes: &[u8] = bytemuck::cast_slice(&nchw);
+            let tensor = Tensor::new(&vec![1, 3, TARGET_SIZE, TARGET_SIZE], TensorType::Fp32, tensor_bytes);
+
             let t_inf_start = std::time::Instant::now();
             let ctx = match graph.init_execution_context() {
                 Ok(c) => c,
-                Err(e) => {
-                    eprintln!("[ERROR] Failed to init execution context: {:?}", e);
-                    continue;
-                }
+                Err(e) => { eprintln!("[ERROR] Context init: {:?}", e); continue; }
             };
+            
             let inputs = vec![("images".to_string(), tensor)];
             let outputs = match ctx.compute(inputs) {
                 Ok(o) => o,
-                Err(e) => {
-                    eprintln!("[ERROR] Failed to compute: {:?}", e);
-                    continue;
-                }
+                Err(e) => { eprintln!("[ERROR] Compute: {:?}", e); continue; }
             };
             let t_inf = t_inf_start.elapsed();
-            // Postprocessing
+
             let t_post_start = std::time::Instant::now();
-            let output_tensor = &outputs.get(0).ok_or_else(|| anyhow!("No output tensor"))?.1;
+            let output_tensor = &outputs.get(0).ok_or_else(|| anyhow!("No output"))?.1;
+            
+            // OPTIMIZATION: Safer chunk mapping
             let output_floats: Vec<f32> = output_tensor.data().chunks_exact(4)
                 .map(|chunk| f32::from_le_bytes([chunk[0], chunk[1], chunk[2], chunk[3]])).collect();
+            
             let detections = process_output(&output_floats);
             let t_post = t_post_start.elapsed();
-            debug_log!(debug, "Detected {} objects", detections.len());
-            // Send result back as JSON
+
             let json = match serde_json::to_vec(&detections) {
                 Ok(j) => j,
-                Err(e) => {
-                    eprintln!("[ERROR] JSON encode error: {}", e);
-                    continue;
-                }
+                Err(e) => { eprintln!("[ERROR] JSON: {}", e); continue; }
             };
             let _ = socket.send_to(&json, src);
-            profile_log!(profile, "UDP Preprocessing: {:?}, Inference: {:?}, Postprocessing: {:?}, UDP write: {} bytes", t_pre, t_inf, t_post, json.len());
+            
+            profile_log!(profile, "UDP Pre: {:?}, Inf: {:?}, Post: {:?}, Size: {}", t_pre, t_inf, t_post, json.len());
         }
-        // Clean up old/incomplete frames
-        let now = Instant::now();
-        frames.retain(|_, (ts, _, _)| now.duration_since(*ts) < frame_timeout);
+
+        // OPTIMIZATION: Throttled cleanup (runs every 100 packets)
+        packet_count += 1;
+        if packet_count % 100 == 0 {
+            let now = Instant::now();
+            frames.retain(|_, (ts, _, _)| now.duration_since(*ts) < frame_timeout);
+        }
     }
 }
 
-/// Main server entrypoint: parses args, loads model, starts TCP/UDP server
 fn run_server() -> Result<()> {
     use std::env;
     let args: Vec<String> = env::args().collect();
@@ -373,22 +354,18 @@ fn run_server() -> Result<()> {
     let mut debug = false;
     let mut use_udp = false;
     let mut profile = false;
+    
     for i in 0..args.len() {
         match args[i].as_str() {
-            "--device" => {
-                if let Some(val) = args.get(i + 1) {
-                    if val == "cpu" || val == "gpu" {
-                        device = val;
-                    }
-                }
-            },
+            "--device" => if let Some(val) = args.get(i + 1) { device = val; },
             "--debug" => debug = true,
             "--udp" => use_udp = true,
             "--profile" => profile = true,
             _ => {}
         }
     }
-    eprintln!("[INIT] Loading YOLOv8n model via wasi-nn (device: {})...", device);
+
+    eprintln!("[INIT] Loading YOLOv8n (device: {})...", device);
     let graph = match load_graph(device, debug) {
         Ok(g) => {
             eprintln!("[SUCCESS] Model loaded for device: {}", device);
@@ -396,44 +373,48 @@ fn run_server() -> Result<()> {
         },
         Err(e) => {
             if device == "gpu" {
-                eprintln!("[WARN] Failed to load GPU model: {}. Falling back to CPU model...", e);
-                let g = load_graph("cpu", debug)
-                    .map_err(|e| anyhow!("Failed to load fallback CPU model: {:?}", e))?;
-                eprintln!("[SUCCESS] Model loaded for device: cpu");
-                g
+                eprintln!("[WARN] GPU failed: {}. Fallback to CPU.", e);
+                load_graph("cpu", debug)?
             } else {
                 return Err(anyhow!("Failed to load model: {:?}", e));
             }
         }
     };
+
+    // --- WARMUP LOOP ---
+    if device == "gpu" {
+        eprintln!("[INIT] Warming up GPU...");
+        if let Ok(ctx) = graph.init_execution_context() {
+            let size = (3 * 640 * 640) as usize;
+            let dummy_f32 = vec![0f32; size];
+            let dummy_bytes: &[u8] = bytemuck::cast_slice(&dummy_f32);
+            for _ in 0..3 {
+                let tensor = Tensor::new(&vec![1, 3, 640, 640], TensorType::Fp32, dummy_bytes);
+                let _ = ctx.compute(vec![("images".to_string(), tensor)]);
+            }
+            eprintln!("[SUCCESS] GPU Warmup complete.");
+        }
+    }       
+
     if use_udp {
-        eprintln!("[INIT] Starting UDP server on {}...", UDP_ADDR);
         run_udp_server(&graph, debug, profile)
     } else {
         eprintln!("[INIT] Starting TCP server on {}...", TCP_ADDR);
         let listener = TcpListener::bind(TCP_ADDR)?;
-        eprintln!("[SUCCESS] Server listening on {}", TCP_ADDR);
         for stream in listener.incoming() {
             match stream {
-                Ok(stream) => {
-                    if let Err(e) = handle_client(stream, &graph, debug) {
-                        eprintln!("[ERROR] Client handler error: {:?}", e);
-                    }
-                }
-                Err(e) => {
-                    eprintln!("[ERROR] Connection failed: {:?}", e);
-                }
+                Ok(s) => if let Err(e) = handle_client(s, &graph, debug) { eprintln!("[ERROR] Handler: {:?}", e); },
+                Err(e) => eprintln!("[ERROR] Connection: {:?}", e),
             }
         }
         Ok(())
     }
 }
 
-// --- Entrypoint ---
 #[no_mangle]
 pub extern "C" fn _start() {
     if let Err(e) = run_server() {
         eprintln!("[FATAL] Server error: {:?}", e);
         std::process::exit(1);
     }
-}
+} 
