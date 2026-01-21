@@ -287,6 +287,7 @@ if __name__ == "__main__":
     parser.add_argument("--no-display", action="store_true", help="Disable video display window")
     parser.add_argument("--save", type=str, default=None, help="Save output video to file")
     parser.add_argument("--remote", nargs="?", const="auto", default=None, help="Test against Kubernetes app. Optionally specify NODE_IP (default: auto)")
+    parser.add_argument("--port", type=int, default=None, help="UDP port to use (default: 8081, or 30081 if --remote)")
     args = parser.parse_args()
 
     display = not args.no_display
@@ -295,9 +296,9 @@ if __name__ == "__main__":
 
     # If --remote is passed, set host and port for Kubernetes NodePort
     host = "127.0.0.1"
-    port = 8081
+    port = args.port if args.port is not None else 8081
     if args.remote is not None:
-        port = 30081
+        port = args.port if args.port is not None else 30081
         if args.remote == "auto":
             import os
             host = os.environ.get("K8S_NODE_IP", "127.0.0.1")
