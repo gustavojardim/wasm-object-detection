@@ -6,7 +6,7 @@ set -e
 # Always run from project root
 cd "$(dirname "$0")/.."
 
-REG="${REGISTRY:-192.168.0.108:32000}"
+REG="${REGISTRY:-127.0.0.1:32000}"
 NAME="${IMAGE_NAME:-wasm-inference}"
 TAG="${IMAGE_TAG:-latest}"
 
@@ -38,9 +38,10 @@ if [ -f ../models/yolov8n_cuda.torchscript ]; then
   cp ../models/yolov8n_cuda.torchscript models/
 fi
 
-# Create a single-layer tar with both app.wasm and model
+
+# Create a single-layer tar with app.wasm and all model files
 echo "Creating tar layer..."
-tar -cf wasm-bundle.tar app.wasm models/yolov8n_cpu.torchscript
+tar -cf wasm-bundle.tar app.wasm models/yolov8n_cpu.torchscript models/yolov8n_cuda.torchscript
 LAYER_SHA=$(sha256sum wasm-bundle.tar | awk '{print $1}')
 
 # Create OCI config.json

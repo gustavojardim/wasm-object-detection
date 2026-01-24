@@ -1,14 +1,20 @@
 # syntax=docker/dockerfile:1
 
 # ==============================================================================
-# STAGE 1: Wasmtime Builder (Using Nightly Rust)
-# ==============================================================================
-FROM rustlang/rust:nightly-slim AS wasmtime-builder
 
-# 1. Install build dependencies
+# STAGE 1: Wasmtime Builder (Using Ubuntu + Rust)
+# ===============================================================================
+FROM ubuntu:24.04 AS wasmtime-builder
+
+# 1. Install build dependencies and Rust
 RUN apt-get update && apt-get install -y \
     git cmake clang libclang-dev curl unzip build-essential \
+    ca-certificates \
     && rm -rf /var/lib/apt/lists/*
+
+# Install Rust (nightly)
+RUN curl https://sh.rustup.rs -sSf | bash -s -- -y --default-toolchain nightly
+ENV PATH="/root/.cargo/bin:$PATH"
 
 # 2. Download LibTorch (x86_64 / CUDA)
 WORKDIR /deps
@@ -43,29 +49,24 @@ RUN cargo build --release -p wasmtime-cli --features "wasi-nn"
 # ==============================================================================
 FROM debian:stable-slim
 
-# 1. Install runtime libraries
 RUN apt-get update && apt-get install -y --no-install-recommends \
     ca-certificates \
     libgomp1 \
     libstdc++6 \
     && rm -rf /var/lib/apt/lists/*
 
-# 2. Copy LibTorch
 COPY --from=wasmtime-builder /deps/libtorch /opt/libtorch
 ENV LD_LIBRARY_PATH=/opt/libtorch/lib
 
-# 3. Copy the binary
 COPY --from=wasmtime-builder /usr/src/wasmtime/target/release/wasmtime /usr/local/bin/wasmtime
 
-# 4. Copy YOUR pre-built package
-COPY package /opt/wasm/
+# Copy your WASM and models to /app
+COPY target/wasm32-wasip2/release/inference.wasm /app/inference.wasm
+COPY models /app/models
 
-EXPOSE 9001
+WORKDIR /app
 
-ENTRYPOINT ["wasmtime", "run", \
-    "-S", "cli=y", \
-    "-S", "nn=y", \
-    "-S", "inherit-network=y", \
-    "--dir", "/opt/wasm/models::/models", \
-    "--env", "CONFIG_PATH=/opt/wasm/config.json", \
-    "/opt/wasm/app.wasm"]
+EXPOSE 8081/udp
+
+ENTRYPOINT ["wasmtime", "run", "-S", "cli=y", "-S", "nn=y", "-S", "inherit-network=y", "-S", "tcp=y", "--dir", "/app/models::/models", "/app/inference.wasm"]
+CMD ["--device", "cpu", "--udp"]

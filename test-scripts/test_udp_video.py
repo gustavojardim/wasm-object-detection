@@ -110,7 +110,7 @@ def process_video(source, display=True, save_output=None, host="127.0.0.1", port
     metrics_log = []
     last_latency = None
     log_metrics = True  # Set to True to save metrics to JSONL
-    metrics_file = "udp_video_metrics.jsonl" if log_metrics else None
+    metrics_file_json = "udp_video_metrics.json" if log_metrics else None
     try:
         udp_size = (640, 640)
         frame_interval = 1.0 / fps if fps > 0 else 1.0 / 30
@@ -184,32 +184,28 @@ def process_video(source, display=True, save_output=None, host="127.0.0.1", port
                 bandwidth_samples.append(bandwidth)
                 bytes_this_second = 0
                 last_bandwidth_check = now
-            # Log metrics
-            if log_metrics:
-                metrics = {
-                    "frame": frame_count,
-                    "fps": fps_actual,
-                    "latency_ms": latency * 1000,
-                    "detections": len(detections),
-                    "packet_loss": packet_loss,
-                    "bandwidth_Bps": bandwidth_samples[-1] if bandwidth_samples else 0,
-                    "jitter_ms": jitter_samples[-1] * 1000 if jitter_samples else 0,
-                    "update_time_ms": update_time,
-                    "view_time_ms": view_time,
-                    "detection_time_ms": detection_time,
-                    "frame_extraction_time_ms": frame_extraction_time,
-                    "network_time_ms": network_time,
-                    "render_time_ms": render_time,
-                    "resize_time_ms": resize_time,
-                    "encoding_time_ms": encoding_time,
-                    "decoding_time_ms": decoding_time,
-                    "image_size_mb": image_size_mb,
-                    "throughput_mbps": throughput_mbps
-                }
-                metrics_log.append(metrics)
-                if metrics_file:
-                    with open(metrics_file, "a") as f:
-                        f.write(json.dumps(metrics) + "\n")
+            # Log metrics in memory only
+            metrics = {
+                "frame": frame_count,
+                "fps": fps_actual,
+                "latency_ms": latency * 1000,
+                "detections": len(detections),
+                "packet_loss": packet_loss,
+                "bandwidth_Bps": bandwidth_samples[-1] if bandwidth_samples else 0,
+                "jitter_ms": jitter_samples[-1] * 1000 if jitter_samples else 0,
+                "update_time_ms": update_time,
+                "view_time_ms": view_time,
+                "detection_time_ms": detection_time,
+                "frame_extraction_time_ms": frame_extraction_time,
+                "network_time_ms": network_time,
+                "render_time_ms": render_time,
+                "resize_time_ms": resize_time,
+                "encoding_time_ms": encoding_time,
+                "decoding_time_ms": decoding_time,
+                "image_size_mb": image_size_mb,
+                "throughput_mbps": throughput_mbps
+            }
+            metrics_log.append(metrics)
             if frame_count % 30 == 0:
                 elapsed = time.time() - start_time
                 progress = (frame_count / total_frames * 100) if total_frames > 0 else 0
@@ -221,6 +217,38 @@ def process_video(source, display=True, save_output=None, host="127.0.0.1", port
             sleep_time = frame_interval - elapsed_loop
             if sleep_time > 0:
                 time.sleep(sleep_time)
+        # --- Send UDP metrics request packet ---
+        import struct
+        # frame_id=0, chunk_idx=0, total_chunks=0
+        header = struct.pack('!IHH', 0, 0, 0)
+        sock.sendto(header, server_addr)
+        # Receive metrics summary from server
+        sock.settimeout(2.0)
+        server_metrics_summary = None
+        try:
+            data, _ = sock.recvfrom(4096)
+            metrics_summary = json.loads(data.decode('utf-8'))
+            server_metrics_summary = metrics_summary
+            print("\nUDP Server Metrics Summary:")
+            # Print as formatted table if possible
+            if isinstance(metrics_summary, dict):
+                tabular_keys = [k for k, v in metrics_summary.items() if isinstance(v, list) and len(v) == 3]
+                if tabular_keys:
+                    print("{:<16} {:>10} {:>10} {:>10}".format("Metric", "Avg", "Min", "Max"))
+                    print("-" * 50)
+                    for k in tabular_keys:
+                        avg, min_, max_ = metrics_summary[k]
+                        print("{:<16} {:>10.2f} {:>10.2f} {:>10.2f}".format(k, float(avg), float(min_), float(max_)))
+                    for k, v in metrics_summary.items():
+                        if k not in tabular_keys:
+                            print(f"{k}: {v}")
+                else:
+                    for k, v in metrics_summary.items():
+                        print(f"{k}: {v}")
+            else:
+                print(metrics_summary)
+        except socket.timeout:
+            print("[WARN] No metrics summary received from server.")
     except KeyboardInterrupt:
         print("\nInterrupted by user")
     except Exception as e:
@@ -264,20 +292,72 @@ def process_video(source, display=True, save_output=None, host="127.0.0.1", port
         print(f"Frames: {frame_count}")
         print(f"Fps: {avg_fps_actual:.6f}")
         print("*" * 40)
-        print("\nFormat : (avg, min, max)")
-        print("PER FRAME STATISTICS")
-        print(f"FPS: ({avg_fps_actual:.2f}, {min_fps_actual:.2f}, {max_fps_actual:.2f})")
-        print(f"Update time (ms): {tuple(f'{v:.2f}' for v in metric_stats('update_time_ms'))}")
-        print(f"View time (ms): {tuple(f'{v:.2f}' for v in metric_stats('view_time_ms'))}")
-        print(f"Detection time (ms): {tuple(f'{v:.2f}' for v in metric_stats('detection_time_ms'))}")
-        print(f"Frame extraction time (ms): {tuple(f'{v:.2f}' for v in metric_stats('frame_extraction_time_ms'))}")
-        print(f"Network time (ms): {tuple(f'{v:.2f}' for v in metric_stats('network_time_ms'))}")
-        print(f"Render time (ms): {tuple(f'{v:.2f}' for v in metric_stats('render_time_ms'))}")
-        print(f"Resize time (ms): {tuple(f'{v:.2f}' for v in metric_stats('resize_time_ms'))}")
-        print(f"Encoding time (ms): {tuple(f'{v:.2f}' for v in metric_stats('encoding_time_ms'))}")
-        print(f"Decoding time (ms): {tuple(f'{v:.2f}' for v in metric_stats('decoding_time_ms'))}")
-        print(f"Image size (Mb): {tuple(f'{v:.2f}' for v in metric_stats('image_size_mb'))}")
-        print(f"Thruput (Mb/s): {tuple(f'{v:.2f}' for v in metric_stats('throughput_mbps'))}")
+        # At the end, write summary metrics to udp_video_metrics.json as a list of runs, including server metrics
+        if log_metrics:
+            import os
+            summary = {}
+            metric_keys = [
+                'fps', 'latency_ms', 'detections', 'packet_loss', 'bandwidth_Bps', 'jitter_ms',
+                'update_time_ms', 'view_time_ms', 'detection_time_ms', 'frame_extraction_time_ms',
+                'network_time_ms', 'render_time_ms', 'resize_time_ms', 'encoding_time_ms',
+                'decoding_time_ms', 'image_size_mb', 'throughput_mbps'
+            ]
+            for key in metric_keys:
+                vals = [m[key] for m in metrics_log if key in m]
+                if vals:
+                    summary[key] = {
+                        'avg': round(float(np.mean(vals)), 2),
+                        'min': round(float(np.min(vals)), 2),
+                        'max': round(float(np.max(vals)), 2)
+                    }
+            import datetime
+            summary['run_time'] = datetime.datetime.now().isoformat()
+            summary['frames'] = frame_count
+            summary['source'] = source
+            # Add server metrics if available
+            if server_metrics_summary is not None:
+                summary['server_metrics'] = server_metrics_summary
+            runs = []
+            if metrics_file_json and os.path.exists(metrics_file_json):
+                try:
+                    with open(metrics_file_json, "r") as f:
+                        runs = json.load(f)
+                        if not isinstance(runs, list):
+                            runs = []
+                except Exception:
+                    runs = []
+            runs.append(summary)
+            if metrics_file_json:
+                with open(metrics_file_json, "w") as f:
+                    json.dump(runs, f, indent=2)
+        print("\nClient Metrics Summary:")
+        col_metric = 28
+        col_val = 10
+        print(f"{'Metric':<{col_metric}} {'Avg':>{col_val}} {'Min':>{col_val}} {'Max':>{col_val}}")
+        print("-" * (col_metric + 3 * col_val + 3))
+        print(f"{'FPS':<{col_metric}} {avg_fps_actual:>{col_val}.2f} {min_fps_actual:>{col_val}.2f} {max_fps_actual:>{col_val}.2f}")
+        # Add additional metrics
+        for metric in [
+            ("Latency (ms)", 'latency_ms'),
+            ("Detections", 'detections'),
+            ("Packet loss", 'packet_loss'),
+            ("Bandwidth (Bps)", 'bandwidth_Bps'),
+            ("Jitter (ms)", 'jitter_ms'),
+            ("Update time (ms)", 'update_time_ms'),
+            ("View time (ms)", 'view_time_ms'),
+            ("Detection time (ms)", 'detection_time_ms'),
+            ("Frame extraction time (ms)", 'frame_extraction_time_ms'),
+            ("Network time (ms)", 'network_time_ms'),
+            ("Render time (ms)", 'render_time_ms'),
+            ("Resize time (ms)", 'resize_time_ms'),
+            ("Encoding time (ms)", 'encoding_time_ms'),
+            ("Decoding time (ms)", 'decoding_time_ms'),
+            ("Image size (Mb)", 'image_size_mb'),
+            ("Thruput (Mb/s)", 'throughput_mbps'),
+        ]:
+            name, key = metric
+            avg, min_, max_ = metric_stats(key)
+            print(f"{name:<{col_metric}} {avg:>{col_val}.2f} {min_:>{col_val}.2f} {max_:>{col_val}.2f}")
         print("*" * 40)
 
 if __name__ == "__main__":
@@ -288,6 +368,7 @@ if __name__ == "__main__":
     parser.add_argument("--save", type=str, default=None, help="Save output video to file")
     parser.add_argument("--remote", nargs="?", const="auto", default=None, help="Test against Kubernetes app. Optionally specify NODE_IP (default: auto)")
     parser.add_argument("--port", type=int, default=None, help="UDP port to use (default: 8081, or 30081 if --remote)")
+    parser.add_argument("--repeat", type=int, default=1, help="Repeat the app n times consecutively")
     args = parser.parse_args()
 
     display = not args.no_display
@@ -307,4 +388,6 @@ if __name__ == "__main__":
             host = args.remote
             print(f"[INFO] --remote: Using HOST={host}, PORT={port}")
 
-    process_video(source, display, save_output, host=host, port=port)
+    for i in range(args.repeat):
+        print(f"\n--- Run {i+1} of {args.repeat} ---")
+        process_video(source, display, save_output, host=host, port=port)

@@ -11,17 +11,9 @@ spec:
   restartPolicy: Always
   containers:
     - name: inference
-      image: 192.168.0.108:32000/wasm-inference:latest
+      image: 127.0.0.1:32000/wasm-inference:latest
       imagePullPolicy: Always
-      # resources:
-      #   requests:
-      #     memory: "1.5Gi"
-      #     cpu: "500m"
-      #   limits:
-      #     # Allows the pod to burst to 4 cores during inference
-      #     memory: "2Gi"
-      #     cpu: "4000m"
-      command: ["app.wasm", "--udp", "--debug", "--profile"]
+      command: ["app.wasm", "device", "--gpu", "--udp", "--debug", "--profile"]
       ports:
         - containerPort: 8080
           name: tcp
