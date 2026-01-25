@@ -8,7 +8,7 @@ metadata:
 spec:
   containers:
   - name: orchestrator
-    image: 127.0.0.1:32000/orchestrator:latest
+    image: 192.168.0.113:32000/wasm-orchestrator:latest
     ports:
     - containerPort: 5000
     resources:
@@ -27,7 +27,7 @@ spec:
       operator: "Exists"
       effect: "NoSchedule"
   nodeSelector:
-    kubernetes.io/hostname: master
+    kubernetes.io/hostname: worker1
 ---
 apiVersion: v1
 kind: Service

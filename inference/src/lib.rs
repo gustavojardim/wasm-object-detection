@@ -1,5 +1,5 @@
-//! YOLOv8n Object Detection Server (TCP/UDP, WASI-NN)
-//! Optimized for Orin AGX (Zero-Copy, Throttled Cleanup)
+// YOLOv8n Object Detection Server (TCP/UDP, WASI-NN)
+// Optimized for Orin AGX (Zero-Copy, Throttled Cleanup)
 
 use std::io::{Read, Write};
 use std::net::{TcpListener, TcpStream, UdpSocket};
@@ -219,13 +219,12 @@ fn handle_client(mut stream: TcpStream, graph: &Graph, debug: bool) -> Result<()
     info_log!("Client connected: {}", peer);
     let ctx = graph.init_execution_context()
         .map_err(|e| anyhow!("Failed to init execution context: {:?}", e))?;
-    
+
     use std::time::Instant;
     let profile = debug;
     let size = (3 * TARGET_SIZE * TARGET_SIZE) as usize;
     let mut nchw = vec![0f32; size];
 
-    // Store metrics for this client session
     #[derive(Default)]
     struct Metrics {
         tcp_read_ms: Vec<f64>,
@@ -278,7 +277,6 @@ fn handle_client(mut stream: TcpStream, graph: &Graph, debug: bool) -> Result<()
         write_json_result_to_stream(&mut stream, &json)?;
         let t_tcp_write = t_tcp_write_start.elapsed();
 
-        // Store metrics for this request
         metrics.tcp_read_ms.push((t_tcp_read.as_secs_f64() * 1000.0).round() / 1.0);
         metrics.pre_ms.push((t_pre.as_secs_f64() * 1000.0 * 100.0).round() / 100.0);
         metrics.inf_ms.push((t_inf.as_secs_f64() * 1000.0 * 100.0).round() / 100.0);
@@ -286,7 +284,6 @@ fn handle_client(mut stream: TcpStream, graph: &Graph, debug: bool) -> Result<()
         metrics.tcp_write_ms.push((t_tcp_write.as_secs_f64() * 1000.0 * 100.0).round() / 100.0);
     }
 
-    // Compute averages and send to client
     if !metrics.tcp_read_ms.is_empty() {
         let avg = |v: &Vec<f64>| if v.is_empty() { 0.0 } else { v.iter().sum::<f64>() / v.len() as f64 };
         let averages = serde_json::json!({
@@ -298,7 +295,6 @@ fn handle_client(mut stream: TcpStream, graph: &Graph, debug: bool) -> Result<()
             "avg_tcp_write_ms": avg(&metrics.tcp_write_ms),
             "requests": metrics.tcp_read_ms.len()
         });
-        // Send averages as a final message
         let _ = write_json_result_to_stream(&mut stream, &averages);
         profile_log!(profile, averages);
     }
@@ -339,6 +335,12 @@ fn run_udp_server(graph: &Graph, debug: bool, profile: bool) -> Result<()> {
 
     loop {
         let (len, src) = socket.recv_from(&mut buf)?;
+        info_log!("Received UDP packet from {} ({} bytes)", src, len);
+        // --- UDP HEALTH CHECK ---
+        if len == 6 && &buf[..6] == b"HEALTH" {
+            let _ = socket.send_to(b"OK", src);
+            continue;
+        }
         if len < header_len { continue; }
 
         let frame_id = u32::from_be_bytes([buf[0], buf[1], buf[2], buf[3]]);
@@ -478,7 +480,7 @@ fn run_server() -> Result<()> {
     let mut debug = false;
     let mut use_udp = false;
     let mut profile = false;
-    
+
     for i in 0..args.len() {
         match args[i].as_str() {
             "--device" => if let Some(val) = args.get(i + 1) { device = val; },

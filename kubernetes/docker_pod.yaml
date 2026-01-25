@@ -8,7 +8,7 @@ spec:
   restartPolicy: Always
   containers:
     - name: server
-      image: 127.0.0.1:32000/wasm-inference-docker:latest
+      image: 192.168.0.113:32000/wasm-inference-docker:latest
       ports:
         - containerPort: 8081
   volumes:
