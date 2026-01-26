@@ -41,18 +41,18 @@ def deploy_client(client_id, delay):
                 probe_start = time.perf_counter()
                 probe_resp = requests.get(probe_url, timeout=2)
                 probe_elapsed = (time.perf_counter() - probe_start) * 1000  # ms
-                if probe_resp.status_code == 200 and probe_elapsed <= 300:
+                if probe_resp.status_code == 200 and probe_elapsed <= 100:
                     latency_filtered_nodes.append(n["name"])
                 else:
                     print(f"[Client {client_id}] Node {n['name']} latency {probe_elapsed:.2f}ms (ignored)")
             except Exception as e:
                 print(f"[Client {client_id}] Node {n['name']} probe failed: {e}")
         if not latency_filtered_nodes:
-            print(f"[Client {client_id}] No nodes with latency <= 300ms.")
+            print(f"[Client {client_id}] No nodes with latency <= 100ms.")
             results.append({"client_id": client_id, "status": "no_low_latency_nodes"})
             return
         # Step 3: Use all low-latency nodes for deployment
-        payload = {"nodes": latency_filtered_nodes, "request_id": request_id, "client": f"client-{client_id}"}
+        payload = {"nodes": latency_filtered_nodes, "request_id": request_id, "client": f"client-{client_id}", "latency_threshold": 65}
         # Step 3: Send deploy request
         start = time.time()
         resp = requests.post(ORCHESTRATOR_URL, json=payload, timeout=180)

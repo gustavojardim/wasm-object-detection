@@ -55,6 +55,8 @@ def parse_resource(val):
 
 @app.route('/request-deploy', methods=['POST'])
 def request_deploy():
+    data = request.json or {}
+    latency_threshold = data.get('latency_threshold', 100)  # ms
     nodes = v1.list_node().items
     probe_endpoints = []
     for n in nodes:
@@ -66,8 +68,8 @@ def request_deploy():
                 'ip': ip, 
                 'probe': f'http://{ip}:8080/ping'
             })
-    logging.info(f"/request-deploy called, returning {len(probe_endpoints)} nodes")
-    return jsonify({'nodes': probe_endpoints})
+    logging.info(f"/request-deploy called, returning {len(probe_endpoints)} nodes, latency_threshold={latency_threshold}")
+    return jsonify({'nodes': probe_endpoints, 'latency_threshold': latency_threshold})
 
 @app.route('/deploy', methods=['POST'])
 def filtered_nodes():
@@ -75,6 +77,7 @@ def filtered_nodes():
     filtered = data.get('nodes', [])
     request_id = data.get('request_id', 'N/A')
     client_id = data.get('client', 'unknown')
+    latency_threshold = data.get('latency_threshold', 50) # ms
     log_extra = {'request_id': request_id}
     deploy_start = time.time()
 
@@ -103,11 +106,11 @@ def filtered_nodes():
             except Exception as e:
                 logging.warning(f"Latency test failed for node {name}: {e}", extra=log_extra)
         logging.info(f"Measured latencies: {node_latencies}", extra=log_extra)
-        # 4. Filter nodes with latency <= 100ms
-        eligible = [n for n in node_latencies if n['latency_ms'] <= 100]
+        # 4. Filter nodes with latency <= threshold
+        eligible = [n for n in node_latencies if n['latency_ms'] <= latency_threshold]
         if not eligible:
-            logging.warning(f"No nodes with latency <= 100ms. All latencies: {node_latencies}", extra=log_extra)
-            return jsonify({'error': 'No nodes with latency <= 100ms', 'status': 'failed', 'latencies': node_latencies}), 400
+            logging.warning(f"No nodes with latency <= {latency_threshold}ms. All latencies: {node_latencies}", extra=log_extra)
+            return jsonify({'error': f'No nodes with latency <= {latency_threshold}ms', 'status': 'failed', 'latencies': node_latencies}), 400
         # 5. Select node with lowest latency
         best = min(eligible, key=lambda n: n['latency_ms'])
         logging.info(f"Selected node: {best['name']} (latency: {best['latency_ms']:.1f} ms)", extra=log_extra)
