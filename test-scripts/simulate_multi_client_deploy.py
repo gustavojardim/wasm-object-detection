@@ -14,6 +14,7 @@ ORCHESTRATOR_URL = "http://192.168.0.113:30500/deploy"
 NODES = ["gjardim", "gspadotto", "worker1"]
 NUM_CLIENTS = 10
 SPREAD_SECONDS = 15  # Spread requests over this many seconds
+LATENCY_THRESHOLD = 60
 
 results = []
 
@@ -41,7 +42,7 @@ def deploy_client(client_id, delay):
                 probe_start = time.perf_counter()
                 probe_resp = requests.get(probe_url, timeout=2)
                 probe_elapsed = (time.perf_counter() - probe_start) * 1000  # ms
-                if probe_resp.status_code == 200 and probe_elapsed <= 100:
+                if probe_resp.status_code == 200 and probe_elapsed <= 200:
                     latency_filtered_nodes.append(n["name"])
                 else:
                     print(f"[Client {client_id}] Node {n['name']} latency {probe_elapsed:.2f}ms (ignored)")
@@ -52,7 +53,7 @@ def deploy_client(client_id, delay):
             results.append({"client_id": client_id, "status": "no_low_latency_nodes"})
             return
         # Step 3: Use all low-latency nodes for deployment
-        payload = {"nodes": latency_filtered_nodes, "request_id": request_id, "client": f"client-{client_id}", "latency_threshold": 65}
+        payload = {"nodes": latency_filtered_nodes, "request_id": request_id, "client": f"client-{client_id}", "latency_threshold": LATENCY_THRESHOLD}
         # Step 3: Send deploy request
         start = time.time()
         resp = requests.post(ORCHESTRATOR_URL, json=payload, timeout=180)
