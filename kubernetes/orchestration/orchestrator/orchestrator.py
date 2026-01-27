@@ -134,7 +134,7 @@ def filtered_nodes():
         for pod in pods.items:
             node = pod.spec.node_name
             phase = pod.status.phase
-            if node and phase == 'Running':
+            if node and phase not in ('Succeeded', 'Failed', 'Terminating', 'Error'):
                 node_pod_counts[node] = node_pod_counts.get(node, 0) + 1
         eligible_nodes = []
         for name in node_ip_map:

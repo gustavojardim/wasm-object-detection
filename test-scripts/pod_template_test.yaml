@@ -6,7 +6,6 @@ metadata:
     app: wasm-inference
   annotations:
     module.wasm.image/variant: "compat"
-    "kubectl.kubernetes.io/ttl": "45"
 spec:
   hostNetwork: true
   runtimeClassName: wasmtime

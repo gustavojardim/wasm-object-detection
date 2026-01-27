@@ -219,5 +219,16 @@ def main():
     with open(results_file, "w") as f:
         json.dump(all_results, f, indent=2)
 
+    # Final cleanup: delete all wasm-inference pods
+    print("\nCleaning up: deleting all pods with label app=wasm-inference...")
+    cleanup_cmd = ["kubectl", "delete", "pod", "-l", "app=wasm-inference"]
+    cleanup_proc = subprocess.run(cleanup_cmd, capture_output=True, text=True)
+    if cleanup_proc.returncode == 0:
+        print("Cleanup successful:")
+        print(cleanup_proc.stdout)
+    else:
+        print("Cleanup failed:")
+        print(cleanup_proc.stderr)
+
 if __name__ == "__main__":
     main()
