@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: ${POD_NAME}
+  labels:
+    app: wasm-inference
+  annotations:
+    module.wasm.image/variant: "compat"
+    "kubectl.kubernetes.io/ttl": "45"
+spec:
+  hostNetwork: true
+  runtimeClassName: wasmtime
+  restartPolicy: Never
+  containers:
+  - name: inference
+    image: 192.168.0.113:32000/wasm-inference:latest
+    imagePullPolicy: Always
+    command: ["app.wasm", "--device", "cpu", "--udp", "--port", "${UDP_PORT}"]
+    ports:
+    - containerPort: ${UDP_PORT}
+      name: udp
+      protocol: UDP

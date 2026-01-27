@@ -6,7 +6,7 @@ set -e
 # Always run from project root
 cd "$(dirname "$0")/.."
 
-REG="${REGISTRY:-127.0.0.1:32000}"
+REG="${REGISTRY:-192.168.0.113:32000}"
 NAME="${IMAGE_NAME:-wasm-inference}"
 TAG="${IMAGE_TAG:-latest}"
 

@@ -14,7 +14,7 @@ ORCHESTRATOR_URL = "http://192.168.0.113:30500/deploy"
 NODES = ["gjardim", "gspadotto", "worker1"]
 NUM_CLIENTS = 10
 SPREAD_SECONDS = 15  # Spread requests over this many seconds
-LATENCY_THRESHOLD = 60
+LATENCY_THRESHOLD = 80
 
 results = []
 
@@ -58,19 +58,22 @@ def deploy_client(client_id, delay):
         start = time.time()
         resp = requests.post(ORCHESTRATOR_URL, json=payload, timeout=180)
         elapsed = time.time() - start
-        if resp.status_code == 200:
+        try:
             data = resp.json()
+        except Exception:
+            data = resp.text
+        if resp.status_code == 200 and isinstance(data, dict):
             print(f"[Client {client_id}] Success: {data} (time: {elapsed:.2f}s)")
-            # Use node_ip from orchestrator response
             node_ip = data.get("node_ip")
-            udp_port = 30081  # fixed as per your command
-            if node_ip:
+            udp_port = data.get("udp_port", 30081)
+            if node_ip and udp_port:
                 import subprocess
                 video_path = "samples/walking_people_hd.mp4"
                 cmd = [
                     "python3", "test-scripts/test_udp_video.py", video_path,
                     "--remote", node_ip,
-                    "--port", str(udp_port)
+                    "--port", str(udp_port),
+                    "--client-name", f"client-{client_id}"
                 ]
                 try:
                     udp_result = subprocess.run(cmd, capture_output=True, text=True, timeout=120)
@@ -80,6 +83,8 @@ def deploy_client(client_id, delay):
                         "status": "success",
                         "deploy_time": data.get("time"),
                         "pod_name": data.get("pod"),
+                        "node_ip": node_ip,
+                        "udp_port": udp_port,
                         "elapsed": elapsed,
                         "udp_video_result": udp_result.stdout,
                         "udp_video_error": udp_result.stderr
@@ -91,35 +96,79 @@ def deploy_client(client_id, delay):
                         "status": "success",
                         "deploy_time": data.get("time"),
                         "pod_name": data.get("pod"),
+                        "node_ip": node_ip,
+                        "udp_port": udp_port,
                         "elapsed": elapsed,
                         "udp_video_result": None,
                         "udp_video_error": str(e)
                     })
             else:
-                print(f"[Client {client_id}] Could not find node_ip in orchestrator response")
+                print(f"[Client {client_id}] Could not find node_ip or udp_port in orchestrator response")
                 results.append({
                     "client_id": client_id,
                     "status": "success",
                     "deploy_time": data.get("time"),
                     "pod_name": data.get("pod"),
+                    "node_ip": node_ip,
+                    "udp_port": udp_port,
                     "elapsed": elapsed,
                     "udp_video_result": None,
-                    "udp_video_error": "Node IP not found in response"
+                    "udp_video_error": "Node IP or UDP port not found in response"
                 })
         else:
-            print(f"[Client {client_id}] Failed: {resp.text}")
-            results.append({"client_id": client_id, "status": "failed", "error": resp.text, "elapsed": elapsed})
+            print(f"[Client {client_id}] Error response: {data}")
+            results.append({"client_id": client_id, "status": "failed", "error": str(data), "elapsed": elapsed})
     except Exception as e:
         print(f"[Client {client_id}] Exception: {e}")
         results.append({"client_id": client_id, "status": "exception", "error": str(e)})
 
 def main():
     threads = []
-    for i in range(NUM_CLIENTS):
-        delay = random.uniform(0, SPREAD_SECONDS)
-        t = threading.Thread(target=deploy_client, args=(i, delay))
+    client_id = 0
+    # Step 1: Start with 3 clients
+    for _ in range(3):
+        t = threading.Thread(target=deploy_client, args=(client_id, 0))
         threads.append(t)
         t.start()
+        client_id += 1
+    # Step 2: Wait 5s, add 1 client
+    time.sleep(5)
+    if client_id < NUM_CLIENTS:
+        t = threading.Thread(target=deploy_client, args=(client_id, 0))
+        threads.append(t)
+        t.start()
+        client_id += 1
+    # Step 3: Wait 5s, add 1 client
+    time.sleep(5)
+    if client_id < NUM_CLIENTS:
+        t = threading.Thread(target=deploy_client, args=(client_id, 0))
+        threads.append(t)
+        t.start()
+        client_id += 1
+    # Step 4: Wait 5s, add 2 clients
+    time.sleep(5)
+    for _ in range(2):
+        if client_id < NUM_CLIENTS:
+            t = threading.Thread(target=deploy_client, args=(client_id, 0))
+            threads.append(t)
+            t.start()
+            client_id += 1
+    # Step 5: Wait 10s, add 2 clients
+    time.sleep(10)
+    for _ in range(2):
+        if client_id < NUM_CLIENTS:
+            t = threading.Thread(target=deploy_client, args=(client_id, 0))
+            threads.append(t)
+            t.start()
+            client_id += 1
+    # Step 6: Wait 15s, add 2 clients
+    time.sleep(15)
+    for _ in range(2):
+        if client_id < NUM_CLIENTS:
+            t = threading.Thread(target=deploy_client, args=(client_id, 0))
+            threads.append(t)
+            t.start()
+            client_id += 1
     for t in threads:
         t.join()
     # Aggregate and print summary
@@ -130,9 +179,23 @@ def main():
     if success:
         avg_time = sum(r["deploy_time"] for r in success if r["deploy_time"] is not None) / len(success)
         print(f"Average deploy time: {avg_time:.2f}s")
-    # Save results
-    with open("multi_client_deploy_results.json", "w") as f:
-        json.dump(results, f, indent=2)
+    # Append results
+    import os
+    results_file = "multi_client_deploy_results.json"
+    if os.path.exists(results_file):
+        try:
+            with open(results_file, "r") as f:
+                existing = json.load(f)
+            if isinstance(existing, list):
+                all_results = existing + results
+            else:
+                all_results = results
+        except Exception:
+            all_results = results
+    else:
+        all_results = results
+    with open(results_file, "w") as f:
+        json.dump(all_results, f, indent=2)
 
 if __name__ == "__main__":
     main()

@@ -301,24 +301,17 @@ fn handle_client(mut stream: TcpStream, graph: &Graph, debug: bool) -> Result<()
     Ok(())
 }
 
-fn run_udp_server(graph: &Graph, debug: bool, profile: bool) -> Result<()> {
-    // ...existing code...
-    
-    let socket = UdpSocket::bind(UDP_ADDR)?;
-    info_log!("UDP server listening on {}", UDP_ADDR);
-    
+fn run_udp_server_with_addr(graph: &Graph, debug: bool, profile: bool, udp_addr: &str) -> Result<()> {
+    let socket = UdpSocket::bind(udp_addr)?;
+    info_log!("UDP server listening on {}", udp_addr);
     let mut buf = vec![0u8; 2048];
     let size = (3 * TARGET_SIZE * TARGET_SIZE) as usize;
     let mut nchw = vec![0f32; size];
-    
     use std::collections::HashMap;
     use std::time::{Duration, Instant};
-
     let mut frames: HashMap<(u32, std::net::SocketAddr), (Instant, u16, Vec<Option<Vec<u8>>>)> = HashMap::new();
     let header_len = 8;
     let frame_timeout = Duration::from_secs(2);
-
-    // Metrics per client (src)
     #[derive(Default)]
     struct Metrics {
         pre_ms: Vec<f64>,
@@ -329,10 +322,7 @@ fn run_udp_server(graph: &Graph, debug: bool, profile: bool) -> Result<()> {
         frames: usize,
     }
     let mut client_metrics: HashMap<std::net::SocketAddr, Metrics> = HashMap::new();
-
-    // OPTIMIZATION: Counter for throttling cleanup
     let mut packet_count: u64 = 0;
-
     loop {
         let (len, src) = socket.recv_from(&mut buf)?;
         info_log!("Received UDP packet from {} ({} bytes)", src, len);
@@ -342,15 +332,11 @@ fn run_udp_server(graph: &Graph, debug: bool, profile: bool) -> Result<()> {
             continue;
         }
         if len < header_len { continue; }
-
         let frame_id = u32::from_be_bytes([buf[0], buf[1], buf[2], buf[3]]);
         let chunk_idx = u16::from_be_bytes([buf[4], buf[5]]);
         let total_chunks = u16::from_be_bytes([buf[6], buf[7]]);
         let payload = &buf[header_len..len];
-
-        // Check for end-of-session packet (frame_id == 0, chunk_idx == 0, total_chunks == 0)
         if frame_id == 0 && chunk_idx == 0 && total_chunks == 0 {
-            // Send metrics summary to client (always)
             if let Some(metrics) = client_metrics.get(&src) {
                 let stats = |v: &Vec<f64>| {
                     if v.is_empty() {
@@ -384,66 +370,53 @@ fn run_udp_server(graph: &Graph, debug: bool, profile: bool) -> Result<()> {
                     "frames": metrics.frames
                 });
                 let _ = socket.send_to(&serde_json::to_vec(&summary).unwrap(), src);
-                // Only print profile log if enabled
                 profile_log!(profile, summary);
             }
             continue;
         }
-
         let key = (frame_id, src);
         let entry = frames.entry(key).or_insert_with(|| (Instant::now(), total_chunks, vec![None; total_chunks as usize]));
         entry.0 = Instant::now();
         if (chunk_idx as usize) < entry.2.len() {
             entry.2[chunk_idx as usize] = Some(payload.to_vec());
         }
-
         if entry.2.iter().all(|c| c.is_some()) {
             let mut img_bytes = Vec::with_capacity(entry.2.iter().map(|c| c.as_ref().unwrap().len()).sum());
             for chunk in &entry.2 {
                 img_bytes.extend_from_slice(chunk.as_ref().unwrap());
             }
             frames.remove(&key);
-
             debug_log!(debug, "Reassembled frame {} ({} bytes) from {}", frame_id, img_bytes.len(), src);
-
             let t_pre_start = std::time::Instant::now();
             if let Err(e) = img_to_nchw(&img_bytes, &mut nchw) {
                 error_log!("Decode: {}", e);
                 continue;
             }
             let t_pre = t_pre_start.elapsed();
-
             let tensor_bytes: &[u8] = bytemuck::cast_slice(&nchw);
             let tensor = Tensor::new(&vec![1, 3, TARGET_SIZE, TARGET_SIZE], TensorType::Fp32, tensor_bytes);
-
             let t_inf_start = std::time::Instant::now();
             let ctx = match graph.init_execution_context() {
                 Ok(c) => c,
                 Err(e) => { error_log!("Context init: {:?}", e); continue; }
             };
-
             let inputs = vec![("images".to_string(), tensor)];
             let outputs = match ctx.compute(inputs) {
                 Ok(o) => o,
                 Err(e) => { error_log!("Compute: {:?}", e); continue; }
             };
             let t_inf = t_inf_start.elapsed();
-
             let t_post_start = std::time::Instant::now();
             let output_tensor = &outputs.get(0).ok_or_else(|| anyhow!("No output"))?.1;
-
             let output_floats: Vec<f32> = output_tensor.data().chunks_exact(4)
                 .map(|chunk| f32::from_le_bytes([chunk[0], chunk[1], chunk[2], chunk[3]])).collect();
-
             let detections = process_output(&output_floats);
             let t_post = t_post_start.elapsed();
-
             let json = match serde_json::to_vec(&detections) {
                 Ok(j) => j,
                 Err(e) => { error_log!("JSON: {}", e); continue; }
             };
             let _ = socket.send_to(&json, src);
-
             let json_size_kb = (json.len() as f64) / 1024.0;
             profile_log!(profile, serde_json::json!({
                 "mode": "udp",
@@ -453,8 +426,6 @@ fn run_udp_server(graph: &Graph, debug: bool, profile: bool) -> Result<()> {
                 "output_kb": (json_size_kb * 100.0).round() / 100.0,
                 "output_bytes": json.len()
             }));
-
-            // Store metrics per client
             let m = client_metrics.entry(src).or_default();
             m.pre_ms.push((t_pre.as_secs_f64() * 1000.0 * 100.0).round() / 100.0);
             m.inf_ms.push((t_inf.as_secs_f64() * 1000.0 * 100.0).round() / 100.0);
@@ -463,14 +434,13 @@ fn run_udp_server(graph: &Graph, debug: bool, profile: bool) -> Result<()> {
             m.output_bytes.push(json.len());
             m.frames += 1;
         }
-
-        // OPTIMIZATION: Throttled cleanup (runs every 100 packets)
         packet_count += 1;
         if packet_count % 100 == 0 {
             let now = Instant::now();
             frames.retain(|_, (ts, _, _)| now.duration_since(*ts) < frame_timeout);
         }
     }
+    // unreachable: Ok(())
 }
 
 fn run_server() -> Result<()> {
@@ -480,17 +450,23 @@ fn run_server() -> Result<()> {
     let mut debug = false;
     let mut use_udp = false;
     let mut profile = false;
-
+    let mut port: Option<u16> = None;
     for i in 0..args.len() {
         match args[i].as_str() {
             "--device" => if let Some(val) = args.get(i + 1) { device = val; },
             "--debug" => debug = true,
             "--udp" => use_udp = true,
             "--profile" => profile = true,
+            "--port" => {
+                if let Some(val) = args.get(i + 1) {
+                    if let Ok(p) = val.parse::<u16>() {
+                        port = Some(p);
+                    }
+                }
+            },
             _ => {}
         }
     }
-
     info_log!("Loading YOLOv8n (device: {})...", device);
     let graph = match load_graph(device, debug) {
         Ok(g) => {
@@ -506,8 +482,6 @@ fn run_server() -> Result<()> {
             }
         }
     };
-
-    // --- WARMUP LOOP ---
     if device == "gpu" {
         info_log!("Warming up GPU...");
         if let Ok(ctx) = graph.init_execution_context() {
@@ -521,12 +495,15 @@ fn run_server() -> Result<()> {
             info_log!("GPU Warmup complete.");
         }
     }
-
     if use_udp {
-        run_udp_server(&graph, debug, profile)
+        let udp_port = port.unwrap_or(8081);
+        let udp_addr = format!("0.0.0.0:{}", udp_port);
+        run_udp_server_with_addr(&graph, debug, profile, &udp_addr)
     } else {
-        info_log!("Starting TCP server on {}...", TCP_ADDR);
-        let listener = TcpListener::bind(TCP_ADDR)?;
+        let tcp_port = port.unwrap_or(8080);
+        let tcp_addr = format!("0.0.0.0:{}", tcp_port);
+        info_log!("Starting TCP server on {}...", tcp_addr);
+        let listener = TcpListener::bind(tcp_addr)?;
         for stream in listener.incoming() {
             match stream {
                 Ok(s) => if let Err(e) = handle_client(s, &graph, debug) { error_log!("Handler: {:?}", e); },
@@ -543,4 +520,4 @@ pub extern "C" fn _start() {
         error_log!("Server error: {:?}", e);
         std::process::exit(1);
     }
-} 
+}

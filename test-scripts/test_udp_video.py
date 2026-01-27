@@ -78,7 +78,7 @@ def draw_detections(frame, detections):
         cv2.putText(frame, label, (x1, y1 - 5), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 1)
 
 
-def process_video(source, display=True, save_output=None, host="127.0.0.1", port=8081):
+def process_video(source, display=True, save_output=None, host="127.0.0.1", port=8081, client_name=None):
     """Process video file or webcam stream via UDP"""
     video_source = 0 if source == "0" else source
     cap = cv2.VideoCapture(video_source)
@@ -169,7 +169,11 @@ def process_video(source, display=True, save_output=None, host="127.0.0.1", port
             avg_inference = np.mean(inference_times[-30:]) if inference_times else 0
             fps_actual = 1.0 / avg_inference if avg_inference > 0 else 0
             stats_text = f"Frame: {frame_count}/{total_frames} | Detections: {len(detections)} | FPS: {fps_actual:.1f} | Latency: {latency*1000:.0f}ms | Loss: {packet_loss}"
-            cv2.putText(frame, stats_text, (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 0), 2)
+            y_offset = 30
+            if client_name:
+                cv2.putText(frame, f"Client: {client_name}", (10, y_offset), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 200, 255), 2)
+                y_offset += 30
+            cv2.putText(frame, stats_text, (10, y_offset), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 0), 2)
             if display:
                 cv2.imshow('WASM Object Detection (UDP)', frame)
                 if cv2.waitKey(1) & 0xFF == ord('q'):
@@ -369,6 +373,7 @@ if __name__ == "__main__":
     parser.add_argument("--remote", nargs="?", const="auto", default=None, help="Test against Kubernetes app. Optionally specify NODE_IP (default: auto)")
     parser.add_argument("--port", type=int, default=None, help="UDP port to use (default: 8081, or 30081 if --remote)")
     parser.add_argument("--repeat", type=int, default=1, help="Repeat the app n times consecutively")
+    parser.add_argument("--client-name", type=str, default=None, help="Client name to display in video window")
     args = parser.parse_args()
 
     display = not args.no_display
@@ -390,4 +395,4 @@ if __name__ == "__main__":
 
     for i in range(args.repeat):
         print(f"\n--- Run {i+1} of {args.repeat} ---")
-        process_video(source, display, save_output, host=host, port=port)
+        process_video(source, display, save_output, host=host, port=port, client_name=args.client_name)

@@ -10,41 +10,69 @@ import random
 import uuid
 import json
 import os
+from string import Template
 
 # Configuration
-BASE_POD_YAML = "kubernetes/pod.yaml"  # Path to base pod manifest
+POD_YAML_TEMPLATE_PATH = os.path.join(os.path.dirname(__file__), "pod_template_test.yaml")
+def load_pod_template():
+        with open(POD_YAML_TEMPLATE_PATH, "r") as f:
+                return f.read()
 NUM_CLIENTS = 10
-SPREAD_SECONDS = 15  # Spread requests over this many seconds
 NODES = ["gjardim", "gspadotto", "worker1"]  # Used for mapping node names to IPs
 NODE_IPS = {
     "gjardim": "192.168.0.105",
     "worker1": "192.168.0.113",
     "gspadotto": "192.168.0.102"
 }
-UDP_PORT = 30081
+UDP_PORT_RANGE = range(30081, 30101)  # 20 ports per node
+port_pool = {node: {port: None for port in UDP_PORT_RANGE} for node in NODES}
 VIDEO_PATH = "samples/walking_people_hd.mp4"
 POD_NAMESPACE = "default"
 
 results = []
+
+def get_free_udp_port(node_name):
+    for port, pod in port_pool[node_name].items():
+        if pod is None:
+            return port
+    return None
+
+def mark_port_used(node_name, port, pod_name):
+    port_pool[node_name][port] = pod_name
+
+def mark_port_free(node_name, port):
+    port_pool[node_name][port] = None
 
 def deploy_client(client_id, delay):
     time.sleep(delay)
     pod_name = f"simclient-{client_id}-{uuid.uuid4().hex[:6]}"
     pod_yaml = f"/tmp/{pod_name}.yaml"
     try:
-        # Step 1: Generate pod manifest with unique name
-        with open(BASE_POD_YAML) as f:
-            pod_spec = f.read().replace("POD_NAME_PLACEHOLDER", pod_name)
+        # Step 1: Wait for node assignment before generating pod manifest
+        node_name = None
+        while node_name is None:
+            # Randomly pick a node for this client (simulate scheduler)
+            node_name = random.choice(NODES)
+            # Find a free UDP port for this node
+            udp_port = get_free_udp_port(node_name)
+            if udp_port is None:
+                print(f"[Client {client_id}] No free UDP ports for node {node_name}, retrying...")
+                node_name = None
+        mark_port_used(node_name, udp_port, pod_name)
+        # Step 2: Generate pod manifest YAML as a string
+        pod_template = load_pod_template()
+        pod_spec = Template(pod_template).substitute(POD_NAME=pod_name, UDP_PORT=udp_port)
         with open(pod_yaml, "w") as f:
             f.write(pod_spec)
-        # Step 2: kubectl apply
+        # Step 3: kubectl apply
         apply_cmd = ["kubectl", "apply", "-f", pod_yaml]
         apply_proc = subprocess.run(apply_cmd, capture_output=True, text=True, timeout=30)
         if apply_proc.returncode != 0:
             print(f"[Client {client_id}] kubectl apply failed: {apply_proc.stderr}")
+            mark_port_free(node_name, udp_port)
             results.append({"client_id": client_id, "status": "apply_failed", "error": apply_proc.stderr})
             return
-        # Step 3: Wait for pod to be ready
+        # Step 4: Wait for pod to be ready
         ready = False
         start = time.time()
         for _ in range(60):
@@ -60,32 +88,24 @@ def deploy_client(client_id, delay):
         time_to_ready = time.time() - start
         if not ready:
             print(f"[Client {client_id}] Pod {pod_name} not ready after {time_to_ready:.2f}s")
+            mark_port_free(node_name, udp_port)
             results.append({"client_id": client_id, "status": "not_ready", "pod_name": pod_name, "time_to_ready": time_to_ready})
-            return
-        # Step 4: Get node assignment
-        get_cmd = ["kubectl", "get", "pod", pod_name, "-n", POD_NAMESPACE, "-o", "json"]
-        get_proc = subprocess.run(get_cmd, capture_output=True, text=True)
-        pod_info = json.loads(get_proc.stdout)
-        node_name = pod_info["spec"].get("nodeName", None)
-        if not node_name:
-            print(f"[Client {client_id}] Could not determine node for pod {pod_name}")
-            results.append({"client_id": client_id, "status": "no_node", "pod_name": pod_name, "time_to_ready": time_to_ready})
             return
         node_ip = NODE_IPS.get(node_name)
         if not node_ip:
             print(f"[Client {client_id}] Node {node_name} IP not found in mapping")
+            mark_port_free(node_name, udp_port)
             results.append({"client_id": client_id, "status": "no_node_ip", "pod_name": pod_name, "node_name": node_name, "time_to_ready": time_to_ready})
             return
         # Step 5: Run UDP video test
         cmd = [
             "python3", "test-scripts/test_udp_video.py", VIDEO_PATH,
             "--remote", node_ip,
-            "--port", str(UDP_PORT)
+            "--port", str(udp_port)
         ]
         try:
             udp_result = subprocess.run(cmd, capture_output=True, text=True, timeout=120)
             print(f"[Client {client_id}] test_udp_video result: {udp_result.stdout}")
-            # Try to parse metrics from udp_result.stdout (expecting JSON or key metrics)
             udp_metrics = None
             try:
                 udp_metrics = json.loads(udp_result.stdout)
@@ -97,6 +117,7 @@ def deploy_client(client_id, delay):
                 "pod_name": pod_name,
                 "node_name": node_name,
                 "node_ip": node_ip,
+                "udp_port": udp_port,
                 "time_to_ready": time_to_ready,
                 "udp_video_result": udp_result.stdout,
                 "udp_video_error": udp_result.stderr,
@@ -110,6 +131,7 @@ def deploy_client(client_id, delay):
                 "pod_name": pod_name,
                 "node_name": node_name,
                 "node_ip": node_ip,
+                "udp_port": udp_port,
                 "time_to_ready": time_to_ready,
                 "udp_video_result": None,
                 "udp_video_error": str(e),
@@ -121,14 +143,55 @@ def deploy_client(client_id, delay):
     finally:
         if os.path.exists(pod_yaml):
             os.remove(pod_yaml)
+        mark_port_free(node_name, udp_port)
 
 def main():
     threads = []
-    for i in range(NUM_CLIENTS):
-        delay = random.uniform(0, SPREAD_SECONDS)
-        t = threading.Thread(target=deploy_client, args=(i, delay))
+    client_id = 0
+    # Step 1: Start with 3 clients
+    for _ in range(3):
+        t = threading.Thread(target=deploy_client, args=(client_id, 0))
         threads.append(t)
         t.start()
+        client_id += 1
+    # Step 2: Wait 5s, add 1 client
+    time.sleep(5)
+    if client_id < NUM_CLIENTS:
+        t = threading.Thread(target=deploy_client, args=(client_id, 0))
+        threads.append(t)
+        t.start()
+        client_id += 1
+    # Step 3: Wait 5s, add 1 client
+    time.sleep(5)
+    if client_id < NUM_CLIENTS:
+        t = threading.Thread(target=deploy_client, args=(client_id, 0))
+        threads.append(t)
+        t.start()
+        client_id += 1
+    # Step 4: Wait 5s, add 2 clients
+    time.sleep(5)
+    for _ in range(2):
+        if client_id < NUM_CLIENTS:
+            t = threading.Thread(target=deploy_client, args=(client_id, 0))
+            threads.append(t)
+            t.start()
+            client_id += 1
+    # Step 5: Wait 10s, add 2 clients
+    time.sleep(10)
+    for _ in range(2):
+        if client_id < NUM_CLIENTS:
+            t = threading.Thread(target=deploy_client, args=(client_id, 0))
+            threads.append(t)
+            t.start()
+            client_id += 1
+    # Step 6: Wait 15s, add 2 clients
+    time.sleep(15)
+    for _ in range(2):
+        if client_id < NUM_CLIENTS:
+            t = threading.Thread(target=deploy_client, args=(client_id, 0))
+            threads.append(t)
+            t.start()
+            client_id += 1
     for t in threads:
         t.join()
     # Aggregate and print summary
@@ -139,9 +202,22 @@ def main():
     if success:
         avg_time = sum(r["time_to_ready"] for r in success if r.get("time_to_ready") is not None) / len(success)
         print(f"Average time to ready: {avg_time:.2f}s")
-    # Save results
-    with open("multi_client_k8s_scheduler_results.json", "w") as f:
-        json.dump(results, f, indent=2)
+    # Append results
+    results_file = "multi_client_k8s_scheduler_results.json"
+    if os.path.exists(results_file):
+        try:
+            with open(results_file, "r") as f:
+                existing = json.load(f)
+            if isinstance(existing, list):
+                all_results = existing + results
+            else:
+                all_results = results
+        except Exception:
+            all_results = results
+    else:
+        all_results = results
+    with open(results_file, "w") as f:
+        json.dump(all_results, f, indent=2)
 
 if __name__ == "__main__":
     main()
