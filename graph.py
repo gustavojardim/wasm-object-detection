@@ -48,9 +48,9 @@ def resource_usage_comparison(metrics_data, metric, metric_label):
     print(metrics_data.keys())
 
     files = [
-        {"data": metrics_data["baremetal_resource_usage.jsonl"], "label": "Baremetal"},
-        {"data": metrics_data["docker_resource_usage.jsonl"], "label": "Docker"},
-        {"data": metrics_data["wasmtime_resource_usage.jsonl"], "label": "Wasmtime"},
+        {"data": metrics_data["wasm_resource_usage.jsonl"], "label": "Wasm"},
+        {"data": metrics_data["docker_container_resource_usage.jsonl"], "label": "Docker Container"},
+        {"data": metrics_data["wasmtime_container_resource_usage.jsonl"], "label": "Wasmtime Container"},
     ]
 
     for file in files:
@@ -66,15 +66,15 @@ def resource_usage_comparison(metrics_data, metric, metric_label):
     # Show plot
     plt.show()
 
-# metric: "Qual métrica será plotada no gráfico (fps, latency_ms, ...)"
+# metric: "Qual métrica será plotada no gráfico (fps, inference_latency_ms, ...)"
 # metric_label: "Nome a ser usado no eixo y do gráfico"
 def box_plot(metrics_data, metric, metric_label, multi_client):
     fig, ax = plt.subplots()
 
     files = [
-        {"data": metrics_data["baremetal_metrics.json"], "label": "Baremetal"},
-        {"data": metrics_data["docker_metrics.json"], "label": "Docker"},
-        {"data": metrics_data["wasmtime_metrics.json"], "label": "Wasmtime"},
+        {"data": metrics_data["wasm_metrics.json"], "label": "Wasm"},
+        {"data": metrics_data["docker_container_metrics.json"], "label": "Docker Container"},
+        {"data": metrics_data["wasmtime_container_metrics.json"], "label": "Wasmtime"},
     ]
 
     if multi_client:
@@ -84,9 +84,9 @@ def box_plot(metrics_data, metric, metric_label, multi_client):
         ]
     else:
         files = [
-            {"data": metrics_data["baremetal_metrics.json"], "label": "Baremetal"},
-            {"data": metrics_data["docker_metrics.json"], "label": "Docker"},
-            {"data": metrics_data["wasmtime_metrics.json"], "label": "Wasmtime"},
+            {"data": metrics_data["wasm_metrics.json"], "label": "Wasm"},
+            {"data": metrics_data["docker_container_metrics.json"], "label": "Docker Container"},
+            {"data": metrics_data["wasmtime_container_metrics.json"], "label": "Wasmtime"},
         ]
     plot_data = []
     plot_labels = []
@@ -115,8 +115,8 @@ def deploy_results(metrics_data):
     files = [
         {"data": metrics_data["multi_client_k8s_scheduler_deploy_results.json"],    "label": "K8s"},
         {"data": metrics_data["multi_client_orchestration_deploy_results.json"],    "label": "Orchestration"},
-        {"data": metrics_data["docker_deploy_results.json"],                        "label": "Docker"},
-        {"data": metrics_data["wasm_deploy_results.json"],                          "label": "Wasmtime"},
+        {"data": metrics_data["docker_container_deploy_results.json"],              "label": "Docker Container"},
+        {"data": metrics_data["wasmtime_container_deploy_results.json"],                          "label": "Wasmtime Container"},
     ]
 
     labels = []
@@ -153,8 +153,8 @@ def cold_start(metrics_data):
     files = [
         #{"data": metrics_data["multi_client_k8s_scheduler_deploy_results.json"],    "label": "K8s"},
         #{"data": metrics_data["multi_client_orchestration_deploy_results.json"],    "label": "Orchestration"},
-        {"data": metrics_data["docker_deploy_results.json"],                        "label": "Docker"},
-        {"data": metrics_data["wasm_deploy_results.json"],                          "label": "Wasmtime"},
+        {"data": metrics_data["docker_container_deploy_results.json"],                        "label": "Docker"},
+        {"data": metrics_data["wasmtime_container_deploy_results.json"],                      "label": "Wasmtime Container"},
     ]
 
     labels = []
@@ -191,8 +191,8 @@ def deploy_time(metrics_data):
     files = [
         {"data": metrics_data["multi_client_k8s_scheduler_deploy_results.json"],    "label": "K8s"},
         {"data": metrics_data["multi_client_orchestration_deploy_results.json"],    "label": "Orchestration"},
-        #{"data": metrics_data["docker_deploy_results.json"],                        "label": "Docker"},
-        #{"data": metrics_data["wasm_deploy_results.json"],                          "label": "Wasmtime"},
+        #{"data": metrics_data["docker_container_deploy_results.json"],                        "label": "Docker"},
+        #{"data": metrics_data["wasmtime_container_deploy_results.json"],                          "label": "Wasmtime"},
     ]
 
     labels = []
@@ -229,7 +229,7 @@ def main():
     #resource_usage_comparison(metrics_data, "cpu_cores_sum", "CPU Cores Sum")
     #resource_usage_comparison(metrics_data, "cpu_system_pct", "CPU System")
     #box_plot(metrics_data, "fps", "FPS", True)
-    #box_plot(metrics_data, "latency_ms", "Latency (ms)", True)
+    #box_plot(metrics_data, "inference_latency_ms", "Latency (ms)", True)
     #deploy_results(metrics_data)
     #cold_start(metrics_data)
     #deploy_time(metrics_data)

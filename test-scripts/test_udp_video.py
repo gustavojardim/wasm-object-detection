@@ -192,7 +192,7 @@ def process_video(source, display=True, save_output=None, host="127.0.0.1", port
             metrics = {
                 "frame": frame_count,
                 "fps": fps_actual,
-                "latency_ms": latency * 1000,
+                "inference_latency_ms": latency * 1000,
                 "detections": len(detections),
                 "packet_loss": packet_loss,
                 "bandwidth_Bps": bandwidth_samples[-1] if bandwidth_samples else 0,
@@ -301,7 +301,7 @@ def process_video(source, display=True, save_output=None, host="127.0.0.1", port
             import os
             summary = {}
             metric_keys = [
-                'fps', 'latency_ms', 'detections', 'packet_loss', 'bandwidth_Bps', 'jitter_ms',
+                'fps', 'inference_latency_ms', 'detections', 'packet_loss', 'bandwidth_Bps', 'jitter_ms',
                 'update_time_ms', 'view_time_ms', 'detection_time_ms', 'frame_extraction_time_ms',
                 'network_time_ms', 'render_time_ms', 'resize_time_ms', 'encoding_time_ms',
                 'decoding_time_ms', 'image_size_mb', 'throughput_mbps'
@@ -342,7 +342,7 @@ def process_video(source, display=True, save_output=None, host="127.0.0.1", port
         print(f"{'FPS':<{col_metric}} {avg_fps_actual:>{col_val}.2f} {min_fps_actual:>{col_val}.2f} {max_fps_actual:>{col_val}.2f}")
         # Add additional metrics
         for metric in [
-            ("Latency (ms)", 'latency_ms'),
+            ("Latency (ms)", 'inference_latency_ms'),
             ("Detections", 'detections'),
             ("Packet loss", 'packet_loss'),
             ("Bandwidth (Bps)", 'bandwidth_Bps'),

@@ -5,7 +5,7 @@
       "min": 0.97,
       "max": 11.61
     },
-    "latency_ms": {
+    "inference_latency_ms": {
       "avg": 126.19,
       "min": 62.0,
       "max": 731.78
@@ -124,7 +124,7 @@
       "min": 0.9,
       "max": 6.76
     },
-    "latency_ms": {
+    "inference_latency_ms": {
       "avg": 385.12,
       "min": 0.32,
       "max": 1996.83
@@ -243,7 +243,7 @@
       "min": 0.53,
       "max": 11.81
     },
-    "latency_ms": {
+    "inference_latency_ms": {
       "avg": 404.57,
       "min": 63.49,
       "max": 1994.14
@@ -362,7 +362,7 @@
       "min": 0.79,
       "max": 20.33
     },
-    "latency_ms": {
+    "inference_latency_ms": {
       "avg": 464.58,
       "min": 15.7,
       "max": 1966.79
@@ -481,7 +481,7 @@
       "min": 0.96,
       "max": 13.3
     },
-    "latency_ms": {
+    "inference_latency_ms": {
       "avg": 154.35,
       "min": 53.69,
       "max": 1738.35
@@ -600,7 +600,7 @@
       "min": 3.9,
       "max": 13.87
     },
-    "latency_ms": {
+    "inference_latency_ms": {
       "avg": 142.91,
       "min": 60.84,
       "max": 1390.91
@@ -719,7 +719,7 @@
       "min": 2.31,
       "max": 19.94
     },
-    "latency_ms": {
+    "inference_latency_ms": {
       "avg": 121.65,
       "min": 48.51,
       "max": 1432.97
@@ -838,7 +838,7 @@
       "min": 5.73,
       "max": 14.59
     },
-    "latency_ms": {
+    "inference_latency_ms": {
       "avg": 77.97,
       "min": 54.68,
       "max": 174.52
@@ -957,7 +957,7 @@
       "min": 6.44,
       "max": 19.79
     },
-    "latency_ms": {
+    "inference_latency_ms": {
       "avg": 55.92,
       "min": 47.47,
       "max": 168.35
@@ -1076,7 +1076,7 @@
       "min": 4.6,
       "max": 19.92
     },
-    "latency_ms": {
+    "inference_latency_ms": {
       "avg": 57.15,
       "min": 48.42,
       "max": 217.5
@@ -1195,7 +1195,7 @@
       "min": 0.8,
       "max": 11.36
     },
-    "latency_ms": {
+    "inference_latency_ms": {
       "avg": 337.54,
       "min": 37.86,
       "max": 1829.34
@@ -1309,7 +1309,7 @@
       "min": 0.59,
       "max": 5.33
     },
-    "latency_ms": {
+    "inference_latency_ms": {
       "avg": 423.42,
       "min": 37.48,
       "max": 1978.27
@@ -1423,7 +1423,7 @@
       "min": 0.52,
       "max": 8.01
     },
-    "latency_ms": {
+    "inference_latency_ms": {
       "avg": 316.89,
       "min": 12.77,
       "max": 2030.08
@@ -1537,7 +1537,7 @@
       "min": 0.52,
       "max": 13.51
     },
-    "latency_ms": {
+    "inference_latency_ms": {
       "avg": 183.84,
       "min": 56.09,
       "max": 1892.53
@@ -1651,7 +1651,7 @@
       "min": 0.95,
       "max": 16.8
     },
-    "latency_ms": {
+    "inference_latency_ms": {
       "avg": 122.68,
       "min": 51.86,
       "max": 768.39
@@ -1770,7 +1770,7 @@
       "min": 3.84,
       "max": 11.74
     },
-    "latency_ms": {
+    "inference_latency_ms": {
       "avg": 128.53,
       "min": 63.54,
       "max": 716.89
@@ -1889,7 +1889,7 @@
       "min": 1.96,
       "max": 19.3
     },
-    "latency_ms": {
+    "inference_latency_ms": {
       "avg": 115.57,
       "min": 48.56,
       "max": 529.03
@@ -2008,7 +2008,7 @@
       "min": 4.96,
       "max": 14.18
     },
-    "latency_ms": {
+    "inference_latency_ms": {
       "avg": 81.92,
       "min": 57.86,
       "max": 201.48
@@ -2127,7 +2127,7 @@
       "min": 0.51,
       "max": 12.36
     },
-    "latency_ms": {
+    "inference_latency_ms": {
       "avg": 177.95,
       "min": 55.52,
       "max": 1930.16
@@ -2241,7 +2241,7 @@
       "min": 11.62,
       "max": 20.13
     },
-    "latency_ms": {
+    "inference_latency_ms": {
       "avg": 61.66,
       "min": 48.31,
       "max": 158.99
@@ -2360,7 +2360,7 @@
       "min": 5.23,
       "max": 19.89
     },
-    "latency_ms": {
+    "inference_latency_ms": {
       "avg": 56.66,
       "min": 48.36,
       "max": 191.03
@@ -2479,7 +2479,7 @@
       "min": 0.96,
       "max": 16.38
     },
-    "latency_ms": {
+    "inference_latency_ms": {
       "avg": 124.77,
       "min": 52.97,
       "max": 1359.31
@@ -2598,7 +2598,7 @@
       "min": 0.69,
       "max": 14.06
     },
-    "latency_ms": {
+    "inference_latency_ms": {
       "avg": 419.18,
       "min": 0.65,
       "max": 1996.49
@@ -2717,7 +2717,7 @@
       "min": 0.56,
       "max": 11.15
     },
-    "latency_ms": {
+    "inference_latency_ms": {
       "avg": 326.87,
       "min": 61.57,
       "max": 1978.05
@@ -2836,7 +2836,7 @@
       "min": 4.36,
       "max": 19.55
     },
-    "latency_ms": {
+    "inference_latency_ms": {
       "avg": 82.36,
       "min": 47.89,
       "max": 606.16
@@ -2955,7 +2955,7 @@
       "min": 4.97,
       "max": 13.97
     },
-    "latency_ms": {
+    "inference_latency_ms": {
       "avg": 87.9,
       "min": 48.12,
       "max": 403.82
@@ -3074,7 +3074,7 @@
       "min": 2.73,
       "max": 13.06
     },
-    "latency_ms": {
+    "inference_latency_ms": {
       "avg": 101.27,
       "min": 58.73,
       "max": 575.43
@@ -3193,7 +3193,7 @@
       "min": 0.95,
       "max": 16.7
     },
-    "latency_ms": {
+    "inference_latency_ms": {
       "avg": 87.26,
       "min": 52.14,
       "max": 139.61
@@ -3312,7 +3312,7 @@
       "min": 11.94,
       "max": 19.45
     },
-    "latency_ms": {
+    "inference_latency_ms": {
       "avg": 65.4,
       "min": 49.09,
       "max": 95.03
@@ -3431,7 +3431,7 @@
       "min": 1.87,
       "max": 8.31
     },
-    "latency_ms": {
+    "inference_latency_ms": {
       "avg": 220.64,
       "min": 52.39,
       "max": 1988.56
@@ -3550,7 +3550,7 @@
       "min": 12.06,
       "max": 20.28
     },
-    "latency_ms": {
+    "inference_latency_ms": {
       "avg": 50.33,
       "min": 47.62,
       "max": 105.59
@@ -3669,7 +3669,7 @@
       "min": 0.86,
       "max": 9.2
     },
-    "latency_ms": {
+    "inference_latency_ms": {
       "avg": 222.25,
       "min": 69.57,
       "max": 1506.26
@@ -3788,7 +3788,7 @@
       "min": 0.53,
       "max": 18.3
     },
-    "latency_ms": {
+    "inference_latency_ms": {
       "avg": 75.66,
       "min": 42.52,
       "max": 188.46
@@ -3907,7 +3907,7 @@
       "min": 13.97,
       "max": 20.31
     },
-    "latency_ms": {
+    "inference_latency_ms": {
       "avg": 54.05,
       "min": 47.77,
       "max": 159.34
@@ -4026,7 +4026,7 @@
       "min": 0.97,
       "max": 8.18
     },
-    "latency_ms": {
+    "inference_latency_ms": {
       "avg": 142.4,
       "min": 58.41,
       "max": 636.2
@@ -4145,7 +4145,7 @@
       "min": 0.97,
       "max": 8.1
     },
-    "latency_ms": {
+    "inference_latency_ms": {
       "avg": 143.94,
       "min": 64.26,
       "max": 634.84
@@ -4264,7 +4264,7 @@
       "min": 4.68,
       "max": 12.75
     },
-    "latency_ms": {
+    "inference_latency_ms": {
       "avg": 84.82,
       "min": 51.46,
       "max": 213.75
@@ -4383,7 +4383,7 @@
       "min": 6.14,
       "max": 12.68
     },
-    "latency_ms": {
+    "inference_latency_ms": {
       "avg": 83.97,
       "min": 69.07,
       "max": 162.92
@@ -4502,7 +4502,7 @@
       "min": 1.49,
       "max": 12.67
     },
-    "latency_ms": {
+    "inference_latency_ms": {
       "avg": 96.56,
       "min": 46.39,
       "max": 669.95
@@ -4621,7 +4621,7 @@
       "min": 0.96,
       "max": 15.79
     },
-    "latency_ms": {
+    "inference_latency_ms": {
       "avg": 71.97,
       "min": 41.85,
       "max": 451.09
@@ -4740,7 +4740,7 @@
       "min": 0.96,
       "max": 12.26
     },
-    "latency_ms": {
+    "inference_latency_ms": {
       "avg": 155.22,
       "min": 52.09,
       "max": 875.06
@@ -4859,7 +4859,7 @@
       "min": 3.32,
       "max": 13.93
     },
-    "latency_ms": {
+    "inference_latency_ms": {
       "avg": 146.11,
       "min": 50.63,
       "max": 901.26
@@ -4978,7 +4978,7 @@
       "min": 15.88,
       "max": 17.9
     },
-    "latency_ms": {
+    "inference_latency_ms": {
       "avg": 59.94,
       "min": 44.03,
       "max": 80.46
@@ -5097,7 +5097,7 @@
       "min": 1.89,
       "max": 20.12
     },
-    "latency_ms": {
+    "inference_latency_ms": {
       "avg": 125.36,
       "min": 48.06,
       "max": 939.1
@@ -5216,7 +5216,7 @@
       "min": 0.93,
       "max": 19.85
     },
-    "latency_ms": {
+    "inference_latency_ms": {
       "avg": 52.67,
       "min": 48.69,
       "max": 141.5
@@ -5335,7 +5335,7 @@
       "min": 4.74,
       "max": 20.14
     },
-    "latency_ms": {
+    "inference_latency_ms": {
       "avg": 52.3,
       "min": 47.5,
       "max": 211.12
@@ -5454,7 +5454,7 @@
       "min": 0.82,
       "max": 9.37
     },
-    "latency_ms": {
+    "inference_latency_ms": {
       "avg": 350.76,
       "min": 52.94,
       "max": 1970.69
@@ -5568,7 +5568,7 @@
       "min": 0.84,
       "max": 5.03
     },
-    "latency_ms": {
+    "inference_latency_ms": {
       "avg": 344.79,
       "min": 44.74,
       "max": 1781.36
@@ -5682,7 +5682,7 @@
       "min": 0.79,
       "max": 15.92
     },
-    "latency_ms": {
+    "inference_latency_ms": {
       "avg": 220.88,
       "min": 50.88,
       "max": 2007.77
@@ -5796,7 +5796,7 @@
       "min": 0.56,
       "max": 10.54
     },
-    "latency_ms": {
+    "inference_latency_ms": {
       "avg": 407.73,
       "min": 46.66,
       "max": 1982.45
@@ -5915,7 +5915,7 @@
       "min": 4.72,
       "max": 19.94
     },
-    "latency_ms": {
+    "inference_latency_ms": {
       "avg": 95.92,
       "min": 48.61,
       "max": 763.81
@@ -6034,7 +6034,7 @@
       "min": 4.92,
       "max": 12.81
     },
-    "latency_ms": {
+    "inference_latency_ms": {
       "avg": 106.12,
       "min": 59.86,
       "max": 721.19
@@ -6153,7 +6153,7 @@
       "min": 1.51,
       "max": 20.19
     },
-    "latency_ms": {
+    "inference_latency_ms": {
       "avg": 82.87,
       "min": 48.55,
       "max": 862.43
@@ -6272,7 +6272,7 @@
       "min": 0.96,
       "max": 11.84
     },
-    "latency_ms": {
+    "inference_latency_ms": {
       "avg": 99.08,
       "min": 63.08,
       "max": 227.21
@@ -6391,7 +6391,7 @@
       "min": 16.35,
       "max": 20.27
     },
-    "latency_ms": {
+    "inference_latency_ms": {
       "avg": 51.31,
       "min": 47.59,
       "max": 74.07
@@ -6510,7 +6510,7 @@
       "min": 0.97,
       "max": 10.94
     },
-    "latency_ms": {
+    "inference_latency_ms": {
       "avg": 286.22,
       "min": 0.39,
       "max": 1827.15
@@ -6624,7 +6624,7 @@
       "min": 0.53,
       "max": 12.28
     },
-    "latency_ms": {
+    "inference_latency_ms": {
       "avg": 218.89,
       "min": 57.24,
       "max": 1985.96

@@ -2,19 +2,19 @@
   {
     "client_id": 9,
     "status": "failed",
-    "error": "{\"error\":\"No nodes with latency <= 60ms\",\"latencies\":[{\"ip\":\"192.168.0.105\",\"latency_ms\":66.22862815856934,\"name\":\"gjardim\"},{\"ip\":\"192.168.0.102\",\"latency_ms\":113.04473876953125,\"name\":\"gspadotto\"},{\"ip\":\"192.168.0.113\",\"latency_ms\":63.09986114501953,\"name\":\"worker1\"}],\"status\":\"failed\"}\n",
+    "error": "{\"error\":\"No nodes with latency <= 60ms\",\"latencies\":[{\"ip\":\"192.168.0.105\",\"inference_latency_ms\":66.22862815856934,\"name\":\"gjardim\"},{\"ip\":\"192.168.0.102\",\"inference_latency_ms\":113.04473876953125,\"name\":\"gspadotto\"},{\"ip\":\"192.168.0.113\",\"inference_latency_ms\":63.09986114501953,\"name\":\"worker1\"}],\"status\":\"failed\"}\n",
     "elapsed": 0.5280728340148926
   },
   {
     "client_id": 4,
     "status": "failed",
-    "error": "{\"error\":\"No nodes with latency <= 60ms\",\"latencies\":[{\"ip\":\"192.168.0.105\",\"latency_ms\":99.09796714782715,\"name\":\"gjardim\"},{\"ip\":\"192.168.0.102\",\"latency_ms\":64.0714168548584,\"name\":\"gspadotto\"},{\"ip\":\"192.168.0.113\",\"latency_ms\":63.195228576660156,\"name\":\"worker1\"}],\"status\":\"failed\"}\n",
+    "error": "{\"error\":\"No nodes with latency <= 60ms\",\"latencies\":[{\"ip\":\"192.168.0.105\",\"inference_latency_ms\":99.09796714782715,\"name\":\"gjardim\"},{\"ip\":\"192.168.0.102\",\"inference_latency_ms\":64.0714168548584,\"name\":\"gspadotto\"},{\"ip\":\"192.168.0.113\",\"inference_latency_ms\":63.195228576660156,\"name\":\"worker1\"}],\"status\":\"failed\"}\n",
     "elapsed": 1.1232478618621826
   },
   {
     "client_id": 5,
     "status": "failed",
-    "error": "{\"error\":\"No nodes with latency <= 60ms\",\"latencies\":[{\"ip\":\"192.168.0.105\",\"latency_ms\":66.03431701660156,\"name\":\"gjardim\"},{\"ip\":\"192.168.0.102\",\"latency_ms\":205.27911186218262,\"name\":\"gspadotto\"},{\"ip\":\"192.168.0.113\",\"latency_ms\":220.89576721191406,\"name\":\"worker1\"}],\"status\":\"failed\"}\n",
+    "error": "{\"error\":\"No nodes with latency <= 60ms\",\"latencies\":[{\"ip\":\"192.168.0.105\",\"inference_latency_ms\":66.03431701660156,\"name\":\"gjardim\"},{\"ip\":\"192.168.0.102\",\"inference_latency_ms\":205.27911186218262,\"name\":\"gspadotto\"},{\"ip\":\"192.168.0.113\",\"inference_latency_ms\":220.89576721191406,\"name\":\"worker1\"}],\"status\":\"failed\"}\n",
     "elapsed": 1.3440368175506592
   },
   {
@@ -178,13 +178,13 @@
   {
     "client_id": 2,
     "status": "failed",
-    "error": "{'error': 'No nodes with latency <= 80ms', 'latencies': [{'ip': '192.168.0.105', 'latency_ms': 113.96670341491699, 'name': 'gjardim'}, {'ip': '192.168.0.113', 'latency_ms': 228.6074161529541, 'name': 'worker1'}], 'status': 'failed'}",
+    "error": "{'error': 'No nodes with latency <= 80ms', 'latencies': [{'ip': '192.168.0.105', 'inference_latency_ms': 113.96670341491699, 'name': 'gjardim'}, {'ip': '192.168.0.113', 'inference_latency_ms': 228.6074161529541, 'name': 'worker1'}], 'status': 'failed'}",
     "elapsed": 1.7008378505706787
   },
   {
     "client_id": 5,
     "status": "failed",
-    "error": "{'error': 'No nodes with latency <= 80ms', 'latencies': [{'ip': '192.168.0.102', 'latency_ms': 113.92760276794434, 'name': 'gspadotto'}], 'status': 'failed'}",
+    "error": "{'error': 'No nodes with latency <= 80ms', 'latencies': [{'ip': '192.168.0.102', 'inference_latency_ms': 113.92760276794434, 'name': 'gspadotto'}], 'status': 'failed'}",
     "elapsed": 1.1932179927825928
   },
   {
@@ -263,25 +263,25 @@
   {
     "client_id": 2,
     "status": "failed",
-    "error": "{'error': 'No nodes with latency <= 80ms', 'latencies': [{'ip': '192.168.0.105', 'latency_ms': 87.27860450744629, 'name': 'gjardim'}, {'ip': '192.168.0.102', 'latency_ms': 117.96212196350098, 'name': 'gspadotto'}, {'ip': '192.168.0.113', 'latency_ms': 96.65513038635254, 'name': 'worker1'}], 'status': 'failed'}",
+    "error": "{'error': 'No nodes with latency <= 80ms', 'latencies': [{'ip': '192.168.0.105', 'inference_latency_ms': 87.27860450744629, 'name': 'gjardim'}, {'ip': '192.168.0.102', 'inference_latency_ms': 117.96212196350098, 'name': 'gspadotto'}, {'ip': '192.168.0.113', 'inference_latency_ms': 96.65513038635254, 'name': 'worker1'}], 'status': 'failed'}",
     "elapsed": 1.4317412376403809
   },
   {
     "client_id": 1,
     "status": "failed",
-    "error": "{'error': 'No nodes with latency <= 80ms', 'latencies': [{'ip': '192.168.0.105', 'latency_ms': 102.29063034057617, 'name': 'gjardim'}, {'ip': '192.168.0.102', 'latency_ms': 104.42280769348145, 'name': 'gspadotto'}, {'ip': '192.168.0.113', 'latency_ms': 158.8289737701416, 'name': 'worker1'}], 'status': 'failed'}",
+    "error": "{'error': 'No nodes with latency <= 80ms', 'latencies': [{'ip': '192.168.0.105', 'inference_latency_ms': 102.29063034057617, 'name': 'gjardim'}, {'ip': '192.168.0.102', 'inference_latency_ms': 104.42280769348145, 'name': 'gspadotto'}, {'ip': '192.168.0.113', 'inference_latency_ms': 158.8289737701416, 'name': 'worker1'}], 'status': 'failed'}",
     "elapsed": 1.8421168327331543
   },
   {
     "client_id": 6,
     "status": "failed",
-    "error": "{'error': 'No nodes with latency <= 80ms', 'latencies': [{'ip': '192.168.0.102', 'latency_ms': 96.46081924438477, 'name': 'gspadotto'}], 'status': 'failed'}",
+    "error": "{'error': 'No nodes with latency <= 80ms', 'latencies': [{'ip': '192.168.0.102', 'inference_latency_ms': 96.46081924438477, 'name': 'gspadotto'}], 'status': 'failed'}",
     "elapsed": 0.9565320014953613
   },
   {
     "client_id": 8,
     "status": "failed",
-    "error": "{'error': 'No nodes with latency <= 80ms', 'latencies': [{'ip': '192.168.0.102', 'latency_ms': 99.20144081115723, 'name': 'gspadotto'}], 'status': 'failed'}",
+    "error": "{'error': 'No nodes with latency <= 80ms', 'latencies': [{'ip': '192.168.0.102', 'inference_latency_ms': 99.20144081115723, 'name': 'gspadotto'}], 'status': 'failed'}",
     "elapsed": 1.031144142150879
   },
   {
@@ -433,13 +433,13 @@
   {
     "client_id": 0,
     "status": "failed",
-    "error": "{'error': 'No nodes with latency <= 80ms', 'latencies': [{'ip': '192.168.0.105', 'latency_ms': 144.56510543823242, 'name': 'gjardim'}, {'ip': '192.168.0.102', 'latency_ms': 114.0146255493164, 'name': 'gspadotto'}, {'ip': '192.168.0.113', 'latency_ms': 123.14343452453613, 'name': 'worker1'}], 'status': 'failed'}",
+    "error": "{'error': 'No nodes with latency <= 80ms', 'latencies': [{'ip': '192.168.0.105', 'inference_latency_ms': 144.56510543823242, 'name': 'gjardim'}, {'ip': '192.168.0.102', 'inference_latency_ms': 114.0146255493164, 'name': 'gspadotto'}, {'ip': '192.168.0.113', 'inference_latency_ms': 123.14343452453613, 'name': 'worker1'}], 'status': 'failed'}",
     "elapsed": 1.8847219944000244
   },
   {
     "client_id": 4,
     "status": "failed",
-    "error": "{'error': 'No nodes with latency <= 80ms', 'latencies': [{'ip': '192.168.0.105', 'latency_ms': 90.13628959655762, 'name': 'gjardim'}], 'status': 'failed'}",
+    "error": "{'error': 'No nodes with latency <= 80ms', 'latencies': [{'ip': '192.168.0.105', 'inference_latency_ms': 90.13628959655762, 'name': 'gjardim'}], 'status': 'failed'}",
     "elapsed": 0.67728590965271
   },
   {
@@ -518,7 +518,7 @@
   {
     "client_id": 5,
     "status": "failed",
-    "error": "{'error': 'No nodes with latency <= 80ms', 'latencies': [{'ip': '192.168.0.102', 'latency_ms': 105.17048835754395, 'name': 'gspadotto'}], 'status': 'failed'}",
+    "error": "{'error': 'No nodes with latency <= 80ms', 'latencies': [{'ip': '192.168.0.102', 'inference_latency_ms': 105.17048835754395, 'name': 'gspadotto'}], 'status': 'failed'}",
     "elapsed": 1.244555950164795
   },
   {
@@ -608,7 +608,7 @@
   {
     "client_id": 5,
     "status": "failed",
-    "error": "{'error': 'No nodes with latency <= 80ms', 'latencies': [{'ip': '192.168.0.113', 'latency_ms': 166.58878326416016, 'name': 'worker1'}], 'status': 'failed'}",
+    "error": "{'error': 'No nodes with latency <= 80ms', 'latencies': [{'ip': '192.168.0.113', 'inference_latency_ms': 166.58878326416016, 'name': 'worker1'}], 'status': 'failed'}",
     "elapsed": 1.1378109455108643
   },
   {
@@ -868,19 +868,19 @@
   {
     "client_id": 2,
     "status": "failed",
-    "error": "{'error': 'No nodes with latency <= 80ms', 'latencies': [{'ip': '192.168.0.105', 'latency_ms': 98.25277328491211, 'name': 'gjardim'}, {'ip': '192.168.0.102', 'latency_ms': 119.10223960876465, 'name': 'gspadotto'}, {'ip': '192.168.0.113', 'latency_ms': 198.7316608428955, 'name': 'worker1'}], 'status': 'failed'}",
+    "error": "{'error': 'No nodes with latency <= 80ms', 'latencies': [{'ip': '192.168.0.105', 'inference_latency_ms': 98.25277328491211, 'name': 'gjardim'}, {'ip': '192.168.0.102', 'inference_latency_ms': 119.10223960876465, 'name': 'gspadotto'}, {'ip': '192.168.0.113', 'inference_latency_ms': 198.7316608428955, 'name': 'worker1'}], 'status': 'failed'}",
     "elapsed": 1.6075470447540283
   },
   {
     "client_id": 4,
     "status": "failed",
-    "error": "{'error': 'No nodes with latency <= 80ms', 'latencies': [{'ip': '192.168.0.105', 'latency_ms': 83.64319801330566, 'name': 'gjardim'}], 'status': 'failed'}",
+    "error": "{'error': 'No nodes with latency <= 80ms', 'latencies': [{'ip': '192.168.0.105', 'inference_latency_ms': 83.64319801330566, 'name': 'gjardim'}], 'status': 'failed'}",
     "elapsed": 0.40176987648010254
   },
   {
     "client_id": 5,
     "status": "failed",
-    "error": "{'error': 'No nodes with latency <= 80ms', 'latencies': [{'ip': '192.168.0.105', 'latency_ms': 127.79545783996582, 'name': 'gjardim'}], 'status': 'failed'}",
+    "error": "{'error': 'No nodes with latency <= 80ms', 'latencies': [{'ip': '192.168.0.105', 'inference_latency_ms': 127.79545783996582, 'name': 'gjardim'}], 'status': 'failed'}",
     "elapsed": 1.0493533611297607
   },
   {
@@ -958,19 +958,19 @@
   {
     "client_id": 2,
     "status": "failed",
-    "error": "{'error': 'No nodes with latency <= 80ms', 'latencies': [{'ip': '192.168.0.105', 'latency_ms': 93.09625625610352, 'name': 'gjardim'}, {'ip': '192.168.0.102', 'latency_ms': 106.72307014465332, 'name': 'gspadotto'}, {'ip': '192.168.0.113', 'latency_ms': 160.06922721862793, 'name': 'worker1'}], 'status': 'failed'}",
+    "error": "{'error': 'No nodes with latency <= 80ms', 'latencies': [{'ip': '192.168.0.105', 'inference_latency_ms': 93.09625625610352, 'name': 'gjardim'}, {'ip': '192.168.0.102', 'inference_latency_ms': 106.72307014465332, 'name': 'gspadotto'}, {'ip': '192.168.0.113', 'inference_latency_ms': 160.06922721862793, 'name': 'worker1'}], 'status': 'failed'}",
     "elapsed": 1.7661511898040771
   },
   {
     "client_id": 4,
     "status": "failed",
-    "error": "{'error': 'No nodes with latency <= 80ms', 'latencies': [{'ip': '192.168.0.113', 'latency_ms': 195.36328315734863, 'name': 'worker1'}], 'status': 'failed'}",
+    "error": "{'error': 'No nodes with latency <= 80ms', 'latencies': [{'ip': '192.168.0.113', 'inference_latency_ms': 195.36328315734863, 'name': 'worker1'}], 'status': 'failed'}",
     "elapsed": 5.889944076538086
   },
   {
     "client_id": 5,
     "status": "failed",
-    "error": "{'error': 'No nodes with latency <= 80ms', 'latencies': [{'ip': '192.168.0.113', 'latency_ms': 161.95988655090332, 'name': 'worker1'}], 'status': 'failed'}",
+    "error": "{'error': 'No nodes with latency <= 80ms', 'latencies': [{'ip': '192.168.0.113', 'inference_latency_ms': 161.95988655090332, 'name': 'worker1'}], 'status': 'failed'}",
     "elapsed": 6.4291698932647705
   },
   {
@@ -987,7 +987,7 @@
   {
     "client_id": 8,
     "status": "failed",
-    "error": "{'error': 'No nodes with latency <= 80ms', 'latencies': [{'ip': '192.168.0.102', 'latency_ms': 106.02807998657227, 'name': 'gspadotto'}], 'status': 'failed'}",
+    "error": "{'error': 'No nodes with latency <= 80ms', 'latencies': [{'ip': '192.168.0.102', 'inference_latency_ms': 106.02807998657227, 'name': 'gspadotto'}], 'status': 'failed'}",
     "elapsed": 1.1302051544189453
   },
   {
@@ -1043,7 +1043,7 @@
   {
     "client_id": 3,
     "status": "failed",
-    "error": "{'error': 'No nodes with latency <= 80ms', 'latencies': [{'ip': '192.168.0.102', 'latency_ms': 187.50238418579102, 'name': 'gspadotto'}], 'status': 'failed'}",
+    "error": "{'error': 'No nodes with latency <= 80ms', 'latencies': [{'ip': '192.168.0.102', 'inference_latency_ms': 187.50238418579102, 'name': 'gspadotto'}], 'status': 'failed'}",
     "elapsed": 0.4612598419189453
   },
   {
