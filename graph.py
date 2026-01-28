@@ -78,9 +78,16 @@ def box_plot(metrics_data, metric, metric_label, multi_client):
     ]
 
     if multi_client:
-        files.append({"data": metrics_data["multi_client_k8s_metrics.json"], "label": "Multi Client K8s"})
-        files.append({"data": metrics_data["multi_client_orchestration_metrics.json"], "label": "Multi Client Orchestration"})
-
+        files = [
+            {"data": metrics_data["multi_client_k8s_metrics.json"], "label": "Multi Client K8s"},
+            {"data": metrics_data["multi_client_orchestration_metrics.json"], "label": "Multi Client Orchestration"},
+        ]
+    else:
+        files = [
+            {"data": metrics_data["baremetal_metrics.json"], "label": "Baremetal"},
+            {"data": metrics_data["docker_metrics.json"], "label": "Docker"},
+            {"data": metrics_data["wasmtime_metrics.json"], "label": "Wasmtime"},
+        ]
     plot_data = []
     plot_labels = []
 
@@ -140,6 +147,81 @@ def deploy_results(metrics_data):
 
     
 
+def cold_start(metrics_data):
+    fig, ax = plt.subplots()
+
+    files = [
+        #{"data": metrics_data["multi_client_k8s_scheduler_deploy_results.json"],    "label": "K8s"},
+        #{"data": metrics_data["multi_client_orchestration_deploy_results.json"],    "label": "Orchestration"},
+        {"data": metrics_data["docker_deploy_results.json"],                        "label": "Docker"},
+        {"data": metrics_data["wasm_deploy_results.json"],                          "label": "Wasmtime"},
+    ]
+
+    labels = []
+    values = []
+
+    sum = 0
+    count = 0
+
+    for file in files:
+        for record in file["data"]:
+            count += 1
+
+            if record["status"] == "success":
+                count +=1
+                sum += record["cold_start_time"]
+
+        avg = sum / count
+
+        values.append(avg)
+        labels.append(file["label"])
+
+
+    bars = ax.bar(labels, values)
+    ax.bar_label(bars, padding=3)
+
+    ax.set_ylabel("Time (s)")
+    ax.set_title("Avg cold start time")
+
+    plt.show()
+
+def deploy_time(metrics_data):
+    fig, ax = plt.subplots()
+
+    files = [
+        {"data": metrics_data["multi_client_k8s_scheduler_deploy_results.json"],    "label": "K8s"},
+        {"data": metrics_data["multi_client_orchestration_deploy_results.json"],    "label": "Orchestration"},
+        #{"data": metrics_data["docker_deploy_results.json"],                        "label": "Docker"},
+        #{"data": metrics_data["wasm_deploy_results.json"],                          "label": "Wasmtime"},
+    ]
+
+    labels = []
+    values = []
+
+    sum = 0
+    count = 0
+
+    for file in files:
+        for record in file["data"]:
+            count += 1
+
+            if record["status"] == "success":
+                count +=1
+                sum += record["deploy_time"]
+
+        avg = sum / count
+
+        values.append(avg)
+        labels.append(file["label"])
+
+
+    bars = ax.bar(labels, values)
+    ax.bar_label(bars, padding=3)
+
+    ax.set_ylabel("Time (s)")
+    ax.set_title("Avg deploy time")
+
+    plt.show()
 
 def main():
     metrics_data = load("metrics/")
@@ -147,8 +229,11 @@ def main():
     #resource_usage_comparison(metrics_data, "cpu_cores_sum", "CPU Cores Sum")
     #resource_usage_comparison(metrics_data, "cpu_system_pct", "CPU System")
     #box_plot(metrics_data, "fps", "FPS", True)
-    #box_plot(metrics_data, "latency_ms", "Latency (ms)", False)
-    deploy_results(metrics_data)
+    #box_plot(metrics_data, "latency_ms", "Latency (ms)", True)
+    #deploy_results(metrics_data)
+    #cold_start(metrics_data)
+    #deploy_time(metrics_data)
+    
 
 if __name__ == "__main__":
     main()
