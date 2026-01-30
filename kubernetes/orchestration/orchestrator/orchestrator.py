@@ -155,22 +155,22 @@ def filtered_nodes():
             try:
                 latency = measure_qos_monitor_latency(ip)
                 if latency is not None:
-                    latency_ms = latency * 1000
-                    node_latencies.append({'name': name, 'ip': ip, 'latency_ms': latency_ms})
-                    logging.info(f"Node {name} latency: {latency_ms:.1f} ms", extra=log_extra)
+                    inference_latency_ms = latency * 1000
+                    node_latencies.append({'name': name, 'ip': ip, 'inference_latency_ms': inference_latency_ms})
+                    logging.info(f"Node {name} latency: {inference_latency_ms:.1f} ms", extra=log_extra)
                 else:
                     logging.info(f"Node {name} did not respond to latency test", extra=log_extra)
             except Exception as e:
                 logging.warning(f"Latency test failed for node {name}: {e}", extra=log_extra)
         logging.info(f"Measured latencies: {node_latencies}", extra=log_extra)
         # 4. Filter nodes with latency <= threshold
-        eligible = [n for n in node_latencies if n['latency_ms'] <= latency_threshold]
+        eligible = [n for n in node_latencies if n['inference_latency_ms'] <= latency_threshold]
         if not eligible:
             logging.warning(f"No nodes with latency <= {latency_threshold}ms. All latencies: {node_latencies}", extra=log_extra)
             return jsonify({'error': f'No nodes with latency <= {latency_threshold}ms', 'status': 'failed', 'latencies': node_latencies}), 400
         # 5. Select node with lowest latency
-        best = min(eligible, key=lambda n: n['latency_ms'])
-        logging.info(f"Selected node: {best['name']} (latency: {best['latency_ms']:.1f} ms)", extra=log_extra)
+        best = min(eligible, key=lambda n: n['inference_latency_ms'])
+        logging.info(f"Selected node: {best['name']} (latency: {best['inference_latency_ms']:.1f} ms)", extra=log_extra)
 
         # 6. Assign UDP port for this node
         udp_port = get_free_udp_port(best['name'])
@@ -226,7 +226,7 @@ def filtered_nodes():
                 'pod_ip': pod_ip,
                 'udp_port': udp_port,
                 'time': total_time,
-                'latency_ms': best['latency_ms']
+                'inference_latency_ms': best['inference_latency_ms']
             })
     except Exception as e:
         logging.error(f"Deployment crashed: {str(e)}", extra=log_extra)

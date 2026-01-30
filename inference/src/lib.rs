@@ -89,6 +89,7 @@ wit_bindgen::generate!({
     world: "ml",
     default_bindings_module: "inference::bindings"
 });
+
 use self::wasi::nn::graph::{self, Graph, ExecutionTarget, GraphEncoding};
 use self::wasi::nn::tensor::{Tensor, TensorType};
 
@@ -140,11 +141,16 @@ fn img_to_nchw(img_bytes: &[u8], nchw: &mut [f32]) -> Result<()> {
 }
 
 fn load_graph(device: &str, debug: bool) -> Result<Graph> {
-    let (model_file, target) = match device {
+    let (model_file, target) = match device.to_lowercase().as_str() {
         "cpu" => ("yolov8n_cpu.torchscript", ExecutionTarget::Cpu),
-        _ => ("yolov8n_cuda.torchscript", ExecutionTarget::Gpu),
+        "gpu" | "cuda" => ("yolov8n_cuda.torchscript", ExecutionTarget::Gpu),
+        other => {
+            error_log!("Unknown device '{}', defaulting to CPU.", other);
+            ("yolov8n_cpu.torchscript", ExecutionTarget::Cpu)
+        }
     };
     let model_path = format!("/models/{}", model_file);
+    debug_log!(debug, "Selected device: {}, model: {}", device, model_file);
     let model_bytes = std::fs::read(&model_path)
         .with_context(|| format!("failed to read model at {}", model_path))?;
     debug_log!(debug, "Loading model: {} (target: {:?})", model_file, target);
@@ -311,7 +317,7 @@ fn run_udp_server_with_addr(graph: &Graph, debug: bool, profile: bool, udp_addr:
     use std::time::{Duration, Instant};
     let mut frames: HashMap<(u32, std::net::SocketAddr), (Instant, u16, Vec<Option<Vec<u8>>>)> = HashMap::new();
     let header_len = 8;
-    let frame_timeout = Duration::from_secs(2);
+    let frame_timeout = Duration::from_secs(5);
     #[derive(Default)]
     struct Metrics {
         pre_ms: Vec<f64>,
@@ -371,6 +377,8 @@ fn run_udp_server_with_addr(graph: &Graph, debug: bool, profile: bool, udp_addr:
                 });
                 let _ = socket.send_to(&serde_json::to_vec(&summary).unwrap(), src);
                 profile_log!(profile, summary);
+                client_metrics.remove(&src);
+                frames.retain(|&(_, addr), _| addr != src);
             }
             continue;
         }
@@ -446,7 +454,7 @@ fn run_udp_server_with_addr(graph: &Graph, debug: bool, profile: bool, udp_addr:
 fn run_server() -> Result<()> {
     use std::env;
     let args: Vec<String> = env::args().collect();
-    let mut device = "gpu";
+    let mut device = "cpu"; // Default to CPU for safety
     let mut debug = false;
     let mut use_udp = false;
     let mut profile = false;
@@ -474,9 +482,11 @@ fn run_server() -> Result<()> {
             g
         },
         Err(e) => {
-            if device == "gpu" {
-                eprintln!("[WARN] GPU failed: {}. Fallback to CPU.", e);
-                load_graph("cpu", debug)?
+            if device != "cpu" {
+                error_log!("[WARN] {} failed: {}. Fallback to CPU.", device.to_uppercase(), e);
+                let cpu_graph = load_graph("cpu", debug)?;
+                info_log!("CPU model loaded as fallback.");
+                cpu_graph
             } else {
                 return Err(anyhow!("Failed to load model: {:?}", e));
             }

@@ -10,58 +10,52 @@ import json
 import numpy as np
 import sys
 import time
-import threading
-try:
-    import psutil
-except ImportError:
-    psutil = None
+from typing import List, Dict, Any, Optional, Tuple
 
-# Constants (default values)
+# --- Constants ---
 HOST = "127.0.0.1"
-PORT = 8081  # UDP port
+PORT = 8081
 CONFIDENCE_THRESHOLD = 0.5
+MTU = 1400  # Safe UDP payload size
+UDP_FRAME_SIZE = (640, 640)
+MAX_UDP_FRAME_BYTES = 60000
+METRICS_FILE = "udp_video_metrics.json"
 
-# Colors for different classes (80 COCO classes)
-np.random.seed(42)  # For consistent colors
+np.random.seed(42)
 COLORS = np.random.uniform(0, 255, size=(80, 3))
 
-def send_frame_get_detections(sock, frame_bytes, server_addr, timeout=2.0):
-    """Send frame to server using UDP fragmentation and receive detections"""
+
+def send_frame_udp(sock, frame_bytes, server_addr, frame_id, mtu=MTU, timeout=2.0):
+    """Send frame to server using UDP fragmentation and receive detections."""
     import struct
-    MTU = 1400  # Safe UDP payload size
-    HEADER_FMT = '!IHH'  # frame_id:uint32, chunk_idx:uint16, total_chunks:uint16
-    HEADER_SIZE = struct.calcsize(HEADER_FMT)
-    MAX_PAYLOAD = MTU - HEADER_SIZE
-    # Use a static frame_id counter
-    if not hasattr(send_frame_get_detections, "frame_id"):
-        send_frame_get_detections.frame_id = 1
-    frame_id = send_frame_get_detections.frame_id
-    send_frame_get_detections.frame_id += 1
+    HEADER_FMT = '!IHH'
+    header_size = struct.calcsize(HEADER_FMT)
+    max_payload = mtu - header_size
 
     # Fragment frame_bytes
-    chunks = [frame_bytes[i:i+MAX_PAYLOAD] for i in range(0, len(frame_bytes), MAX_PAYLOAD)]
+    chunks = [frame_bytes[i:i+max_payload] for i in range(0, len(frame_bytes), max_payload)]
     total_chunks = len(chunks)
     for idx, chunk in enumerate(chunks):
         header = struct.pack(HEADER_FMT, frame_id, idx, total_chunks)
         packet = header + chunk
         sock.sendto(packet, server_addr)
 
-    # Receive response (unchanged)
+    # Receive response
     sock.settimeout(timeout)
     try:
-        data, _ = sock.recvfrom(1024 * 1024)  # 1MB buffer
+        data, _ = sock.recvfrom(1024 * 1024)
         return json.loads(data.decode('utf-8'))
     except socket.timeout:
         print("[WARN] UDP response timeout")
         return None
 
 
-def draw_detections(frame, detections):
-    """Draw bounding boxes on frame"""
+def draw_detections(frame: np.ndarray, detections: List[Dict[str, Any]], confidence_threshold=CONFIDENCE_THRESHOLD):
+    """Draw bounding boxes and labels on the frame."""
     height, width = frame.shape[:2]
     for det in detections:
         conf = det.get('confidence', 0)
-        if conf < CONFIDENCE_THRESHOLD:
+        if conf < confidence_threshold:
             continue
         bbox = det['bbox']
         x1 = int(bbox['x1'] * width)
@@ -78,97 +72,150 @@ def draw_detections(frame, detections):
         cv2.putText(frame, label, (x1, y1 - 5), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 1)
 
 
-def process_video(source, display=True, save_output=None, host="127.0.0.1", port=8081, client_name=None):
-    """Process video file or webcam stream via UDP"""
+def encode_frame_for_udp(frame: np.ndarray, max_bytes=MAX_UDP_FRAME_BYTES) -> Optional[bytes]:
+    """Encode frame as JPEG, reducing quality if needed to fit UDP size limit."""
+    for quality in [35, 30, 25, 20]:
+        encode_param = [cv2.IMWRITE_JPEG_QUALITY, quality]
+        _, buffer = cv2.imencode('.jpg', frame, encode_param)
+        frame_bytes = buffer.tobytes()
+        if len(frame_bytes) <= max_bytes:
+            return frame_bytes
+    print(f"[WARN] Skipping frame: encoded size {len(frame_bytes)} > {max_bytes} UDP limit (even at lowest quality)")
+    return None
+
+
+def print_progress(frame_count, total_frames, fps, elapsed, packet_loss, avg_bandwidth, avg_jitter):
+    progress = (frame_count / total_frames * 100) if total_frames > 0 else 0
+    print(f"Progress: {frame_count}/{total_frames} ({progress:.1f}%) | Avg FPS: {fps:.1f} | Elapsed: {elapsed:.1f}s | Loss: {packet_loss} | BW: {avg_bandwidth/1024:.1f}KB/s | Jitter: {avg_jitter:.1f}ms")
+
+
+def metric_summary(metrics_log: List[Dict[str, Any]], key: str) -> Tuple[float, float, float]:
+    vals = [m[key] for m in metrics_log if key in m]
+    if not vals:
+        return 0.0, 0.0, 0.0
+    return float(np.mean(vals)), float(np.min(vals)), float(np.max(vals))
+
+
+def save_metrics(filename: str, run_summary: Dict[str, Any]):
+    import os
+    runs = []
+    if os.path.exists(filename):
+        try:
+            with open(filename, "r") as f:
+                runs = json.load(f)
+                if not isinstance(runs, list):
+                    runs = []
+        except Exception:
+            runs = []
+    runs.append(run_summary)
+    with open(filename, "w") as f:
+        json.dump(runs, f, indent=2)
+
+
+def process_video(
+    source: str,
+    display: bool = True,
+    save_output: Optional[str] = None,
+    host: str = "127.0.0.1",
+    port: int = 8081,
+    client_name: Optional[str] = None,
+    log_metrics: bool = True
+):
+    """Main video processing loop."""
     video_source = 0 if source == "0" else source
     cap = cv2.VideoCapture(video_source)
     if not cap.isOpened():
         print(f"Error: Could not open video source {source}")
         return
+
     fps = int(cap.get(cv2.CAP_PROP_FPS)) or 30
     total_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
     width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
     height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
     print(f"Video: {width}x{height} @ {fps}fps, {total_frames} frames")
+
     out = None
     if save_output:
         fourcc = cv2.VideoWriter_fourcc(*'mp4v')
         out = cv2.VideoWriter(save_output, fourcc, fps, (width, height))
         print(f"Saving output to: {save_output}")
-    print(f"Connecting to {host}:{port} (UDP)...")
+
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     server_addr = (host, port)
+    print(f"Connecting to {host}:{port} (UDP)...")
     print("Connected! Processing video...")
+
+    metrics_log = []
+    bandwidth_samples = []
+    jitter_samples = []
+    last_latency = None
     frame_count = 0
     start_time = time.time()
     inference_times = []
-    sent_bytes = 0
     packet_loss = 0
-    bandwidth_samples = []
-    latency_samples = []
-    jitter_samples = []
-    metrics_log = []
-    last_latency = None
-    log_metrics = True  # Set to True to save metrics to JSONL
-    metrics_file_json = "udp_video_metrics.json" if log_metrics else None
+    first_frame_time = None
+    frame_timestamps = []
+    bytes_this_second = 0
+    last_bandwidth_check = time.time()
+    server_metrics_summary = None
+    frame_id = 1
+
     try:
-        udp_size = (640, 640)
-        frame_interval = 1.0 / fps if fps > 0 else 1.0 / 30
-        last_bandwidth_check = time.time()
-        bytes_this_second = 0
         while True:
             loop_start = time.time()
             ret, frame = cap.read()
             if not ret:
                 break
+            if first_frame_time is None:
+                first_frame_time = time.time()
             frame_count += 1
-            # Resize to 640x640 for server compatibility
-            frame_udp = cv2.resize(frame, udp_size)
-            # Try multiple JPEG qualities until frame fits under 60KB
-            for quality in [35, 30, 25, 20]:
-                encode_param = [cv2.IMWRITE_JPEG_QUALITY, quality]
-                _, buffer = cv2.imencode('.jpg', frame_udp, encode_param)
-                frame_bytes = buffer.tobytes()
-                if len(frame_bytes) <= 60000:
-                    break
-            else:
-                print(f"[WARN] Skipping frame: encoded size {len(frame_bytes)} > 60KB UDP limit (even at lowest quality)")
+            now_time = time.time()
+            frame_timestamps.append(now_time)
+            if len(frame_timestamps) > 30:
+                frame_timestamps.pop(0)
+            frame_udp = cv2.resize(frame, UDP_FRAME_SIZE)
+            frame_bytes = encode_frame_for_udp(frame_udp)
+            if frame_bytes is None:
                 continue
             frame_start = time.time()
             try:
-                detections = send_frame_get_detections(sock, frame_bytes, server_addr)
-                sent_bytes += len(frame_bytes)
+                detections = send_frame_udp(sock, frame_bytes, server_addr, frame_id)
                 bytes_this_second += len(frame_bytes)
             except Exception:
                 packet_loss += 1
                 detections = None
+            frame_id += 1
             latency = time.time() - frame_start
             inference_times.append(latency)
-            latency_samples.append(latency)
+            # Jitter calculation
             if last_latency is not None:
                 jitter = abs(latency - last_latency)
-                jitter_samples.append(jitter)
+            else:
+                jitter = 0.0
             last_latency = latency
-            # Custom timings (simulate for now, replace with real timings if available)
-            update_time = latency * 1000  # ms
-            view_time = np.random.uniform(2, 10)  # ms
-            detection_time = latency * 1000 * 0.4  # ms
-            frame_extraction_time = np.random.uniform(0.01, 10)  # ms
-            network_time = np.random.uniform(5, 20)  # ms
-            render_time = np.random.uniform(10, 50)  # ms
-            resize_time = np.random.uniform(10, 30)  # ms
-            encoding_time = np.random.uniform(5, 10)  # ms
-            decoding_time = np.random.uniform(6, 12)  # ms
+            jitter_samples.append(jitter * 1000)
+            # Simulated timings (replace with real if available)
+            update_time = latency * 1000
+            view_time = np.random.uniform(2, 10)
+            detection_time = latency * 1000 * 0.4
+            frame_extraction_time = np.random.uniform(0.01, 10)
+            network_time = np.random.uniform(5, 20)
+            render_time = np.random.uniform(10, 50)
+            resize_time = np.random.uniform(10, 30)
+            encoding_time = np.random.uniform(5, 10)
+            decoding_time = np.random.uniform(6, 12)
             image_size_mb = len(frame_bytes) / (1024 * 1024)
             throughput_mbps = (len(frame_bytes) * 8) / (latency * 1e6) if latency > 0 else 0
             if detections is None:
                 print("No response from server (timeout)")
                 continue
-            # Draw detections on the original frame
             draw_detections(frame, detections)
+            # Calculate regular FPS (not rolling)
+            elapsed_for_fps = (time.time() - first_frame_time) if first_frame_time else 0
+            fps_actual = frame_count / elapsed_for_fps if elapsed_for_fps > 0 else 0
             avg_inference = np.mean(inference_times[-30:]) if inference_times else 0
-            fps_actual = 1.0 / avg_inference if avg_inference > 0 else 0
-            stats_text = f"Frame: {frame_count}/{total_frames} | Detections: {len(detections)} | FPS: {fps_actual:.1f} | Latency: {latency*1000:.0f}ms | Loss: {packet_loss}"
+            processing_fps = 1.0 / avg_inference if avg_inference > 0 else 0
+            stats_text = f"Frame: {frame_count}/{total_frames} | Detections: {len(detections)} | FPS: {fps_actual:.1f} (user) / {processing_fps:.1f} (proc) | Latency: {latency*1000:.0f}ms | Loss: {packet_loss}"
             y_offset = 30
             if client_name:
                 cv2.putText(frame, f"Client: {client_name}", (10, y_offset), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 200, 255), 2)
@@ -188,15 +235,18 @@ def process_video(source, display=True, save_output=None, host="127.0.0.1", port
                 bandwidth_samples.append(bandwidth)
                 bytes_this_second = 0
                 last_bandwidth_check = now
-            # Log metrics in memory only
-            metrics = {
+            else:
+                bandwidth = 0
+            # Log metrics
+            metrics_log.append({
                 "frame": frame_count,
-                "fps": fps_actual,
-                "latency_ms": latency * 1000,
+                "fps_user": fps_actual,
+                "fps_processing": processing_fps,
+                "inference_latency_ms": latency * 1000,
                 "detections": len(detections),
                 "packet_loss": packet_loss,
-                "bandwidth_Bps": bandwidth_samples[-1] if bandwidth_samples else 0,
-                "jitter_ms": jitter_samples[-1] * 1000 if jitter_samples else 0,
+                "bandwidth_Bps": bandwidth,
+                "jitter_ms": jitter * 1000,
                 "update_time_ms": update_time,
                 "view_time_ms": view_time,
                 "detection_time_ms": detection_time,
@@ -208,33 +258,28 @@ def process_video(source, display=True, save_output=None, host="127.0.0.1", port
                 "decoding_time_ms": decoding_time,
                 "image_size_mb": image_size_mb,
                 "throughput_mbps": throughput_mbps
-            }
-            metrics_log.append(metrics)
+            })
+            # Progress log
             if frame_count % 30 == 0:
                 elapsed = time.time() - start_time
-                progress = (frame_count / total_frames * 100) if total_frames > 0 else 0
                 avg_bandwidth = np.mean(bandwidth_samples[-30:]) if bandwidth_samples else 0
-                avg_jitter = np.mean(jitter_samples[-30:]) * 1000 if jitter_samples else 0
-                print(f"Progress: {frame_count}/{total_frames} ({progress:.1f}%) | Avg FPS: {fps_actual:.1f} | Elapsed: {elapsed:.1f}s | Loss: {packet_loss} | BW: {avg_bandwidth/1024:.1f}KB/s | Jitter: {avg_jitter:.1f}ms")
+                avg_jitter = np.mean(jitter_samples[-30:]) if jitter_samples else 0
+                print_progress(frame_count, total_frames, fps_actual, elapsed, packet_loss, avg_bandwidth, avg_jitter)
             # Throttle to match original FPS
             elapsed_loop = time.time() - loop_start
-            sleep_time = frame_interval - elapsed_loop
+            sleep_time = (1.0 / fps) - elapsed_loop
             if sleep_time > 0:
                 time.sleep(sleep_time)
-        # --- Send UDP metrics request packet ---
+        # Request UDP server metrics summary
         import struct
-        # frame_id=0, chunk_idx=0, total_chunks=0
         header = struct.pack('!IHH', 0, 0, 0)
         sock.sendto(header, server_addr)
-        # Receive metrics summary from server
-        sock.settimeout(2.0)
-        server_metrics_summary = None
+        sock.settimeout(5.0)
         try:
             data, _ = sock.recvfrom(4096)
             metrics_summary = json.loads(data.decode('utf-8'))
             server_metrics_summary = metrics_summary
             print("\nUDP Server Metrics Summary:")
-            # Print as formatted table if possible
             if isinstance(metrics_summary, dict):
                 tabular_keys = [k for k, v in metrics_summary.items() if isinstance(v, list) and len(v) == 3]
                 if tabular_keys:
@@ -267,41 +312,26 @@ def process_video(source, display=True, save_output=None, host="127.0.0.1", port
         if display:
             cv2.destroyAllWindows()
         elapsed = time.time() - start_time
-        avg_fps = frame_count / elapsed if elapsed > 0 else 0
+        elapsed_for_fps = (time.time() - first_frame_time) if first_frame_time else 0
+        avg_fps_user = frame_count / elapsed_for_fps if elapsed_for_fps > 0 else 0
         fps_list = [1.0 / t if t > 0 else 0 for t in inference_times]
-        avg_inference = np.mean(inference_times) if inference_times else 0
-        min_inference = np.min(inference_times) if inference_times else 0
-        max_inference = np.max(inference_times) if inference_times else 0
-        avg_bandwidth = np.mean(bandwidth_samples) if bandwidth_samples else 0
-        min_bandwidth = np.min(bandwidth_samples) if bandwidth_samples else 0
-        max_bandwidth = np.max(bandwidth_samples) if bandwidth_samples else 0
-        avg_jitter = np.mean(jitter_samples) * 1000 if jitter_samples else 0
-        min_jitter = np.min(jitter_samples) * 1000 if jitter_samples else 0
-        max_jitter = np.max(jitter_samples) * 1000 if jitter_samples else 0
-        avg_fps_actual = np.mean(fps_list) if fps_list else 0
+        avg_fps_processing = np.mean(fps_list) if fps_list else 0
         min_fps_actual = np.min(fps_list) if fps_list else 0
         max_fps_actual = np.max(fps_list) if fps_list else 0
-        avg_detections = np.mean([m["detections"] for m in metrics_log]) if metrics_log else 0
-        min_detections = np.min([m["detections"] for m in metrics_log]) if metrics_log else 0
-        max_detections = np.max([m["detections"] for m in metrics_log]) if metrics_log else 0
-        # Aggregate metrics
-        def metric_stats(key):
-            vals = [m[key] for m in metrics_log if key in m]
-            if not vals:
-                return (0, 0, 0)
-            return (np.mean(vals), np.min(vals), np.max(vals))
 
         print("\n" + "*" * 40)
         print(f"Time: {elapsed:.6f}s")
         print(f"Frames: {frame_count}")
-        print(f"Fps: {avg_fps_actual:.6f}")
+        print(f"User FPS: {avg_fps_user:.6f}")
+        print(f"Processing FPS: {avg_fps_processing:.6f}")
         print("*" * 40)
-        # At the end, write summary metrics to udp_video_metrics.json as a list of runs, including server metrics
+
+        # Save metrics summary
         if log_metrics:
-            import os
+            import datetime
             summary = {}
             metric_keys = [
-                'fps', 'latency_ms', 'detections', 'packet_loss', 'bandwidth_Bps', 'jitter_ms',
+                'fps_user', 'inference_latency_ms', 'detections', 'packet_loss', 'bandwidth_Bps', 'jitter_ms',
                 'update_time_ms', 'view_time_ms', 'detection_time_ms', 'frame_extraction_time_ms',
                 'network_time_ms', 'render_time_ms', 'resize_time_ms', 'encoding_time_ms',
                 'decoding_time_ms', 'image_size_mb', 'throughput_mbps'
@@ -314,35 +344,21 @@ def process_video(source, display=True, save_output=None, host="127.0.0.1", port
                         'min': round(float(np.min(vals)), 2),
                         'max': round(float(np.max(vals)), 2)
                     }
-            import datetime
             summary['run_time'] = datetime.datetime.now().isoformat()
             summary['frames'] = frame_count
             summary['source'] = source
-            # Add server metrics if available
             if server_metrics_summary is not None:
                 summary['server_metrics'] = server_metrics_summary
-            runs = []
-            if metrics_file_json and os.path.exists(metrics_file_json):
-                try:
-                    with open(metrics_file_json, "r") as f:
-                        runs = json.load(f)
-                        if not isinstance(runs, list):
-                            runs = []
-                except Exception:
-                    runs = []
-            runs.append(summary)
-            if metrics_file_json:
-                with open(metrics_file_json, "w") as f:
-                    json.dump(runs, f, indent=2)
-        print("\nClient Metrics Summary:")
+            save_metrics(METRICS_FILE, summary)
+        # Print client metrics summary
         col_metric = 28
         col_val = 10
+        print("\nClient Metrics Summary:")
         print(f"{'Metric':<{col_metric}} {'Avg':>{col_val}} {'Min':>{col_val}} {'Max':>{col_val}}")
         print("-" * (col_metric + 3 * col_val + 3))
-        print(f"{'FPS':<{col_metric}} {avg_fps_actual:>{col_val}.2f} {min_fps_actual:>{col_val}.2f} {max_fps_actual:>{col_val}.2f}")
-        # Add additional metrics
+        print(f"{'FPS':<{col_metric}} {avg_fps_user:>{col_val}.2f} {min_fps_actual:>{col_val}.2f} {max_fps_actual:>{col_val}.2f}")
         for metric in [
-            ("Latency (ms)", 'latency_ms'),
+            ("Latency (ms)", 'inference_latency_ms'),
             ("Detections", 'detections'),
             ("Packet loss", 'packet_loss'),
             ("Bandwidth (Bps)", 'bandwidth_Bps'),
@@ -360,11 +376,12 @@ def process_video(source, display=True, save_output=None, host="127.0.0.1", port
             ("Thruput (Mb/s)", 'throughput_mbps'),
         ]:
             name, key = metric
-            avg, min_, max_ = metric_stats(key)
+            avg, min_, max_ = metric_summary(metrics_log, key)
             print(f"{name:<{col_metric}} {avg:>{col_val}.2f} {min_:>{col_val}.2f} {max_:>{col_val}.2f}")
         print("*" * 40)
 
-if __name__ == "__main__":
+
+def main():
     import argparse
     parser = argparse.ArgumentParser(description="UDP Video client for WASM Object Detection.")
     parser.add_argument("source", help="Video file path or 0 for webcam")
@@ -396,3 +413,7 @@ if __name__ == "__main__":
     for i in range(args.repeat):
         print(f"\n--- Run {i+1} of {args.repeat} ---")
         process_video(source, display, save_output, host=host, port=port, client_name=args.client_name)
+
+
+if __name__ == "__main__":
+    main()
