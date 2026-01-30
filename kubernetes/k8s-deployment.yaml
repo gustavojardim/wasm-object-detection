@@ -15,7 +15,7 @@ spec:
     - name: inference
       image: 192.168.0.113:32000/wasm-inference:latest
       imagePullPolicy: Always
-      command: ["app.wasm", "device", "--cpu", "--udp", "--debug", "--profile"]
+      args: ["device", "--cpu", "--udp", "--debug", "--profile"]
       ports:
         - containerPort: 8080
           name: tcp
