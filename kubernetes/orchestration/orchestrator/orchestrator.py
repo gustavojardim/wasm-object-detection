@@ -1,9 +1,10 @@
 # Per-node pod limits
 NODE_POD_LIMITS = {
-    "gjardim": 2,
-    "worker1": 1,
-    "gspadotto": 2
+    "gustavojardim": 2,
+    "xub01": 1,
+    "gspadotto": 1
 }
+
 from flask import Flask, request, jsonify
 import logging
 import time
@@ -17,6 +18,9 @@ import threading
 # Port pool config (per node)
 UDP_PORT_RANGE = range(30081, 30101)  # 20 ports per node
 port_pool = {}  # {node_name: {port: pod_name or None}}
+
+# Add a lock for node pod limit management
+node_limit_lock = threading.Lock()
 
 def get_free_udp_port(node_name):
     if node_name not in port_pool:
@@ -70,7 +74,7 @@ if os.getenv('KUBERNETES_SERVICE_HOST'):
     config.load_incluster_config()
     configuration = client.Configuration.get_default_copy()
     configuration.verify_ssl = False
-    configuration.host = 'https://192.168.0.113:16443'
+    configuration.host = 'https://192.168.0.112:16443'
     v1 = client.CoreV1Api(client.ApiClient(configuration))
 else:
     config.load_kube_config()
@@ -129,105 +133,106 @@ def filtered_nodes():
                 if ip:
                     node_ip_map[n.metadata.name] = ip
         # 2.5. Count running inference pods per node and filter by per-node limit
-        pods = v1.list_namespaced_pod(namespace='default', label_selector='app=wasm-inference')
-        node_pod_counts = {}
-        for pod in pods.items:
-            node = pod.spec.node_name
-            phase = pod.status.phase
-            if node and phase not in ('Succeeded', 'Failed', 'Terminating', 'Error'):
-                node_pod_counts[node] = node_pod_counts.get(node, 0) + 1
-        eligible_nodes = []
-        for name in node_ip_map:
-            max_pods = NODE_POD_LIMITS.get(name, 1)
-            running = node_pod_counts.get(name, 0)
-            if running < max_pods:
-                eligible_nodes.append(name)
-            else:
-                logging.info(f"Node {name} at pod limit ({running}/{max_pods}), skipping", extra=log_extra)
-        if not eligible_nodes:
-            logging.warning(f"No nodes available under pod limits. Current counts: {node_pod_counts}", extra=log_extra)
-            return jsonify({'error': 'No nodes available under pod limits', 'status': 'failed', 'pod_counts': node_pod_counts}), 400
-        # 3. Measure latency for each eligible node
-        node_latencies = []
-        for name in eligible_nodes:
-            ip = node_ip_map[name]
-            logging.info(f"[UDP TEST] Using {ip} for node {name}", extra=log_extra)
-            try:
-                latency = measure_qos_monitor_latency(ip)
-                if latency is not None:
-                    inference_latency_ms = latency * 1000
-                    node_latencies.append({'name': name, 'ip': ip, 'inference_latency_ms': inference_latency_ms})
-                    logging.info(f"Node {name} latency: {inference_latency_ms:.1f} ms", extra=log_extra)
+        with node_limit_lock:
+            pods = v1.list_namespaced_pod(namespace='default', label_selector='app=wasm-inference')
+            node_pod_counts = {}
+            for pod in pods.items:
+                node = pod.spec.node_name
+                phase = pod.status.phase
+                if node and phase not in ('Succeeded', 'Failed', 'Terminating', 'Error'):
+                    node_pod_counts[node] = node_pod_counts.get(node, 0) + 1
+            eligible_nodes = []
+            for name in node_ip_map:
+                max_pods = NODE_POD_LIMITS.get(name, 1)
+                running = node_pod_counts.get(name, 0)
+                if running < max_pods:
+                    eligible_nodes.append(name)
                 else:
-                    logging.info(f"Node {name} did not respond to latency test", extra=log_extra)
-            except Exception as e:
-                logging.warning(f"Latency test failed for node {name}: {e}", extra=log_extra)
-        logging.info(f"Measured latencies: {node_latencies}", extra=log_extra)
-        # 4. Filter nodes with latency <= threshold
-        eligible = [n for n in node_latencies if n['inference_latency_ms'] <= latency_threshold]
-        if not eligible:
-            logging.warning(f"No nodes with latency <= {latency_threshold}ms. All latencies: {node_latencies}", extra=log_extra)
-            return jsonify({'error': f'No nodes with latency <= {latency_threshold}ms', 'status': 'failed', 'latencies': node_latencies}), 400
-        # 5. Select node with lowest latency
-        best = min(eligible, key=lambda n: n['inference_latency_ms'])
-        logging.info(f"Selected node: {best['name']} (latency: {best['inference_latency_ms']:.1f} ms)", extra=log_extra)
+                    logging.info(f"Node {name} at pod limit ({running}/{max_pods}), skipping", extra=log_extra)
+            if not eligible_nodes:
+                logging.warning(f"No nodes available under pod limits. Current counts: {node_pod_counts}", extra=log_extra)
+                return jsonify({'error': 'No nodes available under pod limits', 'status': 'failed', 'pod_counts': node_pod_counts}), 400
+            # 3. Measure latency for each eligible node
+            node_latencies = []
+            for name in eligible_nodes:
+                ip = node_ip_map[name]
+                logging.info(f"[UDP TEST] Using {ip} for node {name}", extra=log_extra)
+                try:
+                    latency = measure_qos_monitor_latency(ip)
+                    if latency is not None:
+                        inference_latency_ms = latency * 1000
+                        node_latencies.append({'name': name, 'ip': ip, 'inference_latency_ms': inference_latency_ms})
+                        logging.info(f"Node {name} latency: {inference_latency_ms:.1f} ms", extra=log_extra)
+                    else:
+                        logging.info(f"Node {name} did not respond to latency test", extra=log_extra)
+                except Exception as e:
+                    logging.warning(f"Latency test failed for node {name}: {e}", extra=log_extra)
+            logging.info(f"Measured latencies: {node_latencies}", extra=log_extra)
+            # 4. Filter nodes with latency <= threshold
+            eligible = [n for n in node_latencies if n['inference_latency_ms'] <= latency_threshold]
+            if not eligible:
+                logging.warning(f"No nodes with latency <= {latency_threshold}ms. All latencies: {node_latencies}", extra=log_extra)
+                return jsonify({'error': f'No nodes with latency <= {latency_threshold}ms', 'status': 'failed', 'latencies': node_latencies}), 400
+            # 5. Select node with lowest latency
+            best = min(eligible, key=lambda n: n['inference_latency_ms'])
+            logging.info(f"Selected node: {best['name']} (latency: {best['inference_latency_ms']:.1f} ms)", extra=log_extra)
 
-        # 6. Assign UDP port for this node
-        udp_port = get_free_udp_port(best['name'])
-        if udp_port is None:
-            logging.error(f"No free UDP ports available for node {best['name']}", extra=log_extra)
-            return jsonify({'error': f'No free UDP ports available for node {best["name"]}', 'status': 'failed'}), 400
-        pod_name = f"wasm-inference-{client_id}-{int(time.time())}"
-        mark_port_used(best['name'], udp_port, pod_name)
+            # 6. Assign UDP port for this node
+            udp_port = get_free_udp_port(best['name'])
+            if udp_port is None:
+                logging.error(f"No free UDP ports available for node {best['name']}", extra=log_extra)
+                return jsonify({'error': f'No free UDP ports available for node {best["name"]}', 'status': 'failed'}), 400
+            pod_name = f"wasm-inference-{client_id}-{int(time.time())}"
+            mark_port_used(best['name'], udp_port, pod_name)
 
-        # 7. Pod Definition (hostNetwork)
-        pod_spec = client.V1Pod(
-            metadata=client.V1ObjectMeta(
-                name=pod_name,
-                labels={'app': 'wasm-inference', 'client': client_id},
-                annotations={'module.wasm.image/variant': 'compat'}
-            ),
-            spec=client.V1PodSpec(
-                runtime_class_name='wasmtime',
-                node_name=best['name'],
-                host_network=True,
-                restart_policy='Never',
-                containers=[client.V1Container(
-                    name='inference',
-                    image='192.168.0.113:32000/wasm-inference:latest',
-                    command=['app.wasm', '--device', 'cpu', '--udp', '--port', str(udp_port)],
-                    ports=[client.V1ContainerPort(container_port=udp_port, protocol='UDP')]
-                )]
+            # 7. Pod Definition (hostNetwork)
+            pod_spec = client.V1Pod(
+                metadata=client.V1ObjectMeta(
+                    name=pod_name,
+                    labels={'app': 'wasm-inference', 'client': client_id},
+                    annotations={'module.wasm.image/variant': 'compat'}
+                ),
+                spec=client.V1PodSpec(
+                    runtime_class_name='wasmtime',
+                    node_name=best['name'],
+                    host_network=True,
+                    restart_policy='Never',
+                    containers=[client.V1Container(
+                        name='inference',
+                        image='192.168.0.112:32000/wasm-inference:latest',
+                        command=['app.wasm', '--device', 'cpu', '--udp', '--port', str(udp_port)],
+                        ports=[client.V1ContainerPort(container_port=udp_port, protocol='UDP')]
+                    )]
+                )
             )
-        )
-        v1.create_namespaced_pod(namespace='default', body=pod_spec)
-        # 8. Wait for Readiness
-        success = False
-        for _ in range(60):
-            status = v1.read_namespaced_pod_status(pod_name, 'default')
-            if status.status.phase == 'Running':
-                success = True
-                break
-            time.sleep(1)
-        total_time = time.time() - deploy_start
-        if success:
-            # Fetch pod IP after it is running
-            pod_status = v1.read_namespaced_pod_status(pod_name, 'default')
-            pod_ip = pod_status.status.pod_ip if pod_status.status and pod_status.status.pod_ip else None
-            node_ip = best['ip'] if 'ip' in best else node_ip_map.get(best['name'])
-            logging.info(f"Deployment Successful: {pod_name} on {best['name']} in {total_time:.2f}s (pod_ip={pod_ip}, node_ip={node_ip}, udp_port={udp_port})", extra=log_extra)
-            # Schedule pod deletion and port release
-            schedule_pod_deletion(pod_name, 'default', best['name'], udp_port, delay=45)
-            return jsonify({
-                'status': 'success',
-                'node': best['name'],
-                'node_ip': node_ip,
-                'pod': pod_name,
-                'pod_ip': pod_ip,
-                'udp_port': udp_port,
-                'time': total_time,
-                'inference_latency_ms': best['inference_latency_ms']
-            })
+            v1.create_namespaced_pod(namespace='default', body=pod_spec)
+            # 8. Wait for Readiness
+            success = False
+            for _ in range(60):
+                status = v1.read_namespaced_pod_status(pod_name, 'default')
+                if status.status.phase == 'Running':
+                    success = True
+                    break
+                time.sleep(1)
+            total_time = time.time() - deploy_start
+            if success:
+                # Fetch pod IP after it is running
+                pod_status = v1.read_namespaced_pod_status(pod_name, 'default')
+                pod_ip = pod_status.status.pod_ip if pod_status.status and pod_status.status.pod_ip else None
+                node_ip = best['ip'] if 'ip' in best else node_ip_map.get(best['name'])
+                logging.info(f"Deployment Successful: {pod_name} on {best['name']} in {total_time:.2f}s (pod_ip={pod_ip}, node_ip={node_ip}, udp_port={udp_port})", extra=log_extra)
+                # Schedule pod deletion and port release
+                schedule_pod_deletion(pod_name, 'default', best['name'], udp_port, delay=45)
+                return jsonify({
+                    'status': 'success',
+                    'node': best['name'],
+                    'node_ip': node_ip,
+                    'pod': pod_name,
+                    'pod_ip': pod_ip,
+                    'udp_port': udp_port,
+                    'time': total_time,
+                    'inference_latency_ms': best['inference_latency_ms']
+                })
     except Exception as e:
         logging.error(f"Deployment crashed: {str(e)}", extra=log_extra)
         return jsonify({'error': str(e)}, 500)

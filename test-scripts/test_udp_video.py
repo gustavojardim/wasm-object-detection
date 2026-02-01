@@ -25,7 +25,7 @@ np.random.seed(42)
 COLORS = np.random.uniform(0, 255, size=(80, 3))
 
 
-def send_frame_udp(sock, frame_bytes, server_addr, frame_id, mtu=MTU, timeout=2.0):
+def send_frame_udp(sock, frame_bytes, server_addr, frame_id, mtu=MTU, timeout=0.5):
     """Send frame to server using UDP fragmentation and receive detections."""
     import struct
     HEADER_FMT = '!IHH'
@@ -159,6 +159,7 @@ def process_video(
     last_bandwidth_check = time.time()
     server_metrics_summary = None
     frame_id = 1
+    missed_frames = 0
 
     try:
         while True:
@@ -176,6 +177,7 @@ def process_video(
             frame_udp = cv2.resize(frame, UDP_FRAME_SIZE)
             frame_bytes = encode_frame_for_udp(frame_udp)
             if frame_bytes is None:
+                missed_frames += 1
                 continue
             frame_start = time.time()
             try:
@@ -185,7 +187,7 @@ def process_video(
                 packet_loss += 1
                 detections = None
             frame_id += 1
-            latency = time.time() - frame_start
+            latency = max(time.time() - frame_start, 0)
             inference_times.append(latency)
             # Jitter calculation
             if last_latency is not None:
@@ -195,27 +197,29 @@ def process_video(
             last_latency = latency
             jitter_samples.append(jitter * 1000)
             # Simulated timings (replace with real if available)
-            update_time = latency * 1000
-            view_time = np.random.uniform(2, 10)
-            detection_time = latency * 1000 * 0.4
-            frame_extraction_time = np.random.uniform(0.01, 10)
-            network_time = np.random.uniform(5, 20)
-            render_time = np.random.uniform(10, 50)
-            resize_time = np.random.uniform(10, 30)
-            encoding_time = np.random.uniform(5, 10)
-            decoding_time = np.random.uniform(6, 12)
-            image_size_mb = len(frame_bytes) / (1024 * 1024)
+            update_time = max(latency * 1000, 0)
+            view_time = max(np.random.uniform(2, 10), 0)
+            detection_time = max(latency * 1000 * 0.4, 0)
+            frame_extraction_time = max(np.random.uniform(0.01, 10), 0)
+            network_time = max(np.random.uniform(5, 20), 0)
+            render_time = max(np.random.uniform(10, 50), 0)
+            resize_time = max(np.random.uniform(10, 30), 0)
+            encoding_time = max(np.random.uniform(5, 10), 0)
+            decoding_time = max(np.random.uniform(6, 12), 0)
+            image_size_mb = max(len(frame_bytes) / (1024 * 1024), 0)
             throughput_mbps = (len(frame_bytes) * 8) / (latency * 1e6) if latency > 0 else 0
             if detections is None:
                 print("No response from server (timeout)")
+                missed_frames += 1
                 continue
             draw_detections(frame, detections)
             # Calculate regular FPS (not rolling)
             elapsed_for_fps = (time.time() - first_frame_time) if first_frame_time else 0
+            # FPS should be based on all attempted frames (frame_count)
             fps_actual = frame_count / elapsed_for_fps if elapsed_for_fps > 0 else 0
             avg_inference = np.mean(inference_times[-30:]) if inference_times else 0
             processing_fps = 1.0 / avg_inference if avg_inference > 0 else 0
-            stats_text = f"Frame: {frame_count}/{total_frames} | Detections: {len(detections)} | FPS: {fps_actual:.1f} (user) / {processing_fps:.1f} (proc) | Latency: {latency*1000:.0f}ms | Loss: {packet_loss}"
+            stats_text = f"Frame: {frame_count}/{total_frames} | Detections: {len(detections)} | FPS: {fps_actual:.1f} (user) / {processing_fps:.1f} (proc) | Latency: {latency*1000:.0f}ms | Loss: {packet_loss} | Missed: {missed_frames}"
             y_offset = 30
             if client_name:
                 cv2.putText(frame, f"Client: {client_name}", (10, y_offset), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 200, 255), 2)
@@ -243,8 +247,9 @@ def process_video(
                 "fps_user": fps_actual,
                 "fps_processing": processing_fps,
                 "inference_latency_ms": latency * 1000,
-                "detections": len(detections),
+                "detections": len(detections) if detections is not None else 0,
                 "packet_loss": packet_loss,
+                "missed_frames": missed_frames,
                 "bandwidth_Bps": bandwidth,
                 "jitter_ms": jitter * 1000,
                 "update_time_ms": update_time,
@@ -322,6 +327,7 @@ def process_video(
         print("\n" + "*" * 40)
         print(f"Time: {elapsed:.6f}s")
         print(f"Frames: {frame_count}")
+        print(f"Missed frames: {missed_frames}")
         print(f"User FPS: {avg_fps_user:.6f}")
         print(f"Processing FPS: {avg_fps_processing:.6f}")
         print("*" * 40)
@@ -346,6 +352,7 @@ def process_video(
                     }
             summary['run_time'] = datetime.datetime.now().isoformat()
             summary['frames'] = frame_count
+            summary['missed_frames'] = missed_frames
             summary['source'] = source
             if server_metrics_summary is not None:
                 summary['server_metrics'] = server_metrics_summary
@@ -357,6 +364,7 @@ def process_video(
         print(f"{'Metric':<{col_metric}} {'Avg':>{col_val}} {'Min':>{col_val}} {'Max':>{col_val}}")
         print("-" * (col_metric + 3 * col_val + 3))
         print(f"{'FPS':<{col_metric}} {avg_fps_user:>{col_val}.2f} {min_fps_actual:>{col_val}.2f} {max_fps_actual:>{col_val}.2f}")
+        print(f"{'Missed frames':<{col_metric}} {missed_frames:>{col_val}}")
         for metric in [
             ("Latency (ms)", 'inference_latency_ms'),
             ("Detections", 'detections'),

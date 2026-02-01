@@ -1,0 +1,182 @@
+[
+  {
+    "iteration": 1,
+    "status": "success",
+    "apply_time": 0.3171498775482178,
+    "cold_start_time": 2.8923888206481934
+  },
+  {
+    "iteration": 2,
+    "status": "success",
+    "apply_time": 0.3374629020690918,
+    "cold_start_time": 2.878634214401245
+  },
+  {
+    "iteration": 3,
+    "status": "success",
+    "apply_time": 0.3061649799346924,
+    "cold_start_time": 2.841538190841675
+  },
+  {
+    "iteration": 4,
+    "status": "success",
+    "apply_time": -1.0426781177520752,
+    "cold_start_time": 1.49631667137146
+  },
+  {
+    "iteration": 5,
+    "status": "success",
+    "apply_time": 0.30731201171875,
+    "cold_start_time": 2.855257749557495
+  },
+  {
+    "iteration": 6,
+    "status": "success",
+    "apply_time": 0.321120023727417,
+    "cold_start_time": 2.918159246444702
+  },
+  {
+    "iteration": 7,
+    "status": "success",
+    "apply_time": 0.31604671478271484,
+    "cold_start_time": 2.948622941970825
+  },
+  {
+    "iteration": 8,
+    "status": "success",
+    "apply_time": 0.3303956985473633,
+    "cold_start_time": 2.8777599334716797
+  },
+  {
+    "iteration": 9,
+    "status": "success",
+    "apply_time": 0.3262617588043213,
+    "cold_start_time": 2.8722286224365234
+  },
+  {
+    "iteration": 10,
+    "status": "success",
+    "apply_time": 0.313112735748291,
+    "cold_start_time": 2.8602142333984375
+  },
+  {
+    "iteration": 11,
+    "status": "success",
+    "apply_time": 0.32129836082458496,
+    "cold_start_time": 2.873562812805176
+  },
+  {
+    "iteration": 12,
+    "status": "success",
+    "apply_time": 0.3103640079498291,
+    "cold_start_time": 2.8778035640716553
+  },
+  {
+    "iteration": 13,
+    "status": "success",
+    "apply_time": 0.31491565704345703,
+    "cold_start_time": 1.5028743743896484
+  },
+  {
+    "iteration": 14,
+    "status": "success",
+    "apply_time": 0.33330726623535156,
+    "cold_start_time": 2.940615653991699
+  },
+  {
+    "iteration": 15,
+    "status": "success",
+    "apply_time": 0.3183927536010742,
+    "cold_start_time": 2.8785293102264404
+  },
+  {
+    "iteration": 16,
+    "status": "success",
+    "apply_time": 0.3440120220184326,
+    "cold_start_time": 2.956934690475464
+  },
+  {
+    "iteration": 17,
+    "status": "success",
+    "apply_time": 0.31769514083862305,
+    "cold_start_time": 2.877281904220581
+  },
+  {
+    "iteration": 18,
+    "status": "success",
+    "apply_time": 0.311084508895874,
+    "cold_start_time": 2.854405164718628
+  },
+  {
+    "iteration": 19,
+    "status": "success",
+    "apply_time": 0.3155543804168701,
+    "cold_start_time": 2.886618137359619
+  },
+  {
+    "iteration": 20,
+    "status": "success",
+    "apply_time": 0.3133225440979004,
+    "cold_start_time": 2.855942487716675
+  },
+  {
+    "iteration": 21,
+    "status": "success",
+    "apply_time": 0.31957292556762695,
+    "cold_start_time": 2.8664863109588623
+  },
+  {
+    "iteration": 22,
+    "status": "success",
+    "apply_time": 0.3050689697265625,
+    "cold_start_time": 1.4838483333587646
+  },
+  {
+    "iteration": 23,
+    "status": "success",
+    "apply_time": 0.3022632598876953,
+    "cold_start_time": 2.849964141845703
+  },
+  {
+    "iteration": 24,
+    "status": "success",
+    "apply_time": 0.2969069480895996,
+    "cold_start_time": 2.839826822280884
+  },
+  {
+    "iteration": 25,
+    "status": "success",
+    "apply_time": 0.29799437522888184,
+    "cold_start_time": 2.764208023071289
+  },
+  {
+    "iteration": 26,
+    "status": "success",
+    "apply_time": 0.3190765380859375,
+    "cold_start_time": 2.6959537162780761
+  },
+  {
+    "iteration": 27,
+    "status": "success",
+    "apply_time": 0.3142683506011963,
+    "cold_start_time": 2.50890173721313477
+  },
+  {
+    "iteration": 28,
+    "status": "success",
+    "apply_time": 0.3584167957305908,
+    "cold_start_time": 2.7897258232116699
+  },
+  {
+    "iteration": 29,
+    "status": "success",
+    "apply_time": 0.31946730613708496,
+    "cold_start_time": 2.4012973486900334
+  },
+  {
+    "iteration": 30,
+    "status": "success",
+    "apply_time": 0.4263129234313965,
+    "cold_start_time": 2.819293844823877
+  }
+]

@@ -5,10 +5,12 @@ metadata:
   labels:
     app: wasm-inference
 spec:
+  nodeSelector:
+    kubernetes.io/hostname: gustavojardim
   restartPolicy: Always
   containers:
     - name: server
-      image: 192.168.0.113:32000/wasm-inference-docker:latest
+      image: 192.168.0.112:32000/wasm-inference-docker:latest
       ports:
         - containerPort: 8081
   volumes:

@@ -1,0 +1,182 @@
+[
+  {
+    "iteration": 1,
+    "status": "success",
+    "apply_time": 0.23026180267333984,
+    "cold_start_time": 1.6316535472869873
+  },
+  {
+    "iteration": 2,
+    "status": "success",
+    "apply_time": 0.27031850814819336,
+    "cold_start_time": 2.8067991733551025
+  },
+  {
+    "iteration": 3,
+    "status": "success",
+    "apply_time": 0.21977615356445312,
+    "cold_start_time": 2.736337423324585
+  },
+  {
+    "iteration": 4,
+    "status": "success",
+    "apply_time": 0.21869635581970215,
+    "cold_start_time": 2.754385232925415
+  },
+  {
+    "iteration": 5,
+    "status": "success",
+    "apply_time": 0.22213363647460938,
+    "cold_start_time": 2.7519073486328125
+  },
+  {
+    "iteration": 6,
+    "status": "success",
+    "apply_time": 0.22028517723083496,
+    "cold_start_time": 2.750581979751587
+  },
+  {
+    "iteration": 7,
+    "status": "success",
+    "apply_time": 0.21877837181091309,
+    "cold_start_time": 2.7409446239471436
+  },
+  {
+    "iteration": 8,
+    "status": "success",
+    "apply_time": 0.22308945655822754,
+    "cold_start_time": 2.7467904090881348
+  },
+  {
+    "iteration": 9,
+    "status": "success",
+    "apply_time": 0.23018336296081543,
+    "cold_start_time": 2.7619736194610596
+  },
+  {
+    "iteration": 10,
+    "status": "success",
+    "apply_time": 0.2199547290802002,
+    "cold_start_time": 2.739518880844116
+  },
+  {
+    "iteration": 11,
+    "status": "success",
+    "apply_time": 0.21703791618347168,
+    "cold_start_time": 2.7374866008758545
+  },
+  {
+    "iteration": 12,
+    "status": "success",
+    "apply_time": 0.21880197525024414,
+    "cold_start_time": 2.7392492294311523
+  },
+  {
+    "iteration": 13,
+    "status": "success",
+    "apply_time": 0.21761822700500488,
+    "cold_start_time": 2.7581987380981445
+  },
+  {
+    "iteration": 14,
+    "status": "success",
+    "apply_time": 0.2261500358581543,
+    "cold_start_time": 2.7475435733795166
+  },
+  {
+    "iteration": 15,
+    "status": "success",
+    "apply_time": 0.21987414360046387,
+    "cold_start_time": 2.7556207180023193
+  },
+  {
+    "iteration": 16,
+    "status": "success",
+    "apply_time": 0.21749186515808105,
+    "cold_start_time": 2.735621690750122
+  },
+  {
+    "iteration": 17,
+    "status": "success",
+    "apply_time": 0.2208256721496582,
+    "cold_start_time": 1.387557029724121
+  },
+  {
+    "iteration": 18,
+    "status": "success",
+    "apply_time": 0.21883606910705566,
+    "cold_start_time": 1.376633644104004
+  },
+  {
+    "iteration": 19,
+    "status": "success",
+    "apply_time": 0.22683143615722656,
+    "cold_start_time": 2.749389410018921
+  },
+  {
+    "iteration": 20,
+    "status": "success",
+    "apply_time": 0.22246313095092773,
+    "cold_start_time": 2.7551918029785156
+  },
+  {
+    "iteration": 21,
+    "status": "success",
+    "apply_time": 0.22039222717285156,
+    "cold_start_time": 2.7297589778900146
+  },
+  {
+    "iteration": 22,
+    "status": "success",
+    "apply_time": 0.23022937774658203,
+    "cold_start_time": 2.7671725749969482
+  },
+  {
+    "iteration": 23,
+    "status": "success",
+    "apply_time": 0.2150585651397705,
+    "cold_start_time": 2.7396416664123535
+  },
+  {
+    "iteration": 24,
+    "status": "success",
+    "apply_time": 0.22014212608337402,
+    "cold_start_time": 2.7504770755767822
+  },
+  {
+    "iteration": 25,
+    "status": "success",
+    "apply_time": 0.2217416763305664,
+    "cold_start_time": 2.7511847019195557
+  },
+  {
+    "iteration": 26,
+    "status": "success",
+    "apply_time": 0.2150735855102539,
+    "cold_start_time": 2.744235038757324
+  },
+  {
+    "iteration": 27,
+    "status": "success",
+    "apply_time": 0.2680704593658447,
+    "cold_start_time": 2.8888237476348877
+  },
+  {
+    "iteration": 28,
+    "status": "success",
+    "apply_time": 0.22492527961730957,
+    "cold_start_time": 2.7602334022521973
+  },
+  {
+    "iteration": 29,
+    "status": "success",
+    "apply_time": 0.22568297386169434,
+    "cold_start_time": 2.7563982009887695
+  },
+  {
+    "iteration": 30,
+    "status": "success",
+    "apply_time": 0.2537515163421631,
+    "cold_start_time": 2.837736129760742
+  }
+]

@@ -43,7 +43,6 @@ if __name__ == "__main__":
     parser.add_argument("--log-file", type=str, default="wasmtime_enhanced_log.jsonl", help="File to save logs (default: wasmtime_enhanced_log.jsonl)")
     parser.add_argument("--interval", type=float, default=1.0, help="Sampling interval in seconds (default: 1.0)")
     parser.add_argument("--containerd", action="store_true", help="Monitor all containerd-shim-wasmtime-v1 processes (Kubernetes/Docker)")
-
     parser.add_argument("--docker", action="store_true", help="Strictly match the full wasmtime command line (for Docker)")
     args = parser.parse_args()
 

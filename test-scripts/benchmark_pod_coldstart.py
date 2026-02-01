@@ -33,7 +33,7 @@ def main():
     for i in range(args.repeat):
         print(f"\n--- Iteration {i+1}/{args.repeat} ---")
         # Delete pod if exists
-        subprocess.run(["kubectl", "delete", "pod", pod_name, "-n", args.namespace, "--ignore-not-found"], capture_output=True)
+        subprocess.run(["kubectl", "delete", "pod", pod_name, "-n", args.namespace, "--ignore-not-found", "--grace-period=0", "--force"], capture_output=True)
         # Apply pod
         t_apply_start = time.time()
         apply_proc = subprocess.run(["kubectl", "apply", "-f", pod_yaml, "-n", args.namespace], capture_output=True, text=True)
