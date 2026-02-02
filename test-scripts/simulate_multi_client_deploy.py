@@ -10,7 +10,7 @@ import random
 import uuid
 import json
 
-ORCHESTRATOR_URL = "http://192.168.0.113:30500/deploy"
+ORCHESTRATOR_URL = "http://192.168.0.103:30500/deploy"
 NODES = ["gjardim", "gspadotto", "worker1"]
 NUM_CLIENTS = 10
 SPREAD_SECONDS = 15  # Spread requests over this many seconds
@@ -34,10 +34,10 @@ def deploy_client(client_id, delay):
         latency_filtered_nodes = []
         for n in node_info:
             probe_url = n.get("probe")
-            # Rewrite probe_url to use port 8080 (hostNetwork)
+            # Always rewrite probe_url to use port 8082
             if probe_url:
-                # Replace :8080 or :30088 with :8080
-                probe_url = probe_url.replace(":8080", ":8080").replace(":30088", ":8080")
+                import re
+                probe_url = re.sub(r":\d+", ":8082", probe_url)
             try:
                 probe_start = time.perf_counter()
                 probe_resp = requests.get(probe_url, timeout=2)

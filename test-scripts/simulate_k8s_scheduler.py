@@ -18,11 +18,11 @@ def load_pod_template():
         with open(POD_YAML_TEMPLATE_PATH, "r") as f:
                 return f.read()
 NUM_CLIENTS = 10
-NODES = ["gjardim", "gspadotto", "worker1"]  # Used for mapping node names to IPs
+NODES = ["gustavojardim", "gspadotto", "xub01"]  # Used for mapping node names to IPs
 NODE_IPS = {
-    "gjardim": "192.168.0.105",
-    "worker1": "192.168.0.113",
-    "gspadotto": "192.168.0.102"
+    "gustavojardim": "192.168.0.103",
+    "xub01": "192.168.0.114",
+    "gspadotto": "192.168.0.112"
 }
 UDP_PORT_RANGE = range(30081, 30101)  # 20 ports per node
 port_pool = {node: {port: None for port in UDP_PORT_RANGE} for node in NODES}
@@ -221,7 +221,10 @@ def main():
 
     # Final cleanup: delete all wasm-inference pods
     print("\nCleaning up: deleting all pods with label app=wasm-inference...")
-    cleanup_cmd = ["kubectl", "delete", "pod", "-l", "app=wasm-inference"]
+    cleanup_cmd = [
+        "kubectl", "delete", "pod", "-l", "app=wasm-inference",
+        "--grace-period=0", "--force"
+    ]
     cleanup_proc = subprocess.run(cleanup_cmd, capture_output=True, text=True)
     if cleanup_proc.returncode == 0:
         print("Cleanup successful:")

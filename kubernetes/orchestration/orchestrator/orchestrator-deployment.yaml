@@ -8,7 +8,7 @@ metadata:
 spec:
   containers:
   - name: orchestrator
-    image: 192.168.0.113:32000/wasm-orchestrator:latest
+    image: 192.168.0.112:32000/orchestrator:latest
     ports:
     - containerPort: 5000
     resources:
@@ -27,7 +27,7 @@ spec:
       operator: "Exists"
       effect: "NoSchedule"
   nodeSelector:
-    kubernetes.io/hostname: worker1
+    kubernetes.io/hostname: gustavojardim
 ---
 apiVersion: v1
 kind: Service
@@ -62,6 +62,34 @@ roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
   name: orchestrator-node-reader
+subjects:
+- kind: ServiceAccount
+  name: default
+  namespace: kube-system
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: orchestrator-pod-reader
+  namespace: default
+rules:
+- apiGroups: [""]
+  resources: ["pods"]
+  verbs: ["get", "list", "watch", "create", "delete"]
+- apiGroups: [""]
+  resources: ["pods/status"]
+  verbs: ["get"]
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: orchestrator-pod-reader-binding
+  namespace: default
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: orchestrator-pod-reader
 subjects:
 - kind: ServiceAccount
   name: default

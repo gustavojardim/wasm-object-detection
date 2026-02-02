@@ -1,0 +1,3572 @@
+[
+  {
+    "fps_user": {
+      "avg": 13.78,
+      "min": 4.69,
+      "max": 14.9
+    },
+    "inference_latency_ms": {
+      "avg": 59.48,
+      "min": 43.46,
+      "max": 155.27
+    },
+    "detections": {
+      "avg": 2.78,
+      "min": 0.0,
+      "max": 8.0
+    },
+    "packet_loss": {
+      "avg": 0.0,
+      "min": 0.0,
+      "max": 0.0
+    },
+    "bandwidth_Bps": {
+      "avg": 37448.32,
+      "min": 0.0,
+      "max": 684842.14
+    },
+    "jitter_ms": {
+      "avg": 4.7,
+      "min": 0.0,
+      "max": 51.34
+    },
+    "update_time_ms": {
+      "avg": 59.48,
+      "min": 43.46,
+      "max": 155.27
+    },
+    "view_time_ms": {
+      "avg": 6.24,
+      "min": 2.04,
+      "max": 9.92
+    },
+    "detection_time_ms": {
+      "avg": 23.79,
+      "min": 17.38,
+      "max": 62.11
+    },
+    "frame_extraction_time_ms": {
+      "avg": 4.97,
+      "min": 0.09,
+      "max": 9.96
+    },
+    "network_time_ms": {
+      "avg": 12.47,
+      "min": 5.17,
+      "max": 19.97
+    },
+    "render_time_ms": {
+      "avg": 30.41,
+      "min": 10.2,
+      "max": 49.88
+    },
+    "resize_time_ms": {
+      "avg": 19.9,
+      "min": 10.12,
+      "max": 29.99
+    },
+    "encoding_time_ms": {
+      "avg": 7.53,
+      "min": 5.05,
+      "max": 9.98
+    },
+    "decoding_time_ms": {
+      "avg": 8.87,
+      "min": 6.07,
+      "max": 12.0
+    },
+    "image_size_mb": {
+      "avg": 0.04,
+      "min": 0.02,
+      "max": 0.04
+    },
+    "throughput_mbps": {
+      "avg": 5.4,
+      "min": 2.37,
+      "max": 7.6
+    },
+    "run_time": "2026-01-31T15:16:29.163031",
+    "frames": 188,
+    "source": "samples/walking_people_hd.mp4",
+    "server_metrics": {
+      "frames": 188,
+      "inf_ms": [
+        45.04,
+        29.94,
+        139.71
+      ],
+      "mode": "udp",
+      "output_bytes": [
+        353.9,
+        2.0,
+        1011.0
+      ],
+      "output_kb": [
+        0.35,
+        0.0,
+        0.99
+      ],
+      "post_ms": [
+        1.86,
+        1.29,
+        2.94
+      ],
+      "pre_ms": [
+        9.08,
+        7.58,
+        11.72
+      ]
+    }
+  },
+  {
+    "fps_user": {
+      "avg": 16.5,
+      "min": 10.29,
+      "max": 17.09
+    },
+    "inference_latency_ms": {
+      "avg": 54.32,
+      "min": 39.68,
+      "max": 116.95
+    },
+    "detections": {
+      "avg": 2.78,
+      "min": 0.0,
+      "max": 8.0
+    },
+    "packet_loss": {
+      "avg": 0.0,
+      "min": 0.0,
+      "max": 0.0
+    },
+    "bandwidth_Bps": {
+      "avg": 38297.27,
+      "min": 0.0,
+      "max": 748551.99
+    },
+    "jitter_ms": {
+      "avg": 4.45,
+      "min": 0.0,
+      "max": 66.28
+    },
+    "update_time_ms": {
+      "avg": 54.32,
+      "min": 39.68,
+      "max": 116.95
+    },
+    "view_time_ms": {
+      "avg": 5.9,
+      "min": 2.1,
+      "max": 9.98
+    },
+    "detection_time_ms": {
+      "avg": 21.73,
+      "min": 15.87,
+      "max": 46.78
+    },
+    "frame_extraction_time_ms": {
+      "avg": 4.73,
+      "min": 0.03,
+      "max": 9.95
+    },
+    "network_time_ms": {
+      "avg": 12.79,
+      "min": 5.08,
+      "max": 19.89
+    },
+    "render_time_ms": {
+      "avg": 29.35,
+      "min": 10.05,
+      "max": 49.87
+    },
+    "resize_time_ms": {
+      "avg": 19.75,
+      "min": 10.15,
+      "max": 29.88
+    },
+    "encoding_time_ms": {
+      "avg": 7.7,
+      "min": 5.0,
+      "max": 9.97
+    },
+    "decoding_time_ms": {
+      "avg": 8.99,
+      "min": 6.05,
+      "max": 11.99
+    },
+    "image_size_mb": {
+      "avg": 0.04,
+      "min": 0.02,
+      "max": 0.04
+    },
+    "throughput_mbps": {
+      "avg": 5.9,
+      "min": 3.12,
+      "max": 8.41
+    },
+    "run_time": "2026-01-31T15:16:40.586188",
+    "frames": 188,
+    "source": "samples/walking_people_hd.mp4",
+    "server_metrics": {
+      "frames": 188,
+      "inf_ms": [
+        41.16,
+        27.19,
+        103.02
+      ],
+      "mode": "udp",
+      "output_bytes": [
+        353.9,
+        2.0,
+        1011.0
+      ],
+      "output_kb": [
+        0.35,
+        0.0,
+        0.99
+      ],
+      "post_ms": [
+        1.76,
+        1.18,
+        2.33
+      ],
+      "pre_ms": [
+        8.23,
+        7.12,
+        11.98
+      ]
+    }
+  },
+  {
+    "fps_user": {
+      "avg": 16.06,
+      "min": 13.38,
+      "max": 32.1
+    },
+    "inference_latency_ms": {
+      "avg": 55.44,
+      "min": 0.0,
+      "max": 84.53
+    },
+    "detections": {
+      "avg": 2.78,
+      "min": 0.0,
+      "max": 8.0
+    },
+    "packet_loss": {
+      "avg": 0.0,
+      "min": 0.0,
+      "max": 0.0
+    },
+    "bandwidth_Bps": {
+      "avg": 37220.77,
+      "min": 0.0,
+      "max": 719739.86
+    },
+    "jitter_ms": {
+      "avg": 5.1,
+      "min": 0.0,
+      "max": 59.51
+    },
+    "update_time_ms": {
+      "avg": 55.44,
+      "min": 0.0,
+      "max": 84.53
+    },
+    "view_time_ms": {
+      "avg": 5.81,
+      "min": 2.07,
+      "max": 10.0
+    },
+    "detection_time_ms": {
+      "avg": 22.17,
+      "min": 0.0,
+      "max": 33.81
+    },
+    "frame_extraction_time_ms": {
+      "avg": 4.92,
+      "min": 0.15,
+      "max": 9.96
+    },
+    "network_time_ms": {
+      "avg": 12.72,
+      "min": 5.0,
+      "max": 19.96
+    },
+    "render_time_ms": {
+      "avg": 29.38,
+      "min": 10.65,
+      "max": 49.91
+    },
+    "resize_time_ms": {
+      "avg": 19.86,
+      "min": 10.02,
+      "max": 29.91
+    },
+    "encoding_time_ms": {
+      "avg": 7.4,
+      "min": 5.0,
+      "max": 9.99
+    },
+    "decoding_time_ms": {
+      "avg": 9.11,
+      "min": 6.08,
+      "max": 11.96
+    },
+    "image_size_mb": {
+      "avg": 0.04,
+      "min": 0.02,
+      "max": 0.04
+    },
+    "throughput_mbps": {
+      "avg": 5.69,
+      "min": 0.0,
+      "max": 8.49
+    },
+    "run_time": "2026-01-31T15:16:52.292819",
+    "frames": 188,
+    "source": "samples/walking_people_hd.mp4",
+    "server_metrics": {
+      "frames": 188,
+      "inf_ms": [
+        42.12,
+        28.98,
+        67.54
+      ],
+      "mode": "udp",
+      "output_bytes": [
+        353.9,
+        2.0,
+        1011.0
+      ],
+      "output_kb": [
+        0.35,
+        0.0,
+        0.99
+      ],
+      "post_ms": [
+        1.78,
+        1.24,
+        2.42
+      ],
+      "pre_ms": [
+        8.56,
+        7.69,
+        12.01
+      ]
+    }
+  },
+  {
+    "fps_user": {
+      "avg": 15.64,
+      "min": 11.85,
+      "max": 15.98
+    },
+    "inference_latency_ms": {
+      "avg": 55.84,
+      "min": 43.13,
+      "max": 88.1
+    },
+    "detections": {
+      "avg": 2.78,
+      "min": 0.0,
+      "max": 8.0
+    },
+    "packet_loss": {
+      "avg": 0.0,
+      "min": 0.0,
+      "max": 0.0
+    },
+    "bandwidth_Bps": {
+      "avg": 36932.52,
+      "min": 0.0,
+      "max": 703985.52
+    },
+    "jitter_ms": {
+      "avg": 3.64,
+      "min": 0.0,
+      "max": 36.14
+    },
+    "update_time_ms": {
+      "avg": 55.84,
+      "min": 43.13,
+      "max": 88.1
+    },
+    "view_time_ms": {
+      "avg": 5.89,
+      "min": 2.0,
+      "max": 9.98
+    },
+    "detection_time_ms": {
+      "avg": 22.33,
+      "min": 17.25,
+      "max": 35.24
+    },
+    "frame_extraction_time_ms": {
+      "avg": 4.9,
+      "min": 0.08,
+      "max": 9.99
+    },
+    "network_time_ms": {
+      "avg": 12.36,
+      "min": 5.16,
+      "max": 19.91
+    },
+    "render_time_ms": {
+      "avg": 29.08,
+      "min": 10.25,
+      "max": 49.69
+    },
+    "resize_time_ms": {
+      "avg": 20.05,
+      "min": 10.15,
+      "max": 29.91
+    },
+    "encoding_time_ms": {
+      "avg": 7.5,
+      "min": 5.0,
+      "max": 9.99
+    },
+    "decoding_time_ms": {
+      "avg": 9.11,
+      "min": 6.01,
+      "max": 11.94
+    },
+    "image_size_mb": {
+      "avg": 0.04,
+      "min": 0.02,
+      "max": 0.04
+    },
+    "throughput_mbps": {
+      "avg": 5.72,
+      "min": 3.35,
+      "max": 8.18
+    },
+    "run_time": "2026-01-31T15:17:04.109141",
+    "frames": 188,
+    "source": "samples/walking_people_hd.mp4",
+    "server_metrics": {
+      "frames": 188,
+      "inf_ms": [
+        42.45,
+        29.76,
+        74.11
+      ],
+      "mode": "udp",
+      "output_bytes": [
+        353.9,
+        2.0,
+        1011.0
+      ],
+      "output_kb": [
+        0.35,
+        0.0,
+        0.99
+      ],
+      "post_ms": [
+        1.79,
+        1.25,
+        3.17
+      ],
+      "pre_ms": [
+        8.44,
+        7.8,
+        12.26
+      ]
+    }
+  },
+  {
+    "fps_user": {
+      "avg": 15.42,
+      "min": 12.56,
+      "max": 15.99
+    },
+    "inference_latency_ms": {
+      "avg": 58.83,
+      "min": 0.0,
+      "max": 83.72
+    },
+    "detections": {
+      "avg": 2.78,
+      "min": 0.0,
+      "max": 8.0
+    },
+    "packet_loss": {
+      "avg": 0.0,
+      "min": 0.0,
+      "max": 0.0
+    },
+    "bandwidth_Bps": {
+      "avg": 38482.49,
+      "min": 0.0,
+      "max": 686857.34
+    },
+    "jitter_ms": {
+      "avg": 5.15,
+      "min": 0.0,
+      "max": 62.48
+    },
+    "update_time_ms": {
+      "avg": 58.83,
+      "min": 0.0,
+      "max": 83.72
+    },
+    "view_time_ms": {
+      "avg": 6.06,
+      "min": 2.07,
+      "max": 9.91
+    },
+    "detection_time_ms": {
+      "avg": 23.53,
+      "min": 0.0,
+      "max": 33.49
+    },
+    "frame_extraction_time_ms": {
+      "avg": 4.96,
+      "min": 0.05,
+      "max": 9.99
+    },
+    "network_time_ms": {
+      "avg": 12.08,
+      "min": 5.06,
+      "max": 19.95
+    },
+    "render_time_ms": {
+      "avg": 28.63,
+      "min": 10.23,
+      "max": 49.98
+    },
+    "resize_time_ms": {
+      "avg": 20.28,
+      "min": 10.03,
+      "max": 29.99
+    },
+    "encoding_time_ms": {
+      "avg": 7.54,
+      "min": 5.05,
+      "max": 9.96
+    },
+    "decoding_time_ms": {
+      "avg": 9.07,
+      "min": 6.04,
+      "max": 11.99
+    },
+    "image_size_mb": {
+      "avg": 0.04,
+      "min": 0.02,
+      "max": 0.04
+    },
+    "throughput_mbps": {
+      "avg": 5.39,
+      "min": 0.0,
+      "max": 7.94
+    },
+    "run_time": "2026-01-31T15:17:16.527762",
+    "frames": 188,
+    "source": "samples/walking_people_hd.mp4",
+    "server_metrics": {
+      "frames": 188,
+      "inf_ms": [
+        44.84,
+        29.95,
+        68.18
+      ],
+      "mode": "udp",
+      "output_bytes": [
+        353.9,
+        2.0,
+        1011.0
+      ],
+      "output_kb": [
+        0.35,
+        0.0,
+        0.99
+      ],
+      "post_ms": [
+        1.93,
+        1.28,
+        2.75
+      ],
+      "pre_ms": [
+        8.99,
+        7.82,
+        13.17
+      ]
+    }
+  },
+  {
+    "fps_user": {
+      "avg": 14.59,
+      "min": 10.92,
+      "max": 14.91
+    },
+    "inference_latency_ms": {
+      "avg": 60.12,
+      "min": 44.72,
+      "max": 114.99
+    },
+    "detections": {
+      "avg": 2.78,
+      "min": 0.0,
+      "max": 8.0
+    },
+    "packet_loss": {
+      "avg": 0.0,
+      "min": 0.0,
+      "max": 0.0
+    },
+    "bandwidth_Bps": {
+      "avg": 37657.71,
+      "min": 0.0,
+      "max": 662854.19
+    },
+    "jitter_ms": {
+      "avg": 5.53,
+      "min": 0.0,
+      "max": 54.1
+    },
+    "update_time_ms": {
+      "avg": 60.12,
+      "min": 44.72,
+      "max": 114.99
+    },
+    "view_time_ms": {
+      "avg": 5.95,
+      "min": 2.03,
+      "max": 9.94
+    },
+    "detection_time_ms": {
+      "avg": 24.05,
+      "min": 17.89,
+      "max": 46.0
+    },
+    "frame_extraction_time_ms": {
+      "avg": 5.09,
+      "min": 0.32,
+      "max": 9.97
+    },
+    "network_time_ms": {
+      "avg": 12.48,
+      "min": 5.01,
+      "max": 19.84
+    },
+    "render_time_ms": {
+      "avg": 29.76,
+      "min": 10.01,
+      "max": 49.42
+    },
+    "resize_time_ms": {
+      "avg": 18.94,
+      "min": 10.19,
+      "max": 29.7
+    },
+    "encoding_time_ms": {
+      "avg": 7.48,
+      "min": 5.0,
+      "max": 9.99
+    },
+    "decoding_time_ms": {
+      "avg": 8.82,
+      "min": 6.01,
+      "max": 11.95
+    },
+    "image_size_mb": {
+      "avg": 0.04,
+      "min": 0.02,
+      "max": 0.04
+    },
+    "throughput_mbps": {
+      "avg": 5.35,
+      "min": 2.52,
+      "max": 7.77
+    },
+    "run_time": "2026-01-31T15:17:29.182075",
+    "frames": 188,
+    "source": "samples/walking_people_hd.mp4",
+    "server_metrics": {
+      "frames": 188,
+      "inf_ms": [
+        45.46,
+        31.24,
+        99.32
+      ],
+      "mode": "udp",
+      "output_bytes": [
+        353.9,
+        2.0,
+        1011.0
+      ],
+      "output_kb": [
+        0.35,
+        0.0,
+        0.99
+      ],
+      "post_ms": [
+        1.94,
+        1.3,
+        2.86
+      ],
+      "pre_ms": [
+        9.26,
+        7.9,
+        18.77
+      ]
+    }
+  },
+  {
+    "fps_user": {
+      "avg": 15.67,
+      "min": 12.34,
+      "max": 15.98
+    },
+    "inference_latency_ms": {
+      "avg": 56.28,
+      "min": 40.95,
+      "max": 87.02
+    },
+    "detections": {
+      "avg": 2.78,
+      "min": 0.0,
+      "max": 8.0
+    },
+    "packet_loss": {
+      "avg": 0.0,
+      "min": 0.0,
+      "max": 0.0
+    },
+    "bandwidth_Bps": {
+      "avg": 36723.05,
+      "min": 0.0,
+      "max": 685395.61
+    },
+    "jitter_ms": {
+      "avg": 4.21,
+      "min": 0.0,
+      "max": 38.13
+    },
+    "update_time_ms": {
+      "avg": 56.28,
+      "min": 40.95,
+      "max": 87.02
+    },
+    "view_time_ms": {
+      "avg": 5.79,
+      "min": 2.01,
+      "max": 9.95
+    },
+    "detection_time_ms": {
+      "avg": 22.51,
+      "min": 16.38,
+      "max": 34.81
+    },
+    "frame_extraction_time_ms": {
+      "avg": 4.46,
+      "min": 0.01,
+      "max": 9.96
+    },
+    "network_time_ms": {
+      "avg": 12.56,
+      "min": 5.07,
+      "max": 19.98
+    },
+    "render_time_ms": {
+      "avg": 30.69,
+      "min": 10.56,
+      "max": 49.88
+    },
+    "resize_time_ms": {
+      "avg": 20.22,
+      "min": 10.07,
+      "max": 29.72
+    },
+    "encoding_time_ms": {
+      "avg": 7.38,
+      "min": 5.05,
+      "max": 9.99
+    },
+    "decoding_time_ms": {
+      "avg": 9.05,
+      "min": 6.0,
+      "max": 11.97
+    },
+    "image_size_mb": {
+      "avg": 0.04,
+      "min": 0.02,
+      "max": 0.04
+    },
+    "throughput_mbps": {
+      "avg": 5.67,
+      "min": 3.29,
+      "max": 8.05
+    },
+    "run_time": "2026-01-31T15:17:41.057907",
+    "frames": 188,
+    "source": "samples/walking_people_hd.mp4",
+    "server_metrics": {
+      "frames": 188,
+      "inf_ms": [
+        42.58,
+        29.61,
+        69.65
+      ],
+      "mode": "udp",
+      "output_bytes": [
+        353.9,
+        2.0,
+        1011.0
+      ],
+      "output_kb": [
+        0.35,
+        0.0,
+        0.99
+      ],
+      "post_ms": [
+        1.8,
+        1.25,
+        2.36
+      ],
+      "pre_ms": [
+        8.6,
+        7.66,
+        11.61
+      ]
+    }
+  },
+  {
+    "fps_user": {
+      "avg": 15.7,
+      "min": 10.88,
+      "max": 21.16
+    },
+    "inference_latency_ms": {
+      "avg": 55.68,
+      "min": 0.0,
+      "max": 88.11
+    },
+    "detections": {
+      "avg": 2.78,
+      "min": 0.0,
+      "max": 8.0
+    },
+    "packet_loss": {
+      "avg": 0.0,
+      "min": 0.0,
+      "max": 0.0
+    },
+    "bandwidth_Bps": {
+      "avg": 37029.1,
+      "min": 0.0,
+      "max": 684846.91
+    },
+    "jitter_ms": {
+      "avg": 4.99,
+      "min": 0.0,
+      "max": 58.7
+    },
+    "update_time_ms": {
+      "avg": 55.68,
+      "min": 0.0,
+      "max": 88.11
+    },
+    "view_time_ms": {
+      "avg": 6.07,
+      "min": 2.0,
+      "max": 9.78
+    },
+    "detection_time_ms": {
+      "avg": 22.27,
+      "min": 0.0,
+      "max": 35.24
+    },
+    "frame_extraction_time_ms": {
+      "avg": 5.0,
+      "min": 0.1,
+      "max": 9.86
+    },
+    "network_time_ms": {
+      "avg": 12.36,
+      "min": 5.03,
+      "max": 19.86
+    },
+    "render_time_ms": {
+      "avg": 30.29,
+      "min": 10.14,
+      "max": 49.82
+    },
+    "resize_time_ms": {
+      "avg": 19.98,
+      "min": 10.11,
+      "max": 29.96
+    },
+    "encoding_time_ms": {
+      "avg": 7.39,
+      "min": 5.02,
+      "max": 9.99
+    },
+    "decoding_time_ms": {
+      "avg": 9.12,
+      "min": 6.03,
+      "max": 12.0
+    },
+    "image_size_mb": {
+      "avg": 0.04,
+      "min": 0.02,
+      "max": 0.04
+    },
+    "throughput_mbps": {
+      "avg": 5.68,
+      "min": 0.0,
+      "max": 7.95
+    },
+    "run_time": "2026-01-31T15:17:52.837430",
+    "frames": 188,
+    "source": "samples/walking_people_hd.mp4",
+    "server_metrics": {
+      "frames": 188,
+      "inf_ms": [
+        42.31,
+        29.27,
+        74.25
+      ],
+      "mode": "udp",
+      "output_bytes": [
+        353.9,
+        2.0,
+        1011.0
+      ],
+      "output_kb": [
+        0.35,
+        0.0,
+        0.99
+      ],
+      "post_ms": [
+        1.82,
+        1.24,
+        2.73
+      ],
+      "pre_ms": [
+        8.54,
+        7.79,
+        14.46
+      ]
+    }
+  },
+  {
+    "fps_user": {
+      "avg": 15.39,
+      "min": 9.38,
+      "max": 15.91
+    },
+    "inference_latency_ms": {
+      "avg": 57.72,
+      "min": 43.59,
+      "max": 95.88
+    },
+    "detections": {
+      "avg": 2.78,
+      "min": 0.0,
+      "max": 8.0
+    },
+    "packet_loss": {
+      "avg": 0.0,
+      "min": 0.0,
+      "max": 0.0
+    },
+    "bandwidth_Bps": {
+      "avg": 35655.19,
+      "min": 0.0,
+      "max": 687549.38
+    },
+    "jitter_ms": {
+      "avg": 4.81,
+      "min": 0.0,
+      "max": 39.32
+    },
+    "update_time_ms": {
+      "avg": 57.72,
+      "min": 43.59,
+      "max": 95.88
+    },
+    "view_time_ms": {
+      "avg": 6.16,
+      "min": 2.03,
+      "max": 9.99
+    },
+    "detection_time_ms": {
+      "avg": 23.09,
+      "min": 17.43,
+      "max": 38.35
+    },
+    "frame_extraction_time_ms": {
+      "avg": 4.98,
+      "min": 0.07,
+      "max": 9.98
+    },
+    "network_time_ms": {
+      "avg": 12.12,
+      "min": 5.0,
+      "max": 19.88
+    },
+    "render_time_ms": {
+      "avg": 30.48,
+      "min": 10.17,
+      "max": 49.97
+    },
+    "resize_time_ms": {
+      "avg": 20.44,
+      "min": 10.05,
+      "max": 29.97
+    },
+    "encoding_time_ms": {
+      "avg": 7.54,
+      "min": 5.03,
+      "max": 9.93
+    },
+    "decoding_time_ms": {
+      "avg": 9.06,
+      "min": 6.06,
+      "max": 12.0
+    },
+    "image_size_mb": {
+      "avg": 0.04,
+      "min": 0.02,
+      "max": 0.04
+    },
+    "throughput_mbps": {
+      "avg": 5.56,
+      "min": 2.99,
+      "max": 8.11
+    },
+    "run_time": "2026-01-31T15:18:05.006609",
+    "frames": 188,
+    "source": "samples/walking_people_hd.mp4",
+    "server_metrics": {
+      "frames": 188,
+      "inf_ms": [
+        43.57,
+        29.68,
+        77.45
+      ],
+      "mode": "udp",
+      "output_bytes": [
+        353.9,
+        2.0,
+        1011.0
+      ],
+      "output_kb": [
+        0.35,
+        0.0,
+        0.99
+      ],
+      "post_ms": [
+        1.84,
+        1.24,
+        2.54
+      ],
+      "pre_ms": [
+        8.93,
+        7.75,
+        12.94
+      ]
+    }
+  },
+  {
+    "fps_user": {
+      "avg": 15.55,
+      "min": 11.48,
+      "max": 16.91
+    },
+    "inference_latency_ms": {
+      "avg": 56.85,
+      "min": 0.0,
+      "max": 87.88
+    },
+    "detections": {
+      "avg": 2.78,
+      "min": 0.0,
+      "max": 8.0
+    },
+    "packet_loss": {
+      "avg": 0.0,
+      "min": 0.0,
+      "max": 0.0
+    },
+    "bandwidth_Bps": {
+      "avg": 36191.11,
+      "min": 0.0,
+      "max": 666569.16
+    },
+    "jitter_ms": {
+      "avg": 5.52,
+      "min": 0.0,
+      "max": 57.04
+    },
+    "update_time_ms": {
+      "avg": 56.85,
+      "min": 0.0,
+      "max": 87.88
+    },
+    "view_time_ms": {
+      "avg": 6.01,
+      "min": 2.03,
+      "max": 9.99
+    },
+    "detection_time_ms": {
+      "avg": 22.74,
+      "min": 0.0,
+      "max": 35.15
+    },
+    "frame_extraction_time_ms": {
+      "avg": 4.7,
+      "min": 0.05,
+      "max": 9.95
+    },
+    "network_time_ms": {
+      "avg": 11.97,
+      "min": 5.02,
+      "max": 19.98
+    },
+    "render_time_ms": {
+      "avg": 29.51,
+      "min": 10.14,
+      "max": 49.91
+    },
+    "resize_time_ms": {
+      "avg": 19.6,
+      "min": 10.04,
+      "max": 29.59
+    },
+    "encoding_time_ms": {
+      "avg": 7.52,
+      "min": 5.01,
+      "max": 9.99
+    },
+    "decoding_time_ms": {
+      "avg": 9.18,
+      "min": 6.04,
+      "max": 11.99
+    },
+    "image_size_mb": {
+      "avg": 0.04,
+      "min": 0.02,
+      "max": 0.04
+    },
+    "throughput_mbps": {
+      "avg": 5.57,
+      "min": 0.0,
+      "max": 8.16
+    },
+    "run_time": "2026-01-31T15:18:17.038160",
+    "frames": 188,
+    "source": "samples/walking_people_hd.mp4",
+    "server_metrics": {
+      "frames": 188,
+      "inf_ms": [
+        43.17,
+        30.15,
+        73.35
+      ],
+      "mode": "udp",
+      "output_bytes": [
+        353.9,
+        2.0,
+        1011.0
+      ],
+      "output_kb": [
+        0.35,
+        0.0,
+        0.99
+      ],
+      "post_ms": [
+        1.81,
+        1.22,
+        2.58
+      ],
+      "pre_ms": [
+        8.81,
+        7.85,
+        12.19
+      ]
+    }
+  },
+  {
+    "fps_user": {
+      "avg": 15.07,
+      "min": 11.11,
+      "max": 15.41
+    },
+    "inference_latency_ms": {
+      "avg": 58.16,
+      "min": 43.98,
+      "max": 91.21
+    },
+    "detections": {
+      "avg": 2.78,
+      "min": 0.0,
+      "max": 8.0
+    },
+    "packet_loss": {
+      "avg": 0.0,
+      "min": 0.0,
+      "max": 0.0
+    },
+    "bandwidth_Bps": {
+      "avg": 35521.94,
+      "min": 0.0,
+      "max": 673584.06
+    },
+    "jitter_ms": {
+      "avg": 3.53,
+      "min": 0.0,
+      "max": 38.63
+    },
+    "update_time_ms": {
+      "avg": 58.16,
+      "min": 43.98,
+      "max": 91.21
+    },
+    "view_time_ms": {
+      "avg": 6.28,
+      "min": 2.01,
+      "max": 9.95
+    },
+    "detection_time_ms": {
+      "avg": 23.27,
+      "min": 17.59,
+      "max": 36.48
+    },
+    "frame_extraction_time_ms": {
+      "avg": 5.12,
+      "min": 0.05,
+      "max": 9.96
+    },
+    "network_time_ms": {
+      "avg": 12.65,
+      "min": 5.03,
+      "max": 19.93
+    },
+    "render_time_ms": {
+      "avg": 30.19,
+      "min": 10.34,
+      "max": 49.71
+    },
+    "resize_time_ms": {
+      "avg": 20.41,
+      "min": 10.16,
+      "max": 29.95
+    },
+    "encoding_time_ms": {
+      "avg": 7.31,
+      "min": 5.05,
+      "max": 9.99
+    },
+    "decoding_time_ms": {
+      "avg": 8.81,
+      "min": 6.06,
+      "max": 11.96
+    },
+    "image_size_mb": {
+      "avg": 0.04,
+      "min": 0.02,
+      "max": 0.04
+    },
+    "throughput_mbps": {
+      "avg": 5.48,
+      "min": 2.96,
+      "max": 7.74
+    },
+    "run_time": "2026-01-31T15:18:29.294339",
+    "frames": 188,
+    "source": "samples/walking_people_hd.mp4",
+    "server_metrics": {
+      "frames": 188,
+      "inf_ms": [
+        43.98,
+        30.23,
+        77.31
+      ],
+      "mode": "udp",
+      "output_bytes": [
+        353.9,
+        2.0,
+        1011.0
+      ],
+      "output_kb": [
+        0.35,
+        0.0,
+        0.99
+      ],
+      "post_ms": [
+        1.91,
+        1.27,
+        2.73
+      ],
+      "pre_ms": [
+        8.86,
+        7.83,
+        12.66
+      ]
+    }
+  },
+  {
+    "fps_user": {
+      "avg": 14.61,
+      "min": 10.03,
+      "max": 15.24
+    },
+    "inference_latency_ms": {
+      "avg": 58.7,
+      "min": 43.69,
+      "max": 90.85
+    },
+    "detections": {
+      "avg": 2.78,
+      "min": 0.0,
+      "max": 8.0
+    },
+    "packet_loss": {
+      "avg": 0.0,
+      "min": 0.0,
+      "max": 0.0
+    },
+    "bandwidth_Bps": {
+      "avg": 38485.91,
+      "min": 0.0,
+      "max": 666673.3
+    },
+    "jitter_ms": {
+      "avg": 4.61,
+      "min": 0.0,
+      "max": 42.91
+    },
+    "update_time_ms": {
+      "avg": 58.7,
+      "min": 43.69,
+      "max": 90.85
+    },
+    "view_time_ms": {
+      "avg": 6.09,
+      "min": 2.01,
+      "max": 9.95
+    },
+    "detection_time_ms": {
+      "avg": 23.48,
+      "min": 17.48,
+      "max": 36.34
+    },
+    "frame_extraction_time_ms": {
+      "avg": 5.0,
+      "min": 0.02,
+      "max": 9.89
+    },
+    "network_time_ms": {
+      "avg": 12.55,
+      "min": 5.08,
+      "max": 20.0
+    },
+    "render_time_ms": {
+      "avg": 30.25,
+      "min": 10.18,
+      "max": 49.58
+    },
+    "resize_time_ms": {
+      "avg": 19.17,
+      "min": 10.01,
+      "max": 29.71
+    },
+    "encoding_time_ms": {
+      "avg": 7.41,
+      "min": 5.04,
+      "max": 9.99
+    },
+    "decoding_time_ms": {
+      "avg": 9.0,
+      "min": 6.04,
+      "max": 12.0
+    },
+    "image_size_mb": {
+      "avg": 0.04,
+      "min": 0.02,
+      "max": 0.04
+    },
+    "throughput_mbps": {
+      "avg": 5.46,
+      "min": 3.11,
+      "max": 8.05
+    },
+    "run_time": "2026-01-31T15:18:41.671141",
+    "frames": 188,
+    "source": "samples/walking_people_hd.mp4",
+    "server_metrics": {
+      "frames": 188,
+      "inf_ms": [
+        44.48,
+        30.32,
+        73.57
+      ],
+      "mode": "udp",
+      "output_bytes": [
+        353.9,
+        2.0,
+        1011.0
+      ],
+      "output_kb": [
+        0.35,
+        0.0,
+        0.99
+      ],
+      "post_ms": [
+        1.88,
+        1.27,
+        2.62
+      ],
+      "pre_ms": [
+        8.9,
+        7.86,
+        15.37
+      ]
+    }
+  },
+  {
+    "fps_user": {
+      "avg": 15.4,
+      "min": 11.25,
+      "max": 18.88
+    },
+    "inference_latency_ms": {
+      "avg": 56.43,
+      "min": 0.0,
+      "max": 91.16
+    },
+    "detections": {
+      "avg": 2.78,
+      "min": 0.0,
+      "max": 8.0
+    },
+    "packet_loss": {
+      "avg": 0.0,
+      "min": 0.0,
+      "max": 0.0
+    },
+    "bandwidth_Bps": {
+      "avg": 36554.86,
+      "min": 0.0,
+      "max": 682119.7
+    },
+    "jitter_ms": {
+      "avg": 4.62,
+      "min": 0.0,
+      "max": 59.55
+    },
+    "update_time_ms": {
+      "avg": 56.43,
+      "min": 0.0,
+      "max": 91.16
+    },
+    "view_time_ms": {
+      "avg": 5.95,
+      "min": 2.01,
+      "max": 9.98
+    },
+    "detection_time_ms": {
+      "avg": 22.57,
+      "min": 0.0,
+      "max": 36.47
+    },
+    "frame_extraction_time_ms": {
+      "avg": 5.17,
+      "min": 0.02,
+      "max": 9.99
+    },
+    "network_time_ms": {
+      "avg": 12.45,
+      "min": 5.02,
+      "max": 19.96
+    },
+    "render_time_ms": {
+      "avg": 30.16,
+      "min": 10.01,
+      "max": 49.97
+    },
+    "resize_time_ms": {
+      "avg": 20.57,
+      "min": 10.44,
+      "max": 29.96
+    },
+    "encoding_time_ms": {
+      "avg": 7.73,
+      "min": 5.05,
+      "max": 9.89
+    },
+    "decoding_time_ms": {
+      "avg": 9.16,
+      "min": 6.03,
+      "max": 11.98
+    },
+    "image_size_mb": {
+      "avg": 0.04,
+      "min": 0.02,
+      "max": 0.04
+    },
+    "throughput_mbps": {
+      "avg": 5.6,
+      "min": 0.0,
+      "max": 8.12
+    },
+    "run_time": "2026-01-31T15:18:53.593813",
+    "frames": 188,
+    "source": "samples/walking_people_hd.mp4",
+    "server_metrics": {
+      "frames": 188,
+      "inf_ms": [
+        43.11,
+        30.23,
+        77.5
+      ],
+      "mode": "udp",
+      "output_bytes": [
+        353.9,
+        2.0,
+        1011.0
+      ],
+      "output_kb": [
+        0.35,
+        0.0,
+        0.99
+      ],
+      "post_ms": [
+        1.84,
+        1.21,
+        2.48
+      ],
+      "pre_ms": [
+        8.54,
+        7.82,
+        10.91
+      ]
+    }
+  },
+  {
+    "fps_user": {
+      "avg": 14.94,
+      "min": 10.37,
+      "max": 15.47
+    },
+    "inference_latency_ms": {
+      "avg": 57.92,
+      "min": 41.79,
+      "max": 98.86
+    },
+    "detections": {
+      "avg": 2.78,
+      "min": 0.0,
+      "max": 8.0
+    },
+    "packet_loss": {
+      "avg": 0.0,
+      "min": 0.0,
+      "max": 0.0
+    },
+    "bandwidth_Bps": {
+      "avg": 35709.62,
+      "min": 0.0,
+      "max": 671793.84
+    },
+    "jitter_ms": {
+      "avg": 4.48,
+      "min": 0.0,
+      "max": 38.7
+    },
+    "update_time_ms": {
+      "avg": 57.92,
+      "min": 41.79,
+      "max": 98.86
+    },
+    "view_time_ms": {
+      "avg": 6.35,
+      "min": 2.15,
+      "max": 9.96
+    },
+    "detection_time_ms": {
+      "avg": 23.17,
+      "min": 16.71,
+      "max": 39.55
+    },
+    "frame_extraction_time_ms": {
+      "avg": 5.41,
+      "min": 0.11,
+      "max": 9.98
+    },
+    "network_time_ms": {
+      "avg": 12.22,
+      "min": 5.15,
+      "max": 19.92
+    },
+    "render_time_ms": {
+      "avg": 30.44,
+      "min": 10.29,
+      "max": 49.96
+    },
+    "resize_time_ms": {
+      "avg": 20.35,
+      "min": 10.18,
+      "max": 29.72
+    },
+    "encoding_time_ms": {
+      "avg": 7.44,
+      "min": 5.1,
+      "max": 9.96
+    },
+    "decoding_time_ms": {
+      "avg": 8.92,
+      "min": 6.01,
+      "max": 11.98
+    },
+    "image_size_mb": {
+      "avg": 0.04,
+      "min": 0.02,
+      "max": 0.04
+    },
+    "throughput_mbps": {
+      "avg": 5.53,
+      "min": 3.05,
+      "max": 8.17
+    },
+    "run_time": "2026-01-31T15:19:05.795016",
+    "frames": 188,
+    "source": "samples/walking_people_hd.mp4",
+    "server_metrics": {
+      "frames": 188,
+      "inf_ms": [
+        43.86,
+        29.11,
+        84.42
+      ],
+      "mode": "udp",
+      "output_bytes": [
+        353.9,
+        2.0,
+        1011.0
+      ],
+      "output_kb": [
+        0.35,
+        0.0,
+        0.99
+      ],
+      "post_ms": [
+        1.85,
+        1.27,
+        3.73
+      ],
+      "pre_ms": [
+        8.86,
+        8.0,
+        12.83
+      ]
+    }
+  },
+  {
+    "fps_user": {
+      "avg": 15.12,
+      "min": 12.6,
+      "max": 15.48
+    },
+    "inference_latency_ms": {
+      "avg": 57.96,
+      "min": 43.41,
+      "max": 92.32
+    },
+    "detections": {
+      "avg": 2.78,
+      "min": 0.0,
+      "max": 8.0
+    },
+    "packet_loss": {
+      "avg": 0.0,
+      "min": 0.0,
+      "max": 0.0
+    },
+    "bandwidth_Bps": {
+      "avg": 35725.92,
+      "min": 0.0,
+      "max": 667090.64
+    },
+    "jitter_ms": {
+      "avg": 3.87,
+      "min": 0.0,
+      "max": 36.31
+    },
+    "update_time_ms": {
+      "avg": 57.96,
+      "min": 43.41,
+      "max": 92.32
+    },
+    "view_time_ms": {
+      "avg": 6.12,
+      "min": 2.0,
+      "max": 9.97
+    },
+    "detection_time_ms": {
+      "avg": 23.18,
+      "min": 17.36,
+      "max": 36.93
+    },
+    "frame_extraction_time_ms": {
+      "avg": 4.87,
+      "min": 0.02,
+      "max": 9.99
+    },
+    "network_time_ms": {
+      "avg": 12.69,
+      "min": 5.07,
+      "max": 19.97
+    },
+    "render_time_ms": {
+      "avg": 30.08,
+      "min": 10.51,
+      "max": 49.99
+    },
+    "resize_time_ms": {
+      "avg": 20.97,
+      "min": 10.07,
+      "max": 29.93
+    },
+    "encoding_time_ms": {
+      "avg": 7.48,
+      "min": 5.02,
+      "max": 9.99
+    },
+    "decoding_time_ms": {
+      "avg": 9.04,
+      "min": 6.02,
+      "max": 11.98
+    },
+    "image_size_mb": {
+      "avg": 0.04,
+      "min": 0.02,
+      "max": 0.04
+    },
+    "throughput_mbps": {
+      "avg": 5.51,
+      "min": 2.84,
+      "max": 8.08
+    },
+    "run_time": "2026-01-31T15:19:17.992116",
+    "frames": 188,
+    "source": "samples/walking_people_hd.mp4",
+    "server_metrics": {
+      "frames": 188,
+      "inf_ms": [
+        43.98,
+        30.25,
+        79.46
+      ],
+      "mode": "udp",
+      "output_bytes": [
+        353.9,
+        2.0,
+        1011.0
+      ],
+      "output_kb": [
+        0.35,
+        0.0,
+        0.99
+      ],
+      "post_ms": [
+        1.85,
+        1.28,
+        2.49
+      ],
+      "pre_ms": [
+        8.81,
+        7.71,
+        10.65
+      ]
+    }
+  },
+  {
+    "fps_user": {
+      "avg": 15.16,
+      "min": 10.58,
+      "max": 44.28
+    },
+    "inference_latency_ms": {
+      "avg": 58.45,
+      "min": 0.0,
+      "max": 94.39
+    },
+    "detections": {
+      "avg": 2.78,
+      "min": 0.0,
+      "max": 8.0
+    },
+    "packet_loss": {
+      "avg": 0.0,
+      "min": 0.0,
+      "max": 0.0
+    },
+    "bandwidth_Bps": {
+      "avg": 35328.5,
+      "min": 0.0,
+      "max": 664145.85
+    },
+    "jitter_ms": {
+      "avg": 4.92,
+      "min": 0.0,
+      "max": 61.89
+    },
+    "update_time_ms": {
+      "avg": 58.45,
+      "min": 0.0,
+      "max": 94.39
+    },
+    "view_time_ms": {
+      "avg": 6.25,
+      "min": 2.05,
+      "max": 9.96
+    },
+    "detection_time_ms": {
+      "avg": 23.38,
+      "min": 0.0,
+      "max": 37.76
+    },
+    "frame_extraction_time_ms": {
+      "avg": 5.08,
+      "min": 0.08,
+      "max": 9.89
+    },
+    "network_time_ms": {
+      "avg": 12.89,
+      "min": 5.15,
+      "max": 19.96
+    },
+    "render_time_ms": {
+      "avg": 29.16,
+      "min": 10.1,
+      "max": 49.4
+    },
+    "resize_time_ms": {
+      "avg": 19.8,
+      "min": 10.12,
+      "max": 29.86
+    },
+    "encoding_time_ms": {
+      "avg": 7.55,
+      "min": 5.07,
+      "max": 9.95
+    },
+    "decoding_time_ms": {
+      "avg": 9.01,
+      "min": 6.02,
+      "max": 12.0
+    },
+    "image_size_mb": {
+      "avg": 0.04,
+      "min": 0.02,
+      "max": 0.04
+    },
+    "throughput_mbps": {
+      "avg": 5.39,
+      "min": 0.0,
+      "max": 7.53
+    },
+    "run_time": "2026-01-31T15:19:30.338230",
+    "frames": 188,
+    "source": "samples/walking_people_hd.mp4",
+    "server_metrics": {
+      "frames": 188,
+      "inf_ms": [
+        44.64,
+        31.57,
+        79.62
+      ],
+      "mode": "udp",
+      "output_bytes": [
+        353.9,
+        2.0,
+        1011.0
+      ],
+      "output_kb": [
+        0.35,
+        0.0,
+        0.99
+      ],
+      "post_ms": [
+        1.9,
+        1.27,
+        2.91
+      ],
+      "pre_ms": [
+        8.86,
+        7.87,
+        12.58
+      ]
+    }
+  },
+  {
+    "fps_user": {
+      "avg": 15.3,
+      "min": 10.84,
+      "max": 15.67
+    },
+    "inference_latency_ms": {
+      "avg": 57.09,
+      "min": 41.55,
+      "max": 79.92
+    },
+    "detections": {
+      "avg": 2.78,
+      "min": 0.0,
+      "max": 8.0
+    },
+    "packet_loss": {
+      "avg": 0.0,
+      "min": 0.0,
+      "max": 0.0
+    },
+    "bandwidth_Bps": {
+      "avg": 36133.52,
+      "min": 0.0,
+      "max": 698150.48
+    },
+    "jitter_ms": {
+      "avg": 4.12,
+      "min": 0.0,
+      "max": 34.83
+    },
+    "update_time_ms": {
+      "avg": 57.09,
+      "min": 41.55,
+      "max": 79.92
+    },
+    "view_time_ms": {
+      "avg": 6.29,
+      "min": 2.03,
+      "max": 9.97
+    },
+    "detection_time_ms": {
+      "avg": 22.84,
+      "min": 16.62,
+      "max": 31.97
+    },
+    "frame_extraction_time_ms": {
+      "avg": 5.35,
+      "min": 0.12,
+      "max": 9.98
+    },
+    "network_time_ms": {
+      "avg": 12.48,
+      "min": 5.09,
+      "max": 19.98
+    },
+    "render_time_ms": {
+      "avg": 30.6,
+      "min": 10.45,
+      "max": 49.87
+    },
+    "resize_time_ms": {
+      "avg": 20.12,
+      "min": 10.05,
+      "max": 29.97
+    },
+    "encoding_time_ms": {
+      "avg": 7.81,
+      "min": 5.0,
+      "max": 10.0
+    },
+    "decoding_time_ms": {
+      "avg": 9.06,
+      "min": 6.0,
+      "max": 11.91
+    },
+    "image_size_mb": {
+      "avg": 0.04,
+      "min": 0.02,
+      "max": 0.04
+    },
+    "throughput_mbps": {
+      "avg": 5.6,
+      "min": 3.13,
+      "max": 8.19
+    },
+    "run_time": "2026-01-31T15:19:42.398226",
+    "frames": 188,
+    "source": "samples/walking_people_hd.mp4",
+    "server_metrics": {
+      "frames": 188,
+      "inf_ms": [
+        43.11,
+        29.47,
+        62.02
+      ],
+      "mode": "udp",
+      "output_bytes": [
+        353.9,
+        2.0,
+        1011.0
+      ],
+      "output_kb": [
+        0.35,
+        0.0,
+        0.99
+      ],
+      "post_ms": [
+        1.85,
+        1.24,
+        2.83
+      ],
+      "pre_ms": [
+        8.8,
+        7.89,
+        11.96
+      ]
+    }
+  },
+  {
+    "fps_user": {
+      "avg": 15.13,
+      "min": 12.15,
+      "max": 17.68
+    },
+    "inference_latency_ms": {
+      "avg": 57.54,
+      "min": 0.0,
+      "max": 97.1
+    },
+    "detections": {
+      "avg": 2.78,
+      "min": 0.0,
+      "max": 8.0
+    },
+    "packet_loss": {
+      "avg": 0.0,
+      "min": 0.0,
+      "max": 0.0
+    },
+    "bandwidth_Bps": {
+      "avg": 35835.37,
+      "min": 0.0,
+      "max": 668968.05
+    },
+    "jitter_ms": {
+      "avg": 4.58,
+      "min": 0.0,
+      "max": 59.72
+    },
+    "update_time_ms": {
+      "avg": 57.54,
+      "min": 0.0,
+      "max": 97.1
+    },
+    "view_time_ms": {
+      "avg": 6.01,
+      "min": 2.01,
+      "max": 9.98
+    },
+    "detection_time_ms": {
+      "avg": 23.02,
+      "min": 0.0,
+      "max": 38.84
+    },
+    "frame_extraction_time_ms": {
+      "avg": 5.06,
+      "min": 0.02,
+      "max": 9.96
+    },
+    "network_time_ms": {
+      "avg": 12.62,
+      "min": 5.05,
+      "max": 19.98
+    },
+    "render_time_ms": {
+      "avg": 30.02,
+      "min": 10.07,
+      "max": 49.75
+    },
+    "resize_time_ms": {
+      "avg": 20.49,
+      "min": 10.09,
+      "max": 29.76
+    },
+    "encoding_time_ms": {
+      "avg": 7.47,
+      "min": 5.1,
+      "max": 9.98
+    },
+    "decoding_time_ms": {
+      "avg": 9.12,
+      "min": 6.02,
+      "max": 11.98
+    },
+    "image_size_mb": {
+      "avg": 0.04,
+      "min": 0.02,
+      "max": 0.04
+    },
+    "throughput_mbps": {
+      "avg": 5.5,
+      "min": 0.0,
+      "max": 7.82
+    },
+    "run_time": "2026-01-31T15:19:54.544621",
+    "frames": 188,
+    "source": "samples/walking_people_hd.mp4",
+    "server_metrics": {
+      "frames": 188,
+      "inf_ms": [
+        43.96,
+        30.78,
+        82.28
+      ],
+      "mode": "udp",
+      "output_bytes": [
+        353.9,
+        2.0,
+        1011.0
+      ],
+      "output_kb": [
+        0.35,
+        0.0,
+        0.99
+      ],
+      "post_ms": [
+        1.85,
+        1.29,
+        2.62
+      ],
+      "pre_ms": [
+        8.71,
+        7.75,
+        11.11
+      ]
+    }
+  },
+  {
+    "fps_user": {
+      "avg": 14.85,
+      "min": 9.67,
+      "max": 15.24
+    },
+    "inference_latency_ms": {
+      "avg": 60.25,
+      "min": 44.68,
+      "max": 98.28
+    },
+    "detections": {
+      "avg": 2.78,
+      "min": 0.0,
+      "max": 8.0
+    },
+    "packet_loss": {
+      "avg": 0.0,
+      "min": 0.0,
+      "max": 0.0
+    },
+    "bandwidth_Bps": {
+      "avg": 37584.3,
+      "min": 0.0,
+      "max": 674674.39
+    },
+    "jitter_ms": {
+      "avg": 4.89,
+      "min": 0.0,
+      "max": 40.2
+    },
+    "update_time_ms": {
+      "avg": 60.25,
+      "min": 44.68,
+      "max": 98.28
+    },
+    "view_time_ms": {
+      "avg": 6.09,
+      "min": 2.07,
+      "max": 9.93
+    },
+    "detection_time_ms": {
+      "avg": 24.1,
+      "min": 17.87,
+      "max": 39.31
+    },
+    "frame_extraction_time_ms": {
+      "avg": 5.28,
+      "min": 0.11,
+      "max": 9.98
+    },
+    "network_time_ms": {
+      "avg": 12.28,
+      "min": 5.11,
+      "max": 19.97
+    },
+    "render_time_ms": {
+      "avg": 29.26,
+      "min": 10.13,
+      "max": 49.97
+    },
+    "resize_time_ms": {
+      "avg": 19.96,
+      "min": 10.02,
+      "max": 29.99
+    },
+    "encoding_time_ms": {
+      "avg": 7.5,
+      "min": 5.01,
+      "max": 9.98
+    },
+    "decoding_time_ms": {
+      "avg": 8.96,
+      "min": 6.01,
+      "max": 11.88
+    },
+    "image_size_mb": {
+      "avg": 0.04,
+      "min": 0.02,
+      "max": 0.04
+    },
+    "throughput_mbps": {
+      "avg": 5.33,
+      "min": 2.5,
+      "max": 7.6
+    },
+    "run_time": "2026-01-31T15:20:07.227141",
+    "frames": 188,
+    "source": "samples/walking_people_hd.mp4",
+    "server_metrics": {
+      "frames": 188,
+      "inf_ms": [
+        45.66,
+        31.0,
+        84.57
+      ],
+      "mode": "udp",
+      "output_bytes": [
+        353.9,
+        2.0,
+        1011.0
+      ],
+      "output_kb": [
+        0.35,
+        0.0,
+        0.99
+      ],
+      "post_ms": [
+        1.94,
+        1.34,
+        2.76
+      ],
+      "pre_ms": [
+        9.14,
+        8.32,
+        14.59
+      ]
+    }
+  },
+  {
+    "fps_user": {
+      "avg": 14.92,
+      "min": 10.75,
+      "max": 15.52
+    },
+    "inference_latency_ms": {
+      "avg": 57.64,
+      "min": 42.51,
+      "max": 83.41
+    },
+    "detections": {
+      "avg": 2.78,
+      "min": 0.0,
+      "max": 8.0
+    },
+    "packet_loss": {
+      "avg": 0.0,
+      "min": 0.0,
+      "max": 0.0
+    },
+    "bandwidth_Bps": {
+      "avg": 35814.75,
+      "min": 0.0,
+      "max": 664680.15
+    },
+    "jitter_ms": {
+      "avg": 4.2,
+      "min": 0.0,
+      "max": 26.5
+    },
+    "update_time_ms": {
+      "avg": 57.64,
+      "min": 42.51,
+      "max": 83.41
+    },
+    "view_time_ms": {
+      "avg": 6.11,
+      "min": 2.24,
+      "max": 9.98
+    },
+    "detection_time_ms": {
+      "avg": 23.06,
+      "min": 17.01,
+      "max": 33.36
+    },
+    "frame_extraction_time_ms": {
+      "avg": 4.54,
+      "min": 0.01,
+      "max": 9.78
+    },
+    "network_time_ms": {
+      "avg": 12.37,
+      "min": 5.41,
+      "max": 19.98
+    },
+    "render_time_ms": {
+      "avg": 30.1,
+      "min": 10.24,
+      "max": 49.92
+    },
+    "resize_time_ms": {
+      "avg": 19.96,
+      "min": 10.03,
+      "max": 29.95
+    },
+    "encoding_time_ms": {
+      "avg": 7.42,
+      "min": 5.03,
+      "max": 10.0
+    },
+    "decoding_time_ms": {
+      "avg": 9.01,
+      "min": 6.03,
+      "max": 12.0
+    },
+    "image_size_mb": {
+      "avg": 0.04,
+      "min": 0.02,
+      "max": 0.04
+    },
+    "throughput_mbps": {
+      "avg": 5.54,
+      "min": 3.17,
+      "max": 8.17
+    },
+    "run_time": "2026-01-31T15:20:19.386231",
+    "frames": 188,
+    "source": "samples/walking_people_hd.mp4",
+    "server_metrics": {
+      "frames": 188,
+      "inf_ms": [
+        43.63,
+        29.37,
+        64.37
+      ],
+      "mode": "udp",
+      "output_bytes": [
+        353.9,
+        2.0,
+        1011.0
+      ],
+      "output_kb": [
+        0.35,
+        0.0,
+        0.99
+      ],
+      "post_ms": [
+        1.83,
+        1.23,
+        2.95
+      ],
+      "pre_ms": [
+        8.8,
+        7.66,
+        14.71
+      ]
+    }
+  },
+  {
+    "fps_user": {
+      "avg": 15.78,
+      "min": 11.57,
+      "max": 32.29
+    },
+    "inference_latency_ms": {
+      "avg": 55.86,
+      "min": 0.0,
+      "max": 88.88
+    },
+    "detections": {
+      "avg": 2.78,
+      "min": 0.0,
+      "max": 8.0
+    },
+    "packet_loss": {
+      "avg": 0.0,
+      "min": 0.0,
+      "max": 0.0
+    },
+    "bandwidth_Bps": {
+      "avg": 37076.57,
+      "min": 0.0,
+      "max": 694252.95
+    },
+    "jitter_ms": {
+      "avg": 5.25,
+      "min": 0.0,
+      "max": 55.58
+    },
+    "update_time_ms": {
+      "avg": 55.86,
+      "min": 0.0,
+      "max": 88.88
+    },
+    "view_time_ms": {
+      "avg": 6.02,
+      "min": 2.05,
+      "max": 10.0
+    },
+    "detection_time_ms": {
+      "avg": 22.35,
+      "min": 0.0,
+      "max": 35.55
+    },
+    "frame_extraction_time_ms": {
+      "avg": 4.81,
+      "min": 0.01,
+      "max": 9.95
+    },
+    "network_time_ms": {
+      "avg": 12.49,
+      "min": 5.0,
+      "max": 19.91
+    },
+    "render_time_ms": {
+      "avg": 28.53,
+      "min": 10.75,
+      "max": 49.22
+    },
+    "resize_time_ms": {
+      "avg": 19.89,
+      "min": 10.02,
+      "max": 29.97
+    },
+    "encoding_time_ms": {
+      "avg": 7.45,
+      "min": 5.0,
+      "max": 9.95
+    },
+    "decoding_time_ms": {
+      "avg": 9.12,
+      "min": 6.05,
+      "max": 12.0
+    },
+    "image_size_mb": {
+      "avg": 0.04,
+      "min": 0.02,
+      "max": 0.04
+    },
+    "throughput_mbps": {
+      "avg": 5.67,
+      "min": 0.0,
+      "max": 8.48
+    },
+    "run_time": "2026-01-31T15:20:31.181280",
+    "frames": 188,
+    "source": "samples/walking_people_hd.mp4",
+    "server_metrics": {
+      "frames": 188,
+      "inf_ms": [
+        42.33,
+        28.72,
+        75.28
+      ],
+      "mode": "udp",
+      "output_bytes": [
+        353.9,
+        2.0,
+        1011.0
+      ],
+      "output_kb": [
+        0.35,
+        0.0,
+        0.99
+      ],
+      "post_ms": [
+        1.8,
+        1.2,
+        2.46
+      ],
+      "pre_ms": [
+        8.63,
+        7.86,
+        12.83
+      ]
+    }
+  },
+  {
+    "fps_user": {
+      "avg": 14.71,
+      "min": 10.45,
+      "max": 15.07
+    },
+    "inference_latency_ms": {
+      "avg": 59.7,
+      "min": 45.59,
+      "max": 98.19
+    },
+    "detections": {
+      "avg": 2.78,
+      "min": 0.0,
+      "max": 8.0
+    },
+    "packet_loss": {
+      "avg": 0.0,
+      "min": 0.0,
+      "max": 0.0
+    },
+    "bandwidth_Bps": {
+      "avg": 37892.55,
+      "min": 0.0,
+      "max": 653819.89
+    },
+    "jitter_ms": {
+      "avg": 5.93,
+      "min": 0.0,
+      "max": 35.86
+    },
+    "update_time_ms": {
+      "avg": 59.7,
+      "min": 45.59,
+      "max": 98.19
+    },
+    "view_time_ms": {
+      "avg": 5.73,
+      "min": 2.02,
+      "max": 10.0
+    },
+    "detection_time_ms": {
+      "avg": 23.88,
+      "min": 18.24,
+      "max": 39.28
+    },
+    "frame_extraction_time_ms": {
+      "avg": 4.99,
+      "min": 0.09,
+      "max": 9.97
+    },
+    "network_time_ms": {
+      "avg": 12.33,
+      "min": 5.05,
+      "max": 19.9
+    },
+    "render_time_ms": {
+      "avg": 30.02,
+      "min": 10.41,
+      "max": 49.72
+    },
+    "resize_time_ms": {
+      "avg": 19.55,
+      "min": 10.09,
+      "max": 29.96
+    },
+    "encoding_time_ms": {
+      "avg": 7.35,
+      "min": 5.03,
+      "max": 9.99
+    },
+    "decoding_time_ms": {
+      "avg": 9.02,
+      "min": 6.02,
+      "max": 11.91
+    },
+    "image_size_mb": {
+      "avg": 0.04,
+      "min": 0.02,
+      "max": 0.04
+    },
+    "throughput_mbps": {
+      "avg": 5.37,
+      "min": 2.99,
+      "max": 7.74
+    },
+    "run_time": "2026-01-31T15:20:43.776603",
+    "frames": 188,
+    "source": "samples/walking_people_hd.mp4",
+    "server_metrics": {
+      "frames": 188,
+      "inf_ms": [
+        44.99,
+        31.29,
+        82.25
+      ],
+      "mode": "udp",
+      "output_bytes": [
+        353.9,
+        2.0,
+        1011.0
+      ],
+      "output_kb": [
+        0.35,
+        0.0,
+        0.99
+      ],
+      "post_ms": [
+        1.97,
+        1.33,
+        2.54
+      ],
+      "pre_ms": [
+        9.23,
+        8.38,
+        11.53
+      ]
+    }
+  },
+  {
+    "fps_user": {
+      "avg": 15.0,
+      "min": 11.35,
+      "max": 18.04
+    },
+    "inference_latency_ms": {
+      "avg": 57.4,
+      "min": 0.0,
+      "max": 113.45
+    },
+    "detections": {
+      "avg": 2.78,
+      "min": 0.0,
+      "max": 8.0
+    },
+    "packet_loss": {
+      "avg": 0.0,
+      "min": 0.0,
+      "max": 0.0
+    },
+    "bandwidth_Bps": {
+      "avg": 36007.3,
+      "min": 0.0,
+      "max": 683892.41
+    },
+    "jitter_ms": {
+      "avg": 4.96,
+      "min": 0.0,
+      "max": 58.13
+    },
+    "update_time_ms": {
+      "avg": 57.4,
+      "min": 0.0,
+      "max": 113.45
+    },
+    "view_time_ms": {
+      "avg": 6.24,
+      "min": 2.02,
+      "max": 9.99
+    },
+    "detection_time_ms": {
+      "avg": 22.96,
+      "min": 0.0,
+      "max": 45.38
+    },
+    "frame_extraction_time_ms": {
+      "avg": 4.89,
+      "min": 0.04,
+      "max": 9.92
+    },
+    "network_time_ms": {
+      "avg": 12.99,
+      "min": 5.01,
+      "max": 19.98
+    },
+    "render_time_ms": {
+      "avg": 29.89,
+      "min": 10.46,
+      "max": 49.99
+    },
+    "resize_time_ms": {
+      "avg": 18.98,
+      "min": 10.14,
+      "max": 29.94
+    },
+    "encoding_time_ms": {
+      "avg": 7.41,
+      "min": 5.07,
+      "max": 9.99
+    },
+    "decoding_time_ms": {
+      "avg": 8.91,
+      "min": 6.05,
+      "max": 11.97
+    },
+    "image_size_mb": {
+      "avg": 0.04,
+      "min": 0.02,
+      "max": 0.04
+    },
+    "throughput_mbps": {
+      "avg": 5.53,
+      "min": 0.0,
+      "max": 8.14
+    },
+    "run_time": "2026-01-31T15:20:55.889194",
+    "frames": 188,
+    "source": "samples/walking_people_hd.mp4",
+    "server_metrics": {
+      "frames": 188,
+      "inf_ms": [
+        43.9,
+        29.74,
+        100.27
+      ],
+      "mode": "udp",
+      "output_bytes": [
+        353.9,
+        2.0,
+        1011.0
+      ],
+      "output_kb": [
+        0.35,
+        0.0,
+        0.99
+      ],
+      "post_ms": [
+        1.86,
+        1.25,
+        2.41
+      ],
+      "pre_ms": [
+        8.68,
+        7.88,
+        11.92
+      ]
+    }
+  },
+  {
+    "fps_user": {
+      "avg": 15.35,
+      "min": 9.35,
+      "max": 15.93
+    },
+    "inference_latency_ms": {
+      "avg": 58.38,
+      "min": 42.68,
+      "max": 118.5
+    },
+    "detections": {
+      "avg": 2.78,
+      "min": 0.0,
+      "max": 8.0
+    },
+    "packet_loss": {
+      "avg": 0.0,
+      "min": 0.0,
+      "max": 0.0
+    },
+    "bandwidth_Bps": {
+      "avg": 35557.96,
+      "min": 0.0,
+      "max": 702092.98
+    },
+    "jitter_ms": {
+      "avg": 5.19,
+      "min": 0.0,
+      "max": 60.92
+    },
+    "update_time_ms": {
+      "avg": 58.38,
+      "min": 42.68,
+      "max": 118.5
+    },
+    "view_time_ms": {
+      "avg": 5.91,
+      "min": 2.0,
+      "max": 9.99
+    },
+    "detection_time_ms": {
+      "avg": 23.35,
+      "min": 17.07,
+      "max": 47.4
+    },
+    "frame_extraction_time_ms": {
+      "avg": 4.87,
+      "min": 0.02,
+      "max": 9.96
+    },
+    "network_time_ms": {
+      "avg": 12.93,
+      "min": 5.07,
+      "max": 19.96
+    },
+    "render_time_ms": {
+      "avg": 30.3,
+      "min": 10.73,
+      "max": 49.56
+    },
+    "resize_time_ms": {
+      "avg": 19.88,
+      "min": 10.04,
+      "max": 29.99
+    },
+    "encoding_time_ms": {
+      "avg": 7.45,
+      "min": 5.06,
+      "max": 9.99
+    },
+    "decoding_time_ms": {
+      "avg": 9.1,
+      "min": 6.04,
+      "max": 11.97
+    },
+    "image_size_mb": {
+      "avg": 0.04,
+      "min": 0.02,
+      "max": 0.04
+    },
+    "throughput_mbps": {
+      "avg": 5.49,
+      "min": 3.08,
+      "max": 8.01
+    },
+    "run_time": "2026-01-31T15:21:08.175652",
+    "frames": 188,
+    "source": "samples/walking_people_hd.mp4",
+    "server_metrics": {
+      "frames": 188,
+      "inf_ms": [
+        44.17,
+        29.65,
+        101.47
+      ],
+      "mode": "udp",
+      "output_bytes": [
+        353.9,
+        2.0,
+        1011.0
+      ],
+      "output_kb": [
+        0.35,
+        0.0,
+        0.99
+      ],
+      "post_ms": [
+        1.87,
+        1.24,
+        2.76
+      ],
+      "pre_ms": [
+        8.94,
+        7.77,
+        10.99
+      ]
+    }
+  },
+  {
+    "fps_user": {
+      "avg": 14.65,
+      "min": 10.94,
+      "max": 15.17
+    },
+    "inference_latency_ms": {
+      "avg": 58.97,
+      "min": 42.99,
+      "max": 83.32
+    },
+    "detections": {
+      "avg": 2.78,
+      "min": 0.0,
+      "max": 8.0
+    },
+    "packet_loss": {
+      "avg": 0.0,
+      "min": 0.0,
+      "max": 0.0
+    },
+    "bandwidth_Bps": {
+      "avg": 38399.06,
+      "min": 0.0,
+      "max": 670103.78
+    },
+    "jitter_ms": {
+      "avg": 4.41,
+      "min": 0.0,
+      "max": 23.64
+    },
+    "update_time_ms": {
+      "avg": 58.97,
+      "min": 42.99,
+      "max": 83.32
+    },
+    "view_time_ms": {
+      "avg": 5.81,
+      "min": 2.04,
+      "max": 9.97
+    },
+    "detection_time_ms": {
+      "avg": 23.59,
+      "min": 17.2,
+      "max": 33.33
+    },
+    "frame_extraction_time_ms": {
+      "avg": 4.96,
+      "min": 0.05,
+      "max": 9.95
+    },
+    "network_time_ms": {
+      "avg": 12.45,
+      "min": 5.09,
+      "max": 19.9
+    },
+    "render_time_ms": {
+      "avg": 30.72,
+      "min": 10.33,
+      "max": 49.94
+    },
+    "resize_time_ms": {
+      "avg": 20.6,
+      "min": 10.24,
+      "max": 29.88
+    },
+    "encoding_time_ms": {
+      "avg": 7.54,
+      "min": 5.04,
+      "max": 9.99
+    },
+    "decoding_time_ms": {
+      "avg": 8.94,
+      "min": 6.0,
+      "max": 11.96
+    },
+    "image_size_mb": {
+      "avg": 0.04,
+      "min": 0.02,
+      "max": 0.04
+    },
+    "throughput_mbps": {
+      "avg": 5.43,
+      "min": 3.14,
+      "max": 8.13
+    },
+    "run_time": "2026-01-31T15:21:20.611673",
+    "frames": 188,
+    "source": "samples/walking_people_hd.mp4",
+    "server_metrics": {
+      "frames": 188,
+      "inf_ms": [
+        44.53,
+        29.45,
+        64.08
+      ],
+      "mode": "udp",
+      "output_bytes": [
+        353.9,
+        2.0,
+        1011.0
+      ],
+      "output_kb": [
+        0.35,
+        0.0,
+        0.99
+      ],
+      "post_ms": [
+        1.89,
+        1.29,
+        2.71
+      ],
+      "pre_ms": [
+        9.07,
+        8.07,
+        12.01
+      ]
+    }
+  },
+  {
+    "fps_user": {
+      "avg": 15.81,
+      "min": 12.56,
+      "max": 27.13
+    },
+    "inference_latency_ms": {
+      "avg": 56.27,
+      "min": 0.0,
+      "max": 84.13
+    },
+    "detections": {
+      "avg": 2.78,
+      "min": 0.0,
+      "max": 8.0
+    },
+    "packet_loss": {
+      "avg": 0.0,
+      "min": 0.0,
+      "max": 0.0
+    },
+    "bandwidth_Bps": {
+      "avg": 36703.03,
+      "min": 0.0,
+      "max": 674695.68
+    },
+    "jitter_ms": {
+      "avg": 6.2,
+      "min": 0.0,
+      "max": 58.04
+    },
+    "update_time_ms": {
+      "avg": 56.27,
+      "min": 0.0,
+      "max": 84.13
+    },
+    "view_time_ms": {
+      "avg": 5.95,
+      "min": 2.02,
+      "max": 9.92
+    },
+    "detection_time_ms": {
+      "avg": 22.51,
+      "min": 0.0,
+      "max": 33.65
+    },
+    "frame_extraction_time_ms": {
+      "avg": 4.62,
+      "min": 0.03,
+      "max": 9.94
+    },
+    "network_time_ms": {
+      "avg": 12.52,
+      "min": 5.04,
+      "max": 19.69
+    },
+    "render_time_ms": {
+      "avg": 30.1,
+      "min": 10.11,
+      "max": 49.73
+    },
+    "resize_time_ms": {
+      "avg": 19.99,
+      "min": 10.0,
+      "max": 29.98
+    },
+    "encoding_time_ms": {
+      "avg": 7.47,
+      "min": 5.0,
+      "max": 9.99
+    },
+    "decoding_time_ms": {
+      "avg": 8.9,
+      "min": 6.02,
+      "max": 12.0
+    },
+    "image_size_mb": {
+      "avg": 0.04,
+      "min": 0.02,
+      "max": 0.04
+    },
+    "throughput_mbps": {
+      "avg": 5.63,
+      "min": 0.0,
+      "max": 8.2
+    },
+    "run_time": "2026-01-31T15:21:32.534723",
+    "frames": 188,
+    "source": "samples/walking_people_hd.mp4",
+    "server_metrics": {
+      "frames": 188,
+      "inf_ms": [
+        42.47,
+        29.93,
+        65.0
+      ],
+      "mode": "udp",
+      "output_bytes": [
+        353.9,
+        2.0,
+        1011.0
+      ],
+      "output_kb": [
+        0.35,
+        0.0,
+        0.99
+      ],
+      "post_ms": [
+        1.84,
+        1.27,
+        2.57
+      ],
+      "pre_ms": [
+        8.94,
+        7.83,
+        15.3
+      ]
+    }
+  },
+  {
+    "fps_user": {
+      "avg": 15.19,
+      "min": 10.95,
+      "max": 15.56
+    },
+    "inference_latency_ms": {
+      "avg": 57.96,
+      "min": 43.54,
+      "max": 91.46
+    },
+    "detections": {
+      "avg": 2.78,
+      "min": 0.0,
+      "max": 8.0
+    },
+    "packet_loss": {
+      "avg": 0.0,
+      "min": 0.0,
+      "max": 0.0
+    },
+    "bandwidth_Bps": {
+      "avg": 35644.44,
+      "min": 0.0,
+      "max": 687201.77
+    },
+    "jitter_ms": {
+      "avg": 5.54,
+      "min": 0.0,
+      "max": 33.84
+    },
+    "update_time_ms": {
+      "avg": 57.96,
+      "min": 43.54,
+      "max": 91.46
+    },
+    "view_time_ms": {
+      "avg": 6.0,
+      "min": 2.01,
+      "max": 9.96
+    },
+    "detection_time_ms": {
+      "avg": 23.19,
+      "min": 17.42,
+      "max": 36.58
+    },
+    "frame_extraction_time_ms": {
+      "avg": 4.51,
+      "min": 0.03,
+      "max": 9.93
+    },
+    "network_time_ms": {
+      "avg": 12.57,
+      "min": 5.11,
+      "max": 19.76
+    },
+    "render_time_ms": {
+      "avg": 31.05,
+      "min": 10.12,
+      "max": 49.88
+    },
+    "resize_time_ms": {
+      "avg": 19.87,
+      "min": 10.22,
+      "max": 29.98
+    },
+    "encoding_time_ms": {
+      "avg": 7.56,
+      "min": 5.01,
+      "max": 9.99
+    },
+    "decoding_time_ms": {
+      "avg": 9.04,
+      "min": 6.01,
+      "max": 11.98
+    },
+    "image_size_mb": {
+      "avg": 0.04,
+      "min": 0.02,
+      "max": 0.04
+    },
+    "throughput_mbps": {
+      "avg": 5.52,
+      "min": 3.07,
+      "max": 8.05
+    },
+    "run_time": "2026-01-31T15:21:44.772190",
+    "frames": 188,
+    "source": "samples/walking_people_hd.mp4",
+    "server_metrics": {
+      "frames": 188,
+      "inf_ms": [
+        43.7,
+        30.52,
+        75.45
+      ],
+      "mode": "udp",
+      "output_bytes": [
+        353.9,
+        2.0,
+        1011.0
+      ],
+      "output_kb": [
+        0.35,
+        0.0,
+        0.99
+      ],
+      "post_ms": [
+        1.83,
+        1.26,
+        2.6
+      ],
+      "pre_ms": [
+        9.01,
+        8.03,
+        13.29
+      ]
+    }
+  },
+  {
+    "fps_user": {
+      "avg": 15.24,
+      "min": 10.68,
+      "max": 17.9
+    },
+    "inference_latency_ms": {
+      "avg": 56.97,
+      "min": 0.0,
+      "max": 91.6
+    },
+    "detections": {
+      "avg": 2.78,
+      "min": 0.0,
+      "max": 8.0
+    },
+    "packet_loss": {
+      "avg": 0.0,
+      "min": 0.0,
+      "max": 0.0
+    },
+    "bandwidth_Bps": {
+      "avg": 36227.08,
+      "min": 0.0,
+      "max": 668618.55
+    },
+    "jitter_ms": {
+      "avg": 5.43,
+      "min": 0.0,
+      "max": 58.08
+    },
+    "update_time_ms": {
+      "avg": 56.97,
+      "min": 0.0,
+      "max": 91.6
+    },
+    "view_time_ms": {
+      "avg": 6.26,
+      "min": 2.09,
+      "max": 9.99
+    },
+    "detection_time_ms": {
+      "avg": 22.79,
+      "min": 0.0,
+      "max": 36.64
+    },
+    "frame_extraction_time_ms": {
+      "avg": 5.03,
+      "min": 0.03,
+      "max": 9.99
+    },
+    "network_time_ms": {
+      "avg": 12.38,
+      "min": 5.06,
+      "max": 19.85
+    },
+    "render_time_ms": {
+      "avg": 29.32,
+      "min": 10.05,
+      "max": 49.7
+    },
+    "resize_time_ms": {
+      "avg": 19.71,
+      "min": 10.0,
+      "max": 29.78
+    },
+    "encoding_time_ms": {
+      "avg": 7.41,
+      "min": 5.0,
+      "max": 10.0
+    },
+    "decoding_time_ms": {
+      "avg": 8.89,
+      "min": 6.03,
+      "max": 11.96
+    },
+    "image_size_mb": {
+      "avg": 0.04,
+      "min": 0.02,
+      "max": 0.04
+    },
+    "throughput_mbps": {
+      "avg": 5.55,
+      "min": 0.0,
+      "max": 7.63
+    },
+    "run_time": "2026-01-31T15:21:56.836486",
+    "frames": 188,
+    "source": "samples/walking_people_hd.mp4",
+    "server_metrics": {
+      "frames": 188,
+      "inf_ms": [
+        43.29,
+        30.19,
+        76.93
+      ],
+      "mode": "udp",
+      "output_bytes": [
+        353.9,
+        2.0,
+        1011.0
+      ],
+      "output_kb": [
+        0.35,
+        0.0,
+        0.99
+      ],
+      "post_ms": [
+        1.89,
+        1.27,
+        3.44
+      ],
+      "pre_ms": [
+        8.82,
+        7.86,
+        12.86
+      ]
+    }
+  },
+  {
+    "fps_user": {
+      "avg": 15.14,
+      "min": 10.85,
+      "max": 15.55
+    },
+    "inference_latency_ms": {
+      "avg": 58.14,
+      "min": 42.95,
+      "max": 93.47
+    },
+    "detections": {
+      "avg": 2.78,
+      "min": 0.0,
+      "max": 8.0
+    },
+    "packet_loss": {
+      "avg": 0.0,
+      "min": 0.0,
+      "max": 0.0
+    },
+    "bandwidth_Bps": {
+      "avg": 35557.06,
+      "min": 0.0,
+      "max": 693221.19
+    },
+    "jitter_ms": {
+      "avg": 5.01,
+      "min": 0.0,
+      "max": 31.83
+    },
+    "update_time_ms": {
+      "avg": 58.14,
+      "min": 42.95,
+      "max": 93.47
+    },
+    "view_time_ms": {
+      "avg": 6.06,
+      "min": 2.02,
+      "max": 9.97
+    },
+    "detection_time_ms": {
+      "avg": 23.26,
+      "min": 17.18,
+      "max": 37.39
+    },
+    "frame_extraction_time_ms": {
+      "avg": 4.94,
+      "min": 0.07,
+      "max": 9.97
+    },
+    "network_time_ms": {
+      "avg": 12.34,
+      "min": 5.1,
+      "max": 19.89
+    },
+    "render_time_ms": {
+      "avg": 30.83,
+      "min": 10.02,
+      "max": 49.6
+    },
+    "resize_time_ms": {
+      "avg": 20.38,
+      "min": 10.03,
+      "max": 29.79
+    },
+    "encoding_time_ms": {
+      "avg": 7.41,
+      "min": 5.01,
+      "max": 9.99
+    },
+    "decoding_time_ms": {
+      "avg": 9.05,
+      "min": 6.02,
+      "max": 11.81
+    },
+    "image_size_mb": {
+      "avg": 0.04,
+      "min": 0.02,
+      "max": 0.04
+    },
+    "throughput_mbps": {
+      "avg": 5.51,
+      "min": 3.13,
+      "max": 8.26
+    },
+    "run_time": "2026-01-31T15:22:09.107187",
+    "frames": 188,
+    "source": "samples/walking_people_hd.mp4",
+    "server_metrics": {
+      "frames": 188,
+      "inf_ms": [
+        43.96,
+        29.71,
+        78.41
+      ],
+      "mode": "udp",
+      "output_bytes": [
+        353.9,
+        2.0,
+        1011.0
+      ],
+      "output_kb": [
+        0.35,
+        0.0,
+        0.99
+      ],
+      "post_ms": [
+        1.88,
+        1.27,
+        2.6
+      ],
+      "pre_ms": [
+        8.97,
+        8.06,
+        12.61
+      ]
+    }
+  },
+  {
+    "fps_user": {
+      "avg": 14.97,
+      "min": 10.88,
+      "max": 15.37
+    },
+    "inference_latency_ms": {
+      "avg": 58.3,
+      "min": 45.86,
+      "max": 91.17
+    },
+    "detections": {
+      "avg": 2.78,
+      "min": 0.0,
+      "max": 8.0
+    },
+    "packet_loss": {
+      "avg": 0.0,
+      "min": 0.0,
+      "max": 0.0
+    },
+    "bandwidth_Bps": {
+      "avg": 35452.83,
+      "min": 0.0,
+      "max": 659356.91
+    },
+    "jitter_ms": {
+      "avg": 3.53,
+      "min": 0.0,
+      "max": 32.74
+    },
+    "update_time_ms": {
+      "avg": 58.3,
+      "min": 45.86,
+      "max": 91.17
+    },
+    "view_time_ms": {
+      "avg": 5.87,
+      "min": 2.01,
+      "max": 9.83
+    },
+    "detection_time_ms": {
+      "avg": 23.32,
+      "min": 18.35,
+      "max": 36.47
+    },
+    "frame_extraction_time_ms": {
+      "avg": 5.22,
+      "min": 0.02,
+      "max": 9.99
+    },
+    "network_time_ms": {
+      "avg": 11.98,
+      "min": 5.05,
+      "max": 19.81
+    },
+    "render_time_ms": {
+      "avg": 30.11,
+      "min": 10.37,
+      "max": 49.63
+    },
+    "resize_time_ms": {
+      "avg": 20.39,
+      "min": 10.14,
+      "max": 29.95
+    },
+    "encoding_time_ms": {
+      "avg": 7.56,
+      "min": 5.02,
+      "max": 9.99
+    },
+    "decoding_time_ms": {
+      "avg": 9.06,
+      "min": 6.0,
+      "max": 11.98
+    },
+    "image_size_mb": {
+      "avg": 0.04,
+      "min": 0.02,
+      "max": 0.04
+    },
+    "throughput_mbps": {
+      "avg": 5.46,
+      "min": 3.12,
+      "max": 6.99
+    },
+    "run_time": "2026-01-31T15:22:21.396153",
+    "frames": 188,
+    "source": "samples/walking_people_hd.mp4",
+    "server_metrics": {
+      "frames": 188,
+      "inf_ms": [
+        44.18,
+        32.65,
+        76.69
+      ],
+      "mode": "udp",
+      "output_bytes": [
+        353.9,
+        2.0,
+        1011.0
+      ],
+      "output_kb": [
+        0.35,
+        0.0,
+        0.99
+      ],
+      "post_ms": [
+        1.84,
+        1.25,
+        2.54
+      ],
+      "pre_ms": [
+        8.89,
+        7.86,
+        12.36
+      ]
+    }
+  }
+]

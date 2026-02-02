@@ -19,7 +19,7 @@ spec:
       hostNetwork: true
       containers:
         - name: qos-monitor
-          image: 192.168.0.113:32000/wasm-inference:latest
+          image: 192.168.0.112:32000/wasm-inference:latest
           imagePullPolicy: Always
           command: ["app.wasm", "device", "--cpu", "--udp"]
           ports:

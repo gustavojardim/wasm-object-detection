@@ -1,0 +1,732 @@
+[
+  {
+    "client_id": 0,
+    "status": "failed",
+    "error": "{'error': 'No nodes with latency <= 80ms', 'latencies': [{'inference_latency_ms': 106.75525665283203, 'ip': '192.168.0.112', 'name': 'gspadotto'}, {'inference_latency_ms': 94.7256088256836, 'ip': '192.168.0.103', 'name': 'gustavojardim'}], 'status': 'failed'}",
+    "elapsed": 6.459136724472046
+  },
+  {
+    "client_id": 4,
+    "status": "failed",
+    "error": "{'error': 'No nodes with latency <= 80ms', 'latencies': [{'inference_latency_ms': 95.08395195007324, 'ip': '192.168.0.112', 'name': 'gspadotto'}], 'status': 'failed'}",
+    "elapsed": 1.1189520359039307
+  },
+  {
+    "client_id": 6,
+    "status": "failed",
+    "error": "{'error': 'No nodes available under pod limits', 'pod_counts': {'gspadotto': 1, 'gustavojardim': 2, 'xub01': 1}, 'status': 'failed'}",
+    "elapsed": 2.5231456756591797
+  },
+  {
+    "client_id": 2,
+    "status": "success",
+    "deploy_time": 2.579744577407837,
+    "pod_name": "wasm-inference-client-2-1769954836",
+    "node_ip": "192.168.0.103",
+    "udp_port": 30085,
+    "elapsed": 2.5886855125427246,
+    "udp_video_result": "[INFO] --remote: Using HOST=192.168.0.103, PORT=30085\n\n--- Run 1 of 1 ---\nVideo: 1280x720 @ 30fps, 188 frames\nConnecting to 192.168.0.103:30085 (UDP)...\nConnected! Processing video...\nProgress: 30/188 (16.0%) | Avg FPS: 12.4 | Elapsed: 2.5s | Loss: 0 | BW: 514.7KB/s | Jitter: 9.1ms\nProgress: 60/188 (31.9%) | Avg FPS: 12.2 | Elapsed: 5.0s | Loss: 0 | BW: 487.6KB/s | Jitter: 18.3ms\n[WARN] UDP response timeout\nNo response from server (timeout)\nProgress: 90/188 (47.9%) | Avg FPS: 11.3 | Elapsed: 8.1s | Loss: 0 | BW: 430.2KB/s | Jitter: 52.1ms\nProgress: 120/188 (63.8%) | Avg FPS: 9.5 | Elapsed: 12.7s | Loss: 0 | BW: 366.8KB/s | Jitter: 20.9ms\nProgress: 150/188 (79.8%) | Avg FPS: 8.5 | Elapsed: 17.6s | Loss: 0 | BW: 334.3KB/s | Jitter: 37.2ms\nProgress: 180/188 (95.7%) | Avg FPS: 7.9 | Elapsed: 22.8s | Loss: 0 | BW: 310.8KB/s | Jitter: 35.6ms\n\nUDP Server Metrics Summary:\n[{'class_id': 2, 'class': 'car', 'confidence': 0.61270535, 'bbox': {'x1': 0.926767, 'y1': 0.6108858, 'x2': 0.99954414, 'y2': 0.8032692}}]\n\n****************************************\nTime: 24.146179s\nFrames: 188\nMissed frames: 1\nUser FPS: 7.802190\nProcessing FPS: 11.238879\n****************************************\n\nClient Metrics Summary:\nMetric                              Avg        Min        Max\n-------------------------------------------------------------\nFPS                                7.80       1.99     134.17\nMissed frames                         1\nLatency (ms)                     111.50       7.45     342.49\nDetections                         2.79       0.00       8.00\nPacket loss                        0.00       0.00       0.00\nBandwidth (Bps)                36908.39       0.00  651972.13\nJitter (ms)                       26.72       0.00     494.68\nUpdate time (ms)                 111.50       7.45     342.49\nView time (ms)                     6.26       2.04       9.92\nDetection time (ms)               44.60       2.98     137.00\nFrame extraction time (ms)         4.98       0.09       9.96\nNetwork time (ms)                 12.44       5.17      19.97\nRender time (ms)                  30.49      10.20      49.88\nResize time (ms)                  19.93      10.12      29.99\nEncoding time (ms)                 7.53       5.05       9.98\nDecoding time (ms)                 8.86       6.07      12.00\nImage size (Mb)                    0.04       0.02       0.04\nThruput (Mb/s)                     3.52       0.99      30.38\n****************************************\n",
+    "udp_video_error": "QFontDatabase: Cannot find font directory /home/gjardim/wasm-object-detection/.venv/lib/python3.12/site-packages/cv2/qt/fonts.\nNote that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.\nQFontDatabase: Cannot find font directory /home/gjardim/wasm-object-detection/.venv/lib/python3.12/site-packages/cv2/qt/fonts.\nNote that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.\nQFontDatabase: Cannot find font directory /home/gjardim/wasm-object-detection/.venv/lib/python3.12/site-packages/cv2/qt/fonts.\nNote that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.\nQFontDatabase: Cannot find font directory /home/gjardim/wasm-object-detection/.venv/lib/python3.12/site-packages/cv2/qt/fonts.\nNote that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.\nQFontDatabase: Cannot find font directory /home/gjardim/wasm-object-detection/.venv/lib/python3.12/site-packages/cv2/qt/fonts.\nNote that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.\n"
+  },
+  {
+    "client_id": 7,
+    "status": "failed",
+    "error": "{'error': 'No nodes available under pod limits', 'pod_counts': {'gspadotto': 1, 'gustavojardim': 2, 'xub01': 1}, 'status': 'failed'}",
+    "elapsed": 2.638247489929199
+  },
+  {
+    "client_id": 1,
+    "status": "success",
+    "deploy_time": 5.98895525932312,
+    "pod_name": "wasm-inference-client-1-1769954839",
+    "node_ip": "192.168.0.114",
+    "udp_port": 30083,
+    "elapsed": 6.056284666061401,
+    "udp_video_result": "[INFO] --remote: Using HOST=192.168.0.114, PORT=30083\n\n--- Run 1 of 1 ---\nVideo: 1280x720 @ 30fps, 188 frames\nConnecting to 192.168.0.114:30083 (UDP)...\nConnected! Processing video...\nProgress: 30/188 (16.0%) | Avg FPS: 8.1 | Elapsed: 3.8s | Loss: 0 | BW: 351.3KB/s | Jitter: 18.3ms\nProgress: 60/188 (31.9%) | Avg FPS: 8.7 | Elapsed: 7.0s | Loss: 0 | BW: 345.9KB/s | Jitter: 7.6ms\nProgress: 90/188 (47.9%) | Avg FPS: 8.9 | Elapsed: 10.2s | Loss: 0 | BW: 334.5KB/s | Jitter: 12.7ms\nProgress: 120/188 (63.8%) | Avg FPS: 8.7 | Elapsed: 13.8s | Loss: 0 | BW: 334.9KB/s | Jitter: 22.1ms\nProgress: 150/188 (79.8%) | Avg FPS: 8.8 | Elapsed: 17.1s | Loss: 0 | BW: 335.4KB/s | Jitter: 7.9ms\nProgress: 180/188 (95.7%) | Avg FPS: 8.8 | Elapsed: 20.6s | Loss: 0 | BW: 338.2KB/s | Jitter: 10.4ms\n\nUDP Server Metrics Summary:\nMetric                  Avg        Min        Max\n--------------------------------------------------\ninf_ms                67.38      51.28     276.44\noutput_bytes         353.95       2.00    1014.00\noutput_kb              0.35       0.00       0.99\npost_ms                2.19       1.73       3.53\npre_ms                13.95       8.82      23.28\nframes: 188\nmode: udp\n\n****************************************\nTime: 21.377671s\nFrames: 188\nMissed frames: 0\nUser FPS: 8.818023\nProcessing FPS: 11.077724\n****************************************\n\nClient Metrics Summary:\nMetric                              Avg        Min        Max\n-------------------------------------------------------------\nFPS                                8.82       0.00      13.28\nMissed frames                         0\nLatency (ms)                      92.34       0.00     312.44\nDetections                         2.78       0.00       8.00\nPacket loss                        0.00       0.00       0.00\nBandwidth (Bps)                36895.16       0.00  439515.95\nJitter (ms)                       14.33       0.00     225.36\nUpdate time (ms)                  92.34       0.00     312.44\nView time (ms)                     6.24       2.04       9.92\nDetection time (ms)               36.93       0.00     124.98\nFrame extraction time (ms)         4.97       0.09       9.96\nNetwork time (ms)                 12.47       5.17      19.97\nRender time (ms)                  30.41      10.20      49.88\nResize time (ms)                  19.90      10.12      29.99\nEncoding time (ms)                 7.53       5.05       9.98\nDecoding time (ms)                 8.87       6.07      12.00\nImage size (Mb)                    0.04       0.02       0.04\nThruput (Mb/s)                     3.51       0.00       4.66\n****************************************\n",
+    "udp_video_error": "QFontDatabase: Cannot find font directory /home/gjardim/wasm-object-detection/.venv/lib/python3.12/site-packages/cv2/qt/fonts.\nNote that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.\nQFontDatabase: Cannot find font directory /home/gjardim/wasm-object-detection/.venv/lib/python3.12/site-packages/cv2/qt/fonts.\nNote that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.\nQFontDatabase: Cannot find font directory /home/gjardim/wasm-object-detection/.venv/lib/python3.12/site-packages/cv2/qt/fonts.\nNote that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.\nQFontDatabase: Cannot find font directory /home/gjardim/wasm-object-detection/.venv/lib/python3.12/site-packages/cv2/qt/fonts.\nNote that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.\nQFontDatabase: Cannot find font directory /home/gjardim/wasm-object-detection/.venv/lib/python3.12/site-packages/cv2/qt/fonts.\nNote that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.\n"
+  },
+  {
+    "client_id": 3,
+    "status": "success",
+    "deploy_time": 5.106367111206055,
+    "pod_name": "wasm-inference-client-3-1769954843",
+    "node_ip": "192.168.0.103",
+    "udp_port": 30086,
+    "elapsed": 5.121078968048096,
+    "udp_video_result": "[INFO] --remote: Using HOST=192.168.0.103, PORT=30086\n\n--- Run 1 of 1 ---\nVideo: 1280x720 @ 30fps, 188 frames\nConnecting to 192.168.0.103:30086 (UDP)...\nConnected! Processing video...\nProgress: 30/188 (16.0%) | Avg FPS: 4.6 | Elapsed: 6.6s | Loss: 0 | BW: 191.6KB/s | Jitter: 37.7ms\nProgress: 60/188 (31.9%) | Avg FPS: 4.7 | Elapsed: 12.8s | Loss: 0 | BW: 188.9KB/s | Jitter: 59.2ms\nProgress: 90/188 (47.9%) | Avg FPS: 5.1 | Elapsed: 17.8s | Loss: 0 | BW: 184.3KB/s | Jitter: 41.2ms\nProgress: 120/188 (63.8%) | Avg FPS: 6.1 | Elapsed: 19.8s | Loss: 0 | BW: 229.8KB/s | Jitter: 2.8ms\nProgress: 150/188 (79.8%) | Avg FPS: 6.9 | Elapsed: 21.8s | Loss: 0 | BW: 264.6KB/s | Jitter: 5.1ms\nProgress: 180/188 (95.7%) | Avg FPS: 7.6 | Elapsed: 23.7s | Loss: 0 | BW: 295.5KB/s | Jitter: 2.7ms\n\nUDP Server Metrics Summary:\nMetric                  Avg        Min        Max\n--------------------------------------------------\ninf_ms               102.50      39.92     396.48\noutput_bytes         353.90       2.00    1011.00\noutput_kb              0.35       0.00       0.99\npost_ms                2.22       1.31       5.09\npre_ms                10.97       7.94      23.75\nframes: 188\nmode: udp\n\n****************************************\nTime: 24.276524s\nFrames: 188\nMissed frames: 0\nUser FPS: 7.765820\nProcessing FPS: 12.092978\n****************************************\n\nClient Metrics Summary:\nMetric                              Avg        Min        Max\n-------------------------------------------------------------\nFPS                                7.77       0.00      19.43\nMissed frames                         0\nLatency (ms)                     116.65       0.00     416.35\nDetections                         2.78       0.00       8.00\nPacket loss                        0.00       0.00       0.00\nBandwidth (Bps)                35408.65       0.00  643074.01\nJitter (ms)                       23.87       0.00     249.56\nUpdate time (ms)                 116.65       0.00     416.35\nView time (ms)                     6.24       2.04       9.92\nDetection time (ms)               46.66       0.00     166.54\nFrame extraction time (ms)         4.97       0.09       9.96\nNetwork time (ms)                 12.47       5.17      19.97\nRender time (ms)                  30.41      10.20      49.88\nResize time (ms)                  19.90      10.12      29.99\nEncoding time (ms)                 7.53       5.05       9.98\nDecoding time (ms)                 8.87       6.07      12.00\nImage size (Mb)                    0.04       0.02       0.04\nThruput (Mb/s)                     3.86       0.00       6.74\n****************************************\n",
+    "udp_video_error": "QFontDatabase: Cannot find font directory /home/gjardim/wasm-object-detection/.venv/lib/python3.12/site-packages/cv2/qt/fonts.\nNote that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.\nQFontDatabase: Cannot find font directory /home/gjardim/wasm-object-detection/.venv/lib/python3.12/site-packages/cv2/qt/fonts.\nNote that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.\nQFontDatabase: Cannot find font directory /home/gjardim/wasm-object-detection/.venv/lib/python3.12/site-packages/cv2/qt/fonts.\nNote that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.\nQFontDatabase: Cannot find font directory /home/gjardim/wasm-object-detection/.venv/lib/python3.12/site-packages/cv2/qt/fonts.\nNote that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.\nQFontDatabase: Cannot find font directory /home/gjardim/wasm-object-detection/.venv/lib/python3.12/site-packages/cv2/qt/fonts.\nNote that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.\n"
+  },
+  {
+    "client_id": 5,
+    "status": "success",
+    "deploy_time": 2.4330215454101562,
+    "pod_name": "wasm-inference-client-5-1769954851",
+    "node_ip": "192.168.0.112",
+    "udp_port": 30083,
+    "elapsed": 2.4518020153045654,
+    "udp_video_result": "[INFO] --remote: Using HOST=192.168.0.112, PORT=30083\n\n--- Run 1 of 1 ---\nVideo: 1280x720 @ 30fps, 188 frames\nConnecting to 192.168.0.112:30083 (UDP)...\nConnected! Processing video...\nProgress: 30/188 (16.0%) | Avg FPS: 10.4 | Elapsed: 3.1s | Loss: 0 | BW: 413.5KB/s | Jitter: 10.9ms\nProgress: 60/188 (31.9%) | Avg FPS: 11.5 | Elapsed: 5.5s | Loss: 0 | BW: 444.7KB/s | Jitter: 3.6ms\nProgress: 90/188 (47.9%) | Avg FPS: 12.0 | Elapsed: 7.7s | Loss: 0 | BW: 441.0KB/s | Jitter: 4.5ms\nProgress: 120/188 (63.8%) | Avg FPS: 11.6 | Elapsed: 10.6s | Loss: 0 | BW: 437.3KB/s | Jitter: 19.3ms\nProgress: 150/188 (79.8%) | Avg FPS: 11.5 | Elapsed: 13.3s | Loss: 0 | BW: 438.7KB/s | Jitter: 3.2ms\nProgress: 180/188 (95.7%) | Avg FPS: 11.3 | Elapsed: 16.2s | Loss: 0 | BW: 431.9KB/s | Jitter: 3.1ms\n\nUDP Server Metrics Summary:\nMetric                  Avg        Min        Max\n--------------------------------------------------\ninf_ms                52.42      35.66     171.80\noutput_bytes         353.91       2.00    1014.00\noutput_kb              0.35       0.00       0.99\npost_ms                1.90       1.55       3.65\npre_ms                 9.63       7.19      17.03\nframes: 188\nmode: udp\n\n****************************************\nTime: 16.979267s\nFrames: 188\nMissed frames: 0\nUser FPS: 11.218485\nProcessing FPS: 14.894680\n****************************************\n\nClient Metrics Summary:\nMetric                              Avg        Min        Max\n-------------------------------------------------------------\nFPS                               11.22       0.00      20.05\nMissed frames                         0\nLatency (ms)                      71.19       0.00     206.68\nDetections                         2.78       0.00       8.00\nPacket loss                        0.00       0.00       0.00\nBandwidth (Bps)                37580.21       0.00  556425.52\nJitter (ms)                        7.23       0.00     145.19\nUpdate time (ms)                  71.19       0.00     206.68\nView time (ms)                     6.24       2.04       9.92\nDetection time (ms)               28.48       0.00      82.67\nFrame extraction time (ms)         4.97       0.09       9.96\nNetwork time (ms)                 12.47       5.17      19.97\nRender time (ms)                  30.41      10.20      49.88\nResize time (ms)                  19.90      10.12      29.99\nEncoding time (ms)                 7.53       5.05       9.98\nDecoding time (ms)                 8.87       6.07      12.00\nImage size (Mb)                    0.04       0.02       0.04\nThruput (Mb/s)                     4.69       0.00       7.20\n****************************************\n",
+    "udp_video_error": "QFontDatabase: Cannot find font directory /home/gjardim/wasm-object-detection/.venv/lib/python3.12/site-packages/cv2/qt/fonts.\nNote that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.\nQFontDatabase: Cannot find font directory /home/gjardim/wasm-object-detection/.venv/lib/python3.12/site-packages/cv2/qt/fonts.\nNote that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.\nQFontDatabase: Cannot find font directory /home/gjardim/wasm-object-detection/.venv/lib/python3.12/site-packages/cv2/qt/fonts.\nNote that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.\nQFontDatabase: Cannot find font directory /home/gjardim/wasm-object-detection/.venv/lib/python3.12/site-packages/cv2/qt/fonts.\nNote that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.\nQFontDatabase: Cannot find font directory /home/gjardim/wasm-object-detection/.venv/lib/python3.12/site-packages/cv2/qt/fonts.\nNote that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.\n"
+  },
+  {
+    "client_id": 9,
+    "status": "failed",
+    "error": "{'error': 'No nodes available under pod limits', 'pod_counts': {'gspadotto': 1, 'gustavojardim': 2, 'xub01': 1}, 'status': 'failed'}",
+    "elapsed": 0.1017909049987793
+  },
+  {
+    "client_id": 8,
+    "status": "success",
+    "deploy_time": 2.5512003898620605,
+    "pod_name": "wasm-inference-client-8-1769954861",
+    "node_ip": "192.168.0.112",
+    "udp_port": 30084,
+    "elapsed": 2.607603073120117,
+    "udp_video_result": "[INFO] --remote: Using HOST=192.168.0.112, PORT=30084\n\n--- Run 1 of 1 ---\nVideo: 1280x720 @ 30fps, 188 frames\nConnecting to 192.168.0.112:30084 (UDP)...\nConnected! Processing video...\nProgress: 30/188 (16.0%) | Avg FPS: 11.8 | Elapsed: 2.6s | Loss: 0 | BW: 514.1KB/s | Jitter: 8.4ms\nProgress: 60/188 (31.9%) | Avg FPS: 11.7 | Elapsed: 5.2s | Loss: 0 | BW: 474.6KB/s | Jitter: 2.4ms\nProgress: 90/188 (47.9%) | Avg FPS: 11.3 | Elapsed: 8.0s | Loss: 0 | BW: 428.4KB/s | Jitter: 2.1ms\nProgress: 120/188 (63.8%) | Avg FPS: 12.2 | Elapsed: 9.9s | Loss: 0 | BW: 452.4KB/s | Jitter: 2.8ms\nProgress: 150/188 (79.8%) | Avg FPS: 13.0 | Elapsed: 11.6s | Loss: 0 | BW: 492.2KB/s | Jitter: 3.5ms\nProgress: 180/188 (95.7%) | Avg FPS: 13.5 | Elapsed: 13.4s | Loss: 0 | BW: 508.1KB/s | Jitter: 2.3ms\n\nUDP Server Metrics Summary:\nMetric                  Avg        Min        Max\n--------------------------------------------------\ninf_ms                49.10      35.48     132.33\noutput_bytes         353.91       2.00    1014.00\noutput_kb              0.35       0.00       0.99\npost_ms                1.99       1.59       3.53\npre_ms                 9.16       7.27      16.78\nframes: 188\nmode: udp\n\n****************************************\nTime: 13.815689s\nFrames: 188\nMissed frames: 0\nUser FPS: 13.639143\nProcessing FPS: 16.097954\n****************************************\n\nClient Metrics Summary:\nMetric                              Avg        Min        Max\n-------------------------------------------------------------\nFPS                               13.64       6.56      20.22\nMissed frames                         0\nLatency (ms)                      65.99      49.45     152.38\nDetections                         2.78       0.00       8.00\nPacket loss                        0.00       0.00       0.00\nBandwidth (Bps)                37045.56       0.00  721431.58\nJitter (ms)                        3.54       0.00      48.36\nUpdate time (ms)                  65.99      49.45     152.38\nView time (ms)                     6.24       2.04       9.92\nDetection time (ms)               26.40      19.78      60.95\nFrame extraction time (ms)         4.97       0.09       9.96\nNetwork time (ms)                 12.47       5.17      19.97\nRender time (ms)                  30.41      10.20      49.88\nResize time (ms)                  19.90      10.12      29.99\nEncoding time (ms)                 7.53       5.05       9.98\nDecoding time (ms)                 8.87       6.07      12.00\nImage size (Mb)                    0.04       0.02       0.04\nThruput (Mb/s)                     5.16       2.10       7.27\n****************************************\n",
+    "udp_video_error": "QFontDatabase: Cannot find font directory /home/gjardim/wasm-object-detection/.venv/lib/python3.12/site-packages/cv2/qt/fonts.\nNote that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.\nQFontDatabase: Cannot find font directory /home/gjardim/wasm-object-detection/.venv/lib/python3.12/site-packages/cv2/qt/fonts.\nNote that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.\nQFontDatabase: Cannot find font directory /home/gjardim/wasm-object-detection/.venv/lib/python3.12/site-packages/cv2/qt/fonts.\nNote that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.\nQFontDatabase: Cannot find font directory /home/gjardim/wasm-object-detection/.venv/lib/python3.12/site-packages/cv2/qt/fonts.\nNote that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.\nQFontDatabase: Cannot find font directory /home/gjardim/wasm-object-detection/.venv/lib/python3.12/site-packages/cv2/qt/fonts.\nNote that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.\n"
+  },
+  {
+    "client_id": 2,
+    "status": "success",
+    "deploy_time": 7.070799112319946,
+    "pod_name": "wasm-inference-client-2-1769954924",
+    "node_ip": "192.168.0.103",
+    "udp_port": 30085,
+    "elapsed": 7.078465461730957,
+    "udp_video_result": "[INFO] --remote: Using HOST=192.168.0.103, PORT=30085\n\n--- Run 1 of 1 ---\nVideo: 1280x720 @ 30fps, 188 frames\nConnecting to 192.168.0.103:30085 (UDP)...\nConnected! Processing video...\nProgress: 30/188 (16.0%) | Avg FPS: 11.2 | Elapsed: 2.7s | Loss: 0 | BW: 509.2KB/s | Jitter: 15.6ms\nProgress: 60/188 (31.9%) | Avg FPS: 12.2 | Elapsed: 5.0s | Loss: 0 | BW: 502.8KB/s | Jitter: 21.1ms\nProgress: 90/188 (47.9%) | Avg FPS: 10.2 | Elapsed: 8.9s | Loss: 0 | BW: 385.2KB/s | Jitter: 34.9ms\nProgress: 120/188 (63.8%) | Avg FPS: 10.1 | Elapsed: 12.0s | Loss: 0 | BW: 387.7KB/s | Jitter: 7.8ms\nProgress: 150/188 (79.8%) | Avg FPS: 10.0 | Elapsed: 15.1s | Loss: 0 | BW: 382.7KB/s | Jitter: 10.2ms\nProgress: 180/188 (95.7%) | Avg FPS: 9.9 | Elapsed: 18.2s | Loss: 0 | BW: 382.7KB/s | Jitter: 11.5ms\n\nUDP Server Metrics Summary:\nMetric                  Avg        Min        Max\n--------------------------------------------------\ninf_ms                72.44      39.03     394.66\noutput_bytes         353.90       2.00    1011.00\noutput_kb              0.35       0.00       0.99\npost_ms                2.32       1.34       5.05\npre_ms                11.61       7.83      23.80\nframes: 188\nmode: udp\n\n****************************************\nTime: 18.907527s\nFrames: 188\nMissed frames: 0\nUser FPS: 9.975741\nProcessing FPS: 12.414132\n****************************************\n\nClient Metrics Summary:\nMetric                              Avg        Min        Max\n-------------------------------------------------------------\nFPS                                9.98       2.42      19.60\nMissed frames                         0\nLatency (ms)                      88.65      51.01     413.26\nDetections                         2.78       0.00       8.00\nPacket loss                        0.00       0.00       0.00\nBandwidth (Bps)                37830.23       0.00  659060.32\nJitter (ms)                       16.60       0.00     287.72\nUpdate time (ms)                  88.65      51.01     413.26\nView time (ms)                     6.24       2.04       9.92\nDetection time (ms)               35.46      20.41     165.30\nFrame extraction time (ms)         4.97       0.09       9.96\nNetwork time (ms)                 12.47       5.17      19.97\nRender time (ms)                  30.41      10.20      49.88\nResize time (ms)                  19.90      10.12      29.99\nEncoding time (ms)                 7.53       5.05       9.98\nDecoding time (ms)                 8.87       6.07      12.00\nImage size (Mb)                    0.04       0.02       0.04\nThruput (Mb/s)                     3.97       0.65       6.88\n****************************************\n",
+    "udp_video_error": "QFontDatabase: Cannot find font directory /home/gjardim/wasm-object-detection/.venv/lib/python3.12/site-packages/cv2/qt/fonts.\nNote that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.\nQFontDatabase: Cannot find font directory /home/gjardim/wasm-object-detection/.venv/lib/python3.12/site-packages/cv2/qt/fonts.\nNote that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.\nQFontDatabase: Cannot find font directory /home/gjardim/wasm-object-detection/.venv/lib/python3.12/site-packages/cv2/qt/fonts.\nNote that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.\nQFontDatabase: Cannot find font directory /home/gjardim/wasm-object-detection/.venv/lib/python3.12/site-packages/cv2/qt/fonts.\nNote that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.\nQFontDatabase: Cannot find font directory /home/gjardim/wasm-object-detection/.venv/lib/python3.12/site-packages/cv2/qt/fonts.\nNote that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.\n"
+  },
+  {
+    "client_id": 1,
+    "status": "success",
+    "deploy_time": 11.548542261123657,
+    "pod_name": "wasm-inference-client-1-1769954927",
+    "node_ip": "192.168.0.103",
+    "udp_port": 30086,
+    "elapsed": 11.557470321655273,
+    "udp_video_result": "[INFO] --remote: Using HOST=192.168.0.103, PORT=30086\n\n--- Run 1 of 1 ---\nVideo: 1280x720 @ 30fps, 188 frames\nConnecting to 192.168.0.103:30086 (UDP)...\nConnected! Processing video...\nProgress: 30/188 (16.0%) | Avg FPS: 6.8 | Elapsed: 4.5s | Loss: 0 | BW: 277.8KB/s | Jitter: 31.6ms\nProgress: 60/188 (31.9%) | Avg FPS: 7.8 | Elapsed: 7.8s | Loss: 0 | BW: 313.4KB/s | Jitter: 10.5ms\nProgress: 90/188 (47.9%) | Avg FPS: 8.3 | Elapsed: 10.9s | Loss: 0 | BW: 309.9KB/s | Jitter: 10.7ms\nProgress: 120/188 (63.8%) | Avg FPS: 8.6 | Elapsed: 14.0s | Loss: 0 | BW: 328.3KB/s | Jitter: 9.5ms\nProgress: 150/188 (79.8%) | Avg FPS: 9.3 | Elapsed: 16.1s | Loss: 0 | BW: 353.3KB/s | Jitter: 4.9ms\nProgress: 180/188 (95.7%) | Avg FPS: 10.0 | Elapsed: 18.1s | Loss: 0 | BW: 384.4KB/s | Jitter: 4.0ms\n\nUDP Server Metrics Summary:\nMetric                  Avg        Min        Max\n--------------------------------------------------\ninf_ms                71.48      31.47     301.38\noutput_bytes         353.90       2.00    1011.00\noutput_kb              0.35       0.00       0.99\npost_ms                2.30       1.28       5.66\npre_ms                11.20       8.11      15.99\nframes: 188\nmode: udp\n\n****************************************\nTime: 18.560390s\nFrames: 188\nMissed frames: 0\nUser FPS: 10.168873\nProcessing FPS: 12.617109\n****************************************\n\nClient Metrics Summary:\nMetric                              Avg        Min        Max\n-------------------------------------------------------------\nFPS                               10.17       3.13      23.01\nMissed frames                         0\nLatency (ms)                      87.60      43.46     319.12\nDetections                         2.78       0.00       8.00\nPacket loss                        0.00       0.00       0.00\nBandwidth (Bps)                35592.66       0.00  662565.42\nJitter (ms)                       11.69       0.00     149.96\nUpdate time (ms)                  87.60      43.46     319.12\nView time (ms)                     6.24       2.04       9.92\nDetection time (ms)               35.04      17.39     127.65\nFrame extraction time (ms)         4.97       0.09       9.96\nNetwork time (ms)                 12.47       5.17      19.97\nRender time (ms)                  30.41      10.20      49.88\nResize time (ms)                  19.90      10.12      29.99\nEncoding time (ms)                 7.53       5.05       9.98\nDecoding time (ms)                 8.87       6.07      12.00\nImage size (Mb)                    0.04       0.02       0.04\nThruput (Mb/s)                     4.01       1.12       8.22\n****************************************\n",
+    "udp_video_error": "QFontDatabase: Cannot find font directory /home/gjardim/wasm-object-detection/.venv/lib/python3.12/site-packages/cv2/qt/fonts.\nNote that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.\nQFontDatabase: Cannot find font directory /home/gjardim/wasm-object-detection/.venv/lib/python3.12/site-packages/cv2/qt/fonts.\nNote that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.\nQFontDatabase: Cannot find font directory /home/gjardim/wasm-object-detection/.venv/lib/python3.12/site-packages/cv2/qt/fonts.\nNote that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.\nQFontDatabase: Cannot find font directory /home/gjardim/wasm-object-detection/.venv/lib/python3.12/site-packages/cv2/qt/fonts.\nNote that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.\nQFontDatabase: Cannot find font directory /home/gjardim/wasm-object-detection/.venv/lib/python3.12/site-packages/cv2/qt/fonts.\nNote that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.\n"
+  },
+  {
+    "client_id": 0,
+    "status": "failed",
+    "error": "<!doctype html>\n<html lang=en>\n<title>500 Internal Server Error</title>\n<h1>Internal Server Error</h1>\n<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>\n",
+    "elapsed": 69.83155584335327
+  },
+  {
+    "client_id": 3,
+    "status": "success",
+    "deploy_time": 4.21953868865967,
+    "pod_name": "wasm-inference-client-3-1769954990",
+    "node_ip": "192.168.0.103",
+    "udp_port": 30085,
+    "elapsed": 67.22937035560608,
+    "udp_video_result": "[INFO] --remote: Using HOST=192.168.0.103, PORT=30085\n\n--- Run 1 of 1 ---\nVideo: 1280x720 @ 30fps, 188 frames\nConnecting to 192.168.0.103:30085 (UDP)...\nConnected! Processing video...\nProgress: 30/188 (16.0%) | Avg FPS: 14.0 | Elapsed: 2.2s | Loss: 0 | BW: 568.8KB/s | Jitter: 8.1ms\nProgress: 60/188 (31.9%) | Avg FPS: 15.2 | Elapsed: 4.0s | Loss: 0 | BW: 596.0KB/s | Jitter: 7.7ms\nProgress: 90/188 (47.9%) | Avg FPS: 15.6 | Elapsed: 5.8s | Loss: 0 | BW: 588.6KB/s | Jitter: 5.5ms\nProgress: 120/188 (63.8%) | Avg FPS: 15.7 | Elapsed: 7.7s | Loss: 0 | BW: 596.1KB/s | Jitter: 5.2ms\nProgress: 150/188 (79.8%) | Avg FPS: 16.0 | Elapsed: 9.5s | Loss: 0 | BW: 606.4KB/s | Jitter: 5.8ms\nProgress: 180/188 (95.7%) | Avg FPS: 16.0 | Elapsed: 11.3s | Loss: 0 | BW: 610.5KB/s | Jitter: 4.6ms\n\nUDP Server Metrics Summary:\nMetric                  Avg        Min        Max\n--------------------------------------------------\ninf_ms                43.04      29.25     153.01\noutput_bytes         353.90       2.00    1011.00\noutput_kb              0.35       0.00       0.99\npost_ms                1.93       1.25       2.82\npre_ms                 8.98       8.15      11.63\nframes: 188\nmode: udp\n\n****************************************\nTime: 11.816126s\nFrames: 188\nMissed frames: 0\nUser FPS: 15.991446\nProcessing FPS: 18.418315\n****************************************\n\nClient Metrics Summary:\nMetric                              Avg        Min        Max\n-------------------------------------------------------------\nFPS                               15.99       6.03      24.16\nMissed frames                         0\nLatency (ms)                      55.40      41.39     165.76\nDetections                         2.78       0.00       8.00\nPacket loss                        0.00       0.00       0.00\nBandwidth (Bps)                36859.08       0.00  731735.49\nJitter (ms)                        6.01       0.00      60.95\nUpdate time (ms)                  55.40      41.39     165.76\nView time (ms)                     6.24       2.04       9.92\nDetection time (ms)               22.16      16.56      66.31\nFrame extraction time (ms)         4.97       0.09       9.96\nNetwork time (ms)                 12.47       5.17      19.97\nRender time (ms)                  30.41      10.20      49.88\nResize time (ms)                  19.90      10.12      29.99\nEncoding time (ms)                 7.53       5.05       9.98\nDecoding time (ms)                 8.87       6.07      12.00\nImage size (Mb)                    0.04       0.02       0.04\nThruput (Mb/s)                     5.84       2.22       8.92\n****************************************\n",
+    "udp_video_error": "QFontDatabase: Cannot find font directory /home/gjardim/wasm-object-detection/.venv/lib/python3.12/site-packages/cv2/qt/fonts.\nNote that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.\nQFontDatabase: Cannot find font directory /home/gjardim/wasm-object-detection/.venv/lib/python3.12/site-packages/cv2/qt/fonts.\nNote that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.\nQFontDatabase: Cannot find font directory /home/gjardim/wasm-object-detection/.venv/lib/python3.12/site-packages/cv2/qt/fonts.\nNote that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.\nQFontDatabase: Cannot find font directory /home/gjardim/wasm-object-detection/.venv/lib/python3.12/site-packages/cv2/qt/fonts.\nNote that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.\nQFontDatabase: Cannot find font directory /home/gjardim/wasm-object-detection/.venv/lib/python3.12/site-packages/cv2/qt/fonts.\nNote that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.\n"
+  },
+  {
+    "client_id": 4,
+    "status": "failed",
+    "error": "<!doctype html>\n<html lang=en>\n<title>500 Internal Server Error</title>\n<h1>Internal Server Error</h1>\n<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>\n",
+    "elapsed": 121.7197015285492
+  },
+  {
+    "client_id": 7,
+    "status": "failed",
+    "error": "{'error': 'No nodes available under pod limits', 'pod_counts': {'gspadotto': 1, 'gustavojardim': 2, 'xub01': 1}, 'status': 'failed'}",
+    "elapsed": 113.05373978614807
+  },
+  {
+    "client_id": 8,
+    "status": "failed",
+    "error": "{'error': 'No nodes available under pod limits', 'pod_counts': {'gspadotto': 1, 'gustavojardim': 2, 'xub01': 1}, 'status': 'failed'}",
+    "elapsed": 113.15119767189026
+  },
+  {
+    "client_id": 9,
+    "status": "failed",
+    "error": "{'error': 'No nodes available under pod limits', 'pod_counts': {'gspadotto': 1, 'gustavojardim': 2, 'xub01': 1}, 'status': 'failed'}",
+    "elapsed": 99.67224335670471
+  },
+  {
+    "client_id": 5,
+    "status": "success",
+    "deploy_time": 119.78999400138855,
+    "pod_name": "wasm-inference-client-5-1769955050",
+    "node_ip": "192.168.0.103",
+    "udp_port": 30085,
+    "elapsed": 119.80967259407043,
+    "udp_video_result": "[INFO] --remote: Using HOST=192.168.0.103, PORT=30085\n\n--- Run 1 of 1 ---\nVideo: 1280x720 @ 30fps, 188 frames\nConnecting to 192.168.0.103:30085 (UDP)...\nConnected! Processing video...\nProgress: 30/188 (16.0%) | Avg FPS: 12.0 | Elapsed: 2.5s | Loss: 0 | BW: 534.9KB/s | Jitter: 17.4ms\nProgress: 60/188 (31.9%) | Avg FPS: 12.3 | Elapsed: 4.9s | Loss: 0 | BW: 493.1KB/s | Jitter: 8.7ms\nProgress: 90/188 (47.9%) | Avg FPS: 12.3 | Elapsed: 7.3s | Loss: 0 | BW: 461.3KB/s | Jitter: 6.1ms\nProgress: 120/188 (63.8%) | Avg FPS: 11.8 | Elapsed: 10.3s | Loss: 0 | BW: 444.9KB/s | Jitter: 12.7ms\nProgress: 150/188 (79.8%) | Avg FPS: 11.9 | Elapsed: 12.7s | Loss: 0 | BW: 453.2KB/s | Jitter: 5.3ms\nProgress: 180/188 (95.7%) | Avg FPS: 11.9 | Elapsed: 15.2s | Loss: 0 | BW: 456.4KB/s | Jitter: 12.2ms\n\nUDP Server Metrics Summary:\nMetric                  Avg        Min        Max\n--------------------------------------------------\ninf_ms                57.94      42.06     233.90\noutput_bytes         353.90       2.00    1011.00\noutput_kb              0.35       0.00       0.99\npost_ms                2.23       1.26       4.05\npre_ms                11.41       8.12      16.34\nframes: 188\nmode: udp\n\n****************************************\nTime: 15.793384s\nFrames: 188\nMissed frames: 0\nUser FPS: 11.938257\nProcessing FPS: 14.152382\n****************************************\n\nClient Metrics Summary:\nMetric                              Avg        Min        Max\n-------------------------------------------------------------\nFPS                               11.94       3.97      18.25\nMissed frames                         0\nLatency (ms)                      73.59      54.80     251.84\nDetections                         2.78       0.00       8.00\nPacket loss                        0.00       0.00       0.00\nBandwidth (Bps)                37626.66       0.00  658684.87\nJitter (ms)                       10.12       0.00     190.42\nUpdate time (ms)                  73.59      54.80     251.84\nView time (ms)                     6.24       2.04       9.92\nDetection time (ms)               29.43      21.92     100.74\nFrame extraction time (ms)         4.97       0.09       9.96\nNetwork time (ms)                 12.47       5.17      19.97\nRender time (ms)                  30.41      10.20      49.88\nResize time (ms)                  19.90      10.12      29.99\nEncoding time (ms)                 7.53       5.05       9.98\nDecoding time (ms)                 8.87       6.07      12.00\nImage size (Mb)                    0.04       0.02       0.04\nThruput (Mb/s)                     4.50       1.21       6.68\n****************************************\n",
+    "udp_video_error": "QFontDatabase: Cannot find font directory /home/gjardim/wasm-object-detection/.venv/lib/python3.12/site-packages/cv2/qt/fonts.\nNote that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.\nQFontDatabase: Cannot find font directory /home/gjardim/wasm-object-detection/.venv/lib/python3.12/site-packages/cv2/qt/fonts.\nNote that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.\nQFontDatabase: Cannot find font directory /home/gjardim/wasm-object-detection/.venv/lib/python3.12/site-packages/cv2/qt/fonts.\nNote that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.\nQFontDatabase: Cannot find font directory /home/gjardim/wasm-object-detection/.venv/lib/python3.12/site-packages/cv2/qt/fonts.\nNote that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.\nQFontDatabase: Cannot find font directory /home/gjardim/wasm-object-detection/.venv/lib/python3.12/site-packages/cv2/qt/fonts.\nNote that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.\n"
+  },
+  {
+    "client_id": 6,
+    "status": "success",
+    "deploy_time": 5.9367253780365,
+    "pod_name": "wasm-inference-client-6-1769955053",
+    "node_ip": "192.168.0.103",
+    "udp_port": 30086,
+    "elapsed": 123.00314450263977,
+    "udp_video_result": "[INFO] --remote: Using HOST=192.168.0.103, PORT=30086\n\n--- Run 1 of 1 ---\nVideo: 1280x720 @ 30fps, 188 frames\nConnecting to 192.168.0.103:30086 (UDP)...\nConnected! Processing video...\nProgress: 30/188 (16.0%) | Avg FPS: 10.1 | Elapsed: 3.0s | Loss: 0 | BW: 393.5KB/s | Jitter: 10.6ms\nProgress: 60/188 (31.9%) | Avg FPS: 10.3 | Elapsed: 5.9s | Loss: 0 | BW: 418.8KB/s | Jitter: 11.4ms\nProgress: 90/188 (47.9%) | Avg FPS: 10.8 | Elapsed: 8.4s | Loss: 0 | BW: 402.6KB/s | Jitter: 6.7ms\nProgress: 120/188 (63.8%) | Avg FPS: 11.1 | Elapsed: 10.9s | Loss: 0 | BW: 422.2KB/s | Jitter: 7.0ms\nProgress: 150/188 (79.8%) | Avg FPS: 11.4 | Elapsed: 13.2s | Loss: 0 | BW: 432.5KB/s | Jitter: 5.3ms\nProgress: 180/188 (95.7%) | Avg FPS: 12.0 | Elapsed: 15.1s | Loss: 0 | BW: 457.5KB/s | Jitter: 3.2ms\n\nUDP Server Metrics Summary:\nMetric                  Avg        Min        Max\n--------------------------------------------------\ninf_ms                56.51      38.70     188.99\noutput_bytes         353.90       2.00    1011.00\noutput_kb              0.35       0.00       0.99\npost_ms                2.21       1.30       3.19\npre_ms                10.84       7.94      15.83\nframes: 188\nmode: udp\n\n****************************************\nTime: 15.572906s\nFrames: 188\nMissed frames: 0\nUser FPS: 12.117922\nProcessing FPS: 14.469714\n****************************************\n\nClient Metrics Summary:\nMetric                              Avg        Min        Max\n-------------------------------------------------------------\nFPS                               12.12       4.78      19.72\nMissed frames                         0\nLatency (ms)                      71.79      50.70     209.27\nDetections                         2.78       0.00       8.00\nPacket loss                        0.00       0.00       0.00\nBandwidth (Bps)                34886.52       0.00  658358.91\nJitter (ms)                        7.17       0.00      67.99\nUpdate time (ms)                  71.79      50.70     209.27\nView time (ms)                     6.24       2.04       9.92\nDetection time (ms)               28.72      20.28      83.71\nFrame extraction time (ms)         4.97       0.09       9.96\nNetwork time (ms)                 12.47       5.17      19.97\nRender time (ms)                  30.41      10.20      49.88\nResize time (ms)                  19.90      10.12      29.99\nEncoding time (ms)                 7.53       5.05       9.98\nDecoding time (ms)                 8.87       6.07      12.00\nImage size (Mb)                    0.04       0.02       0.04\nThruput (Mb/s)                     4.60       1.76       6.88\n****************************************\n",
+    "udp_video_error": "QFontDatabase: Cannot find font directory /home/gjardim/wasm-object-detection/.venv/lib/python3.12/site-packages/cv2/qt/fonts.\nNote that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.\nQFontDatabase: Cannot find font directory /home/gjardim/wasm-object-detection/.venv/lib/python3.12/site-packages/cv2/qt/fonts.\nNote that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.\nQFontDatabase: Cannot find font directory /home/gjardim/wasm-object-detection/.venv/lib/python3.12/site-packages/cv2/qt/fonts.\nNote that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.\nQFontDatabase: Cannot find font directory /home/gjardim/wasm-object-detection/.venv/lib/python3.12/site-packages/cv2/qt/fonts.\nNote that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.\nQFontDatabase: Cannot find font directory /home/gjardim/wasm-object-detection/.venv/lib/python3.12/site-packages/cv2/qt/fonts.\nNote that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.\n"
+  },
+  {
+    "client_id": 0,
+    "status": "failed",
+    "error": "{'error': 'No nodes with latency <= 80ms', 'latencies': [{'inference_latency_ms': 89.04790878295898, 'ip': '192.168.0.103', 'name': 'gustavojardim'}], 'status': 'failed'}",
+    "elapsed": 3.581524610519409
+  },
+  {
+    "client_id": 3,
+    "status": "failed",
+    "error": "{'error': 'No nodes available under pod limits', 'pod_counts': {'gspadotto': 1, 'gustavojardim': 2, 'xub01': 1}, 'status': 'failed'}",
+    "elapsed": 1.0024878978729248
+  },
+  {
+    "client_id": 4,
+    "status": "failed",
+    "error": "{'error': 'No nodes available under pod limits', 'pod_counts': {'gspadotto': 1, 'gustavojardim': 2, 'xub01': 1}, 'status': 'failed'}",
+    "elapsed": 0.08107447624206543
+  },
+  {
+    "client_id": 6,
+    "status": "failed",
+    "error": "{'error': 'No nodes available under pod limits', 'pod_counts': {'gspadotto': 1, 'gustavojardim': 2, 'xub01': 1}, 'status': 'failed'}",
+    "elapsed": 0.22401046752929688
+  },
+  {
+    "client_id": 5,
+    "status": "failed",
+    "error": "{'error': 'No nodes available under pod limits', 'pod_counts': {'gspadotto': 1, 'gustavojardim': 2, 'xub01': 1}, 'status': 'failed'}",
+    "elapsed": 0.32303738594055176
+  },
+  {
+    "client_id": 2,
+    "status": "success",
+    "deploy_time": 3.2819883823394775,
+    "pod_name": "wasm-inference-client-2-1769955115",
+    "node_ip": "192.168.0.103",
+    "udp_port": 30085,
+    "elapsed": 3.290872097015381,
+    "udp_video_result": "[INFO] --remote: Using HOST=192.168.0.103, PORT=30085\n\n--- Run 1 of 1 ---\nVideo: 1280x720 @ 30fps, 188 frames\nConnecting to 192.168.0.103:30085 (UDP)...\nConnected! Processing video...\nProgress: 30/188 (16.0%) | Avg FPS: 10.9 | Elapsed: 2.8s | Loss: 0 | BW: 526.0KB/s | Jitter: 34.0ms\nProgress: 60/188 (31.9%) | Avg FPS: 11.5 | Elapsed: 5.3s | Loss: 0 | BW: 458.3KB/s | Jitter: 10.9ms\nProgress: 90/188 (47.9%) | Avg FPS: 11.6 | Elapsed: 7.8s | Loss: 0 | BW: 434.2KB/s | Jitter: 7.9ms\nProgress: 120/188 (63.8%) | Avg FPS: 11.7 | Elapsed: 10.3s | Loss: 0 | BW: 442.5KB/s | Jitter: 7.4ms\nProgress: 150/188 (79.8%) | Avg FPS: 11.7 | Elapsed: 12.9s | Loss: 0 | BW: 447.2KB/s | Jitter: 10.1ms\nProgress: 180/188 (95.7%) | Avg FPS: 11.7 | Elapsed: 15.4s | Loss: 0 | BW: 447.9KB/s | Jitter: 7.4ms\n\nUDP Server Metrics Summary:\nMetric                  Avg        Min        Max\n--------------------------------------------------\ninf_ms                59.75      41.62     444.88\noutput_bytes         353.90       2.00    1011.00\noutput_kb              0.35       0.00       0.99\npost_ms                2.23       1.41       4.37\npre_ms                11.02       8.15      15.81\nframes: 188\nmode: udp\n\n****************************************\nTime: 16.177650s\nFrames: 188\nMissed frames: 0\nUser FPS: 11.659362\nProcessing FPS: 13.943166\n****************************************\n\nClient Metrics Summary:\nMetric                              Avg        Min        Max\n-------------------------------------------------------------\nFPS                               11.66       2.15      18.44\nMissed frames                         0\nLatency (ms)                      75.38      54.23     464.73\nDetections                         2.78       0.00       8.00\nPacket loss                        0.00       0.00       0.00\nBandwidth (Bps)                36912.21       0.00  658062.12\nJitter (ms)                       12.82       0.00     403.72\nUpdate time (ms)                  75.38      54.23     464.73\nView time (ms)                     6.24       2.04       9.92\nDetection time (ms)               30.15      21.69     185.89\nFrame extraction time (ms)         4.97       0.09       9.96\nNetwork time (ms)                 12.47       5.17      19.97\nRender time (ms)                  30.41      10.20      49.88\nResize time (ms)                  19.90      10.12      29.99\nEncoding time (ms)                 7.53       5.05       9.98\nDecoding time (ms)                 8.87       6.07      12.00\nImage size (Mb)                    0.04       0.02       0.04\nThruput (Mb/s)                     4.44       0.73       6.68\n****************************************\n",
+    "udp_video_error": "QFontDatabase: Cannot find font directory /home/gjardim/wasm-object-detection/.venv/lib/python3.12/site-packages/cv2/qt/fonts.\nNote that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.\nQFontDatabase: Cannot find font directory /home/gjardim/wasm-object-detection/.venv/lib/python3.12/site-packages/cv2/qt/fonts.\nNote that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.\nQFontDatabase: Cannot find font directory /home/gjardim/wasm-object-detection/.venv/lib/python3.12/site-packages/cv2/qt/fonts.\nNote that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.\nQFontDatabase: Cannot find font directory /home/gjardim/wasm-object-detection/.venv/lib/python3.12/site-packages/cv2/qt/fonts.\nNote that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.\nQFontDatabase: Cannot find font directory /home/gjardim/wasm-object-detection/.venv/lib/python3.12/site-packages/cv2/qt/fonts.\nNote that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.\n"
+  },
+  {
+    "client_id": 1,
+    "status": "success",
+    "deploy_time": 5.918210983276367,
+    "pod_name": "wasm-inference-client-1-1769955119",
+    "node_ip": "192.168.0.103",
+    "udp_port": 30086,
+    "elapsed": 5.935928583145142,
+    "udp_video_result": "[INFO] --remote: Using HOST=192.168.0.103, PORT=30086\n\n--- Run 1 of 1 ---\nVideo: 1280x720 @ 30fps, 188 frames\nConnecting to 192.168.0.103:30086 (UDP)...\nConnected! Processing video...\n[WARN] UDP response timeout\nNo response from server (timeout)\nProgress: 30/188 (16.0%) | Avg FPS: 8.8 | Elapsed: 3.5s | Loss: 0 | BW: 353.7KB/s | Jitter: 20.2ms\nProgress: 60/188 (31.9%) | Avg FPS: 10.3 | Elapsed: 5.9s | Loss: 0 | BW: 397.2KB/s | Jitter: 4.6ms\nProgress: 90/188 (47.9%) | Avg FPS: 10.9 | Elapsed: 8.4s | Loss: 0 | BW: 405.4KB/s | Jitter: 6.7ms\nProgress: 120/188 (63.8%) | Avg FPS: 11.1 | Elapsed: 11.0s | Loss: 0 | BW: 416.2KB/s | Jitter: 7.3ms\nProgress: 150/188 (79.8%) | Avg FPS: 11.3 | Elapsed: 13.4s | Loss: 0 | BW: 431.8KB/s | Jitter: 7.2ms\nProgress: 180/188 (95.7%) | Avg FPS: 11.7 | Elapsed: 15.4s | Loss: 0 | BW: 439.6KB/s | Jitter: 3.0ms\n\nUDP Server Metrics Summary:\nMetric                  Avg        Min        Max\n--------------------------------------------------\ninf_ms                56.06      32.71     245.09\noutput_bytes         353.78       2.00    1011.00\noutput_kb              0.35       0.00       0.99\npost_ms                2.29       1.33       3.11\npre_ms                11.27       8.22      17.48\nframes: 187\nmode: udp\n\n****************************************\nTime: 15.926162s\nFrames: 188\nMissed frames: 1\nUser FPS: 11.882534\nProcessing FPS: 14.351764\n****************************************\n\nClient Metrics Summary:\nMetric                              Avg        Min        Max\n-------------------------------------------------------------\nFPS                               11.88       1.99      22.32\nMissed frames                         1\nLatency (ms)                      71.64      44.79     263.12\nDetections                         2.78       0.00       8.00\nPacket loss                        0.00       0.00       0.00\nBandwidth (Bps)                37225.69       0.00  659584.92\nJitter (ms)                        8.12       0.00     238.50\nUpdate time (ms)                  71.64      44.79     263.12\nView time (ms)                     6.22       2.04       9.92\nDetection time (ms)               28.65      17.92     105.25\nFrame extraction time (ms)         4.95       0.09       9.96\nNetwork time (ms)                 12.43       5.17      19.97\nRender time (ms)                  30.44      10.20      49.88\nResize time (ms)                  19.95      10.12      29.99\nEncoding time (ms)                 7.52       5.05       9.98\nDecoding time (ms)                 8.87       6.07      12.00\nImage size (Mb)                    0.04       0.02       0.04\nThruput (Mb/s)                     4.58       1.39       7.84\n****************************************\n",
+    "udp_video_error": "QFontDatabase: Cannot find font directory /home/gjardim/wasm-object-detection/.venv/lib/python3.12/site-packages/cv2/qt/fonts.\nNote that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.\nQFontDatabase: Cannot find font directory /home/gjardim/wasm-object-detection/.venv/lib/python3.12/site-packages/cv2/qt/fonts.\nNote that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.\nQFontDatabase: Cannot find font directory /home/gjardim/wasm-object-detection/.venv/lib/python3.12/site-packages/cv2/qt/fonts.\nNote that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.\nQFontDatabase: Cannot find font directory /home/gjardim/wasm-object-detection/.venv/lib/python3.12/site-packages/cv2/qt/fonts.\nNote that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.\nQFontDatabase: Cannot find font directory /home/gjardim/wasm-object-detection/.venv/lib/python3.12/site-packages/cv2/qt/fonts.\nNote that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.\n"
+  },
+  {
+    "client_id": 8,
+    "status": "failed",
+    "error": "{'error': 'No nodes available under pod limits', 'pod_counts': {'gspadotto': 1, 'gustavojardim': 2, 'xub01': 1}, 'status': 'failed'}",
+    "elapsed": 0.07763409614562988
+  },
+  {
+    "client_id": 7,
+    "status": "failed",
+    "error": "{'error': 'No nodes available under pod limits', 'pod_counts': {'gspadotto': 1, 'gustavojardim': 2, 'xub01': 1}, 'status': 'failed'}",
+    "elapsed": 0.026935338973999023
+  },
+  {
+    "client_id": 9,
+    "status": "failed",
+    "error": "{'error': 'No nodes available under pod limits', 'pod_counts': {'gspadotto': 1, 'gustavojardim': 2, 'xub01': 1}, 'status': 'failed'}",
+    "elapsed": 0.025121688842773438
+  },
+  {
+    "client_id": 1,
+    "status": "failed",
+    "error": "{'error': 'No nodes available under pod limits', 'pod_counts': {'gspadotto': 1, 'gustavojardim': 2, 'xub01': 1}, 'status': 'failed'}",
+    "elapsed": 6.342855215072632
+  },
+  {
+    "client_id": 3,
+    "status": "failed",
+    "error": "{'error': 'No nodes available under pod limits', 'pod_counts': {'gspadotto': 1, 'gustavojardim': 2, 'xub01': 1}, 'status': 'failed'}",
+    "elapsed": 1.486668586730957
+  },
+  {
+    "client_id": 4,
+    "status": "failed",
+    "error": "{'error': 'No nodes available under pod limits', 'pod_counts': {'gspadotto': 1, 'gustavojardim': 2, 'xub01': 1}, 'status': 'failed'}",
+    "elapsed": 0.11026549339294434
+  },
+  {
+    "client_id": 6,
+    "status": "failed",
+    "error": "{'error': 'No nodes available under pod limits', 'pod_counts': {'gspadotto': 1, 'gustavojardim': 2, 'xub01': 1}, 'status': 'failed'}",
+    "elapsed": 0.1671156883239746
+  },
+  {
+    "client_id": 5,
+    "status": "failed",
+    "error": "{'error': 'No nodes available under pod limits', 'pod_counts': {'gspadotto': 1, 'gustavojardim': 2, 'xub01': 1}, 'status': 'failed'}",
+    "elapsed": 0.26874876022338867
+  },
+  {
+    "client_id": 2,
+    "status": "success",
+    "deploy_time": 3.3724324703216553,
+    "pod_name": "wasm-inference-client-2-1769955198",
+    "node_ip": "192.168.0.103",
+    "udp_port": 30085,
+    "elapsed": 3.3800241947174072,
+    "udp_video_result": "[INFO] --remote: Using HOST=192.168.0.103, PORT=30085\n\n--- Run 1 of 1 ---\nVideo: 1280x720 @ 30fps, 188 frames\nConnecting to 192.168.0.103:30085 (UDP)...\nConnected! Processing video...\nProgress: 30/188 (16.0%) | Avg FPS: 13.2 | Elapsed: 2.3s | Loss: 0 | BW: 522.7KB/s | Jitter: 9.5ms\nProgress: 60/188 (31.9%) | Avg FPS: 13.0 | Elapsed: 4.7s | Loss: 0 | BW: 525.6KB/s | Jitter: 14.6ms\nProgress: 90/188 (47.9%) | Avg FPS: 12.8 | Elapsed: 7.1s | Loss: 0 | BW: 491.3KB/s | Jitter: 6.7ms\nProgress: 120/188 (63.8%) | Avg FPS: 12.4 | Elapsed: 9.7s | Loss: 0 | BW: 478.6KB/s | Jitter: 7.1ms\nProgress: 150/188 (79.8%) | Avg FPS: 12.3 | Elapsed: 12.2s | Loss: 0 | BW: 476.2KB/s | Jitter: 9.6ms\nProgress: 180/188 (95.7%) | Avg FPS: 11.9 | Elapsed: 15.1s | Loss: 0 | BW: 462.7KB/s | Jitter: 10.2ms\n\nUDP Server Metrics Summary:\nMetric                  Avg        Min        Max\n--------------------------------------------------\ninf_ms                57.59      29.56     144.91\noutput_bytes         353.90       2.00    1011.00\noutput_kb              0.35       0.00       0.99\npost_ms                2.25       1.23       3.18\npre_ms                11.38       8.35      15.81\nframes: 188\nmode: udp\n\n****************************************\nTime: 15.768357s\nFrames: 188\nMissed frames: 0\nUser FPS: 11.964029\nProcessing FPS: 13.994623\n****************************************\n\nClient Metrics Summary:\nMetric                              Avg        Min        Max\n-------------------------------------------------------------\nFPS                               11.96       0.00      24.03\nMissed frames                         0\nLatency (ms)                      73.04       0.00     158.21\nDetections                         2.78       0.00       8.00\nPacket loss                        0.00       0.00       0.00\nBandwidth (Bps)                37674.73       0.00  643841.43\nJitter (ms)                        9.43       0.00      74.36\nUpdate time (ms)                  73.04       0.00     158.21\nView time (ms)                     6.24       2.04       9.92\nDetection time (ms)               29.22       0.00      63.29\nFrame extraction time (ms)         4.97       0.09       9.96\nNetwork time (ms)                 12.47       5.17      19.97\nRender time (ms)                  30.41      10.20      49.88\nResize time (ms)                  19.90      10.12      29.99\nEncoding time (ms)                 7.53       5.05       9.98\nDecoding time (ms)                 8.87       6.07      12.00\nImage size (Mb)                    0.04       0.02       0.04\nThruput (Mb/s)                     4.45       0.00       8.08\n****************************************\n",
+    "udp_video_error": "QFontDatabase: Cannot find font directory /home/gjardim/wasm-object-detection/.venv/lib/python3.12/site-packages/cv2/qt/fonts.\nNote that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.\nQFontDatabase: Cannot find font directory /home/gjardim/wasm-object-detection/.venv/lib/python3.12/site-packages/cv2/qt/fonts.\nNote that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.\nQFontDatabase: Cannot find font directory /home/gjardim/wasm-object-detection/.venv/lib/python3.12/site-packages/cv2/qt/fonts.\nNote that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.\nQFontDatabase: Cannot find font directory /home/gjardim/wasm-object-detection/.venv/lib/python3.12/site-packages/cv2/qt/fonts.\nNote that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.\nQFontDatabase: Cannot find font directory /home/gjardim/wasm-object-detection/.venv/lib/python3.12/site-packages/cv2/qt/fonts.\nNote that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.\n"
+  },
+  {
+    "client_id": 0,
+    "status": "success",
+    "deploy_time": 6.22300910949707,
+    "pod_name": "wasm-inference-client-0-1769955201",
+    "node_ip": "192.168.0.103",
+    "udp_port": 30086,
+    "elapsed": 6.274470806121826,
+    "udp_video_result": "[INFO] --remote: Using HOST=192.168.0.103, PORT=30086\n\n--- Run 1 of 1 ---\nVideo: 1280x720 @ 30fps, 188 frames\nConnecting to 192.168.0.103:30086 (UDP)...\nConnected! Processing video...\nProgress: 30/188 (16.0%) | Avg FPS: 10.3 | Elapsed: 3.0s | Loss: 0 | BW: 405.3KB/s | Jitter: 13.0ms\nProgress: 60/188 (31.9%) | Avg FPS: 11.2 | Elapsed: 5.4s | Loss: 0 | BW: 446.1KB/s | Jitter: 6.0ms\nProgress: 90/188 (47.9%) | Avg FPS: 11.3 | Elapsed: 8.0s | Loss: 0 | BW: 424.2KB/s | Jitter: 9.9ms\nProgress: 120/188 (63.8%) | Avg FPS: 11.3 | Elapsed: 10.7s | Loss: 0 | BW: 431.8KB/s | Jitter: 8.5ms\nProgress: 150/188 (79.8%) | Avg FPS: 11.3 | Elapsed: 13.4s | Loss: 0 | BW: 424.9KB/s | Jitter: 12.0ms\nProgress: 180/188 (95.7%) | Avg FPS: 11.9 | Elapsed: 15.2s | Loss: 0 | BW: 448.6KB/s | Jitter: 4.7ms\n\nUDP Server Metrics Summary:\nMetric                  Avg        Min        Max\n--------------------------------------------------\ninf_ms                58.09      29.93     211.81\noutput_bytes         353.90       2.00    1011.00\noutput_kb              0.35       0.00       0.99\npost_ms                2.21       1.29       2.92\npre_ms                10.64       8.05      15.83\nframes: 188\nmode: udp\n\n****************************************\nTime: 15.670765s\nFrames: 188\nMissed frames: 0\nUser FPS: 12.041136\nProcessing FPS: 14.406642\n****************************************\n\nClient Metrics Summary:\nMetric                              Avg        Min        Max\n-------------------------------------------------------------\nFPS                               12.04       4.44      24.24\nMissed frames                         0\nLatency (ms)                      72.99      41.25     225.30\nDetections                         2.78       0.00       8.00\nPacket loss                        0.00       0.00       0.00\nBandwidth (Bps)                38001.92       0.00  713433.59\nJitter (ms)                        8.81       0.00      85.71\nUpdate time (ms)                  72.99      41.25     225.30\nView time (ms)                     6.24       2.04       9.92\nDetection time (ms)               29.20      16.50      90.12\nFrame extraction time (ms)         4.97       0.09       9.96\nNetwork time (ms)                 12.47       5.17      19.97\nRender time (ms)                  30.41      10.20      49.88\nResize time (ms)                  19.90      10.12      29.99\nEncoding time (ms)                 7.53       5.05       9.98\nDecoding time (ms)                 8.87       6.07      12.00\nImage size (Mb)                    0.04       0.02       0.04\nThruput (Mb/s)                     4.58       1.63       8.48\n****************************************\n",
+    "udp_video_error": "QFontDatabase: Cannot find font directory /home/gjardim/wasm-object-detection/.venv/lib/python3.12/site-packages/cv2/qt/fonts.\nNote that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.\nQFontDatabase: Cannot find font directory /home/gjardim/wasm-object-detection/.venv/lib/python3.12/site-packages/cv2/qt/fonts.\nNote that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.\nQFontDatabase: Cannot find font directory /home/gjardim/wasm-object-detection/.venv/lib/python3.12/site-packages/cv2/qt/fonts.\nNote that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.\nQFontDatabase: Cannot find font directory /home/gjardim/wasm-object-detection/.venv/lib/python3.12/site-packages/cv2/qt/fonts.\nNote that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.\nQFontDatabase: Cannot find font directory /home/gjardim/wasm-object-detection/.venv/lib/python3.12/site-packages/cv2/qt/fonts.\nNote that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.\n"
+  },
+  {
+    "client_id": 8,
+    "status": "failed",
+    "error": "{'error': 'No nodes available under pod limits', 'pod_counts': {'gspadotto': 1, 'gustavojardim': 2, 'xub01': 1}, 'status': 'failed'}",
+    "elapsed": 0.1448652744293213
+  },
+  {
+    "client_id": 7,
+    "status": "failed",
+    "error": "{'error': 'No nodes available under pod limits', 'pod_counts': {'gspadotto': 1, 'gustavojardim': 2, 'xub01': 1}, 'status': 'failed'}",
+    "elapsed": 0.24054837226867676
+  },
+  {
+    "client_id": 9,
+    "status": "failed",
+    "error": "{'error': 'No nodes available under pod limits', 'pod_counts': {'gspadotto': 1, 'gustavojardim': 2, 'xub01': 1}, 'status': 'failed'}",
+    "elapsed": 0.02429485321044922
+  },
+  {
+    "client_id": 0,
+    "status": "failed",
+    "error": "{'error': 'No nodes with latency <= 80ms', 'latencies': [{'inference_latency_ms': 80.96909523010254, 'ip': '192.168.0.103', 'name': 'gustavojardim'}], 'status': 'failed'}",
+    "elapsed": 3.646023750305176
+  },
+  {
+    "client_id": 3,
+    "status": "failed",
+    "error": "{'error': 'No nodes available under pod limits', 'pod_counts': {'gspadotto': 1, 'gustavojardim': 2, 'xub01': 1}, 'status': 'failed'}",
+    "elapsed": 2.0011301040649414
+  },
+  {
+    "client_id": 4,
+    "status": "failed",
+    "error": "{'error': 'No nodes available under pod limits', 'pod_counts': {'gspadotto': 1, 'gustavojardim': 2, 'xub01': 1}, 'status': 'failed'}",
+    "elapsed": 0.09891581535339355
+  },
+  {
+    "client_id": 5,
+    "status": "failed",
+    "error": "{'error': 'No nodes available under pod limits', 'pod_counts': {'gspadotto': 1, 'gustavojardim': 2, 'xub01': 1}, 'status': 'failed'}",
+    "elapsed": 0.185652494430542
+  },
+  {
+    "client_id": 6,
+    "status": "failed",
+    "error": "{'error': 'No nodes available under pod limits', 'pod_counts': {'gspadotto': 1, 'gustavojardim': 2, 'xub01': 1}, 'status': 'failed'}",
+    "elapsed": 0.22642159461975098
+  },
+  {
+    "client_id": 1,
+    "status": "success",
+    "deploy_time": 3.422612190246582,
+    "pod_name": "wasm-inference-client-1-1769955279",
+    "node_ip": "192.168.0.103",
+    "udp_port": 30085,
+    "elapsed": 3.4562761783599854,
+    "udp_video_result": "[INFO] --remote: Using HOST=192.168.0.103, PORT=30085\n\n--- Run 1 of 1 ---\nVideo: 1280x720 @ 30fps, 188 frames\nConnecting to 192.168.0.103:30085 (UDP)...\nConnected! Processing video...\nProgress: 30/188 (16.0%) | Avg FPS: 12.4 | Elapsed: 2.5s | Loss: 0 | BW: 509.0KB/s | Jitter: 8.6ms\nProgress: 60/188 (31.9%) | Avg FPS: 12.0 | Elapsed: 5.1s | Loss: 0 | BW: 480.7KB/s | Jitter: 22.1ms\nProgress: 90/188 (47.9%) | Avg FPS: 11.9 | Elapsed: 7.6s | Loss: 0 | BW: 446.1KB/s | Jitter: 9.0ms\nProgress: 120/188 (63.8%) | Avg FPS: 11.9 | Elapsed: 10.1s | Loss: 0 | BW: 452.5KB/s | Jitter: 7.7ms\nProgress: 150/188 (79.8%) | Avg FPS: 12.0 | Elapsed: 12.6s | Loss: 0 | BW: 455.9KB/s | Jitter: 4.7ms\nProgress: 180/188 (95.7%) | Avg FPS: 12.1 | Elapsed: 15.0s | Loss: 0 | BW: 463.5KB/s | Jitter: 12.8ms\n\nUDP Server Metrics Summary:\nMetric                  Avg        Min        Max\n--------------------------------------------------\ninf_ms                56.93      41.09     261.96\noutput_bytes         353.90       2.00    1011.00\noutput_kb              0.35       0.00       0.99\npost_ms                2.24       1.24       3.08\npre_ms                11.37       8.01      16.52\nframes: 188\nmode: udp\n\n****************************************\nTime: 15.637791s\nFrames: 188\nMissed frames: 0\nUser FPS: 12.068013\nProcessing FPS: 14.188656\n****************************************\n\nClient Metrics Summary:\nMetric                              Avg        Min        Max\n-------------------------------------------------------------\nFPS                               12.07       0.00      18.78\nMissed frames                         0\nLatency (ms)                      72.29       0.00     284.74\nDetections                         2.78       0.00       8.00\nPacket loss                        0.00       0.00       0.00\nBandwidth (Bps)                38132.76       0.00  659212.00\nJitter (ms)                       10.61       0.00     224.68\nUpdate time (ms)                  72.29       0.00     284.74\nView time (ms)                     6.24       2.04       9.92\nDetection time (ms)               28.92       0.00     113.89\nFrame extraction time (ms)         4.97       0.09       9.96\nNetwork time (ms)                 12.47       5.17      19.97\nRender time (ms)                  30.41      10.20      49.88\nResize time (ms)                  19.90      10.12      29.99\nEncoding time (ms)                 7.53       5.05       9.98\nDecoding time (ms)                 8.87       6.07      12.00\nImage size (Mb)                    0.04       0.02       0.04\nThruput (Mb/s)                     4.52       0.00       6.80\n****************************************\n",
+    "udp_video_error": "QFontDatabase: Cannot find font directory /home/gjardim/wasm-object-detection/.venv/lib/python3.12/site-packages/cv2/qt/fonts.\nNote that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.\nQFontDatabase: Cannot find font directory /home/gjardim/wasm-object-detection/.venv/lib/python3.12/site-packages/cv2/qt/fonts.\nNote that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.\nQFontDatabase: Cannot find font directory /home/gjardim/wasm-object-detection/.venv/lib/python3.12/site-packages/cv2/qt/fonts.\nNote that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.\nQFontDatabase: Cannot find font directory /home/gjardim/wasm-object-detection/.venv/lib/python3.12/site-packages/cv2/qt/fonts.\nNote that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.\nQFontDatabase: Cannot find font directory /home/gjardim/wasm-object-detection/.venv/lib/python3.12/site-packages/cv2/qt/fonts.\nNote that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.\n"
+  },
+  {
+    "client_id": 2,
+    "status": "success",
+    "deploy_time": 6.640937328338623,
+    "pod_name": "wasm-inference-client-2-1769955282",
+    "node_ip": "192.168.0.103",
+    "udp_port": 30086,
+    "elapsed": 6.8549277782440186,
+    "udp_video_result": "[INFO] --remote: Using HOST=192.168.0.103, PORT=30086\n\n--- Run 1 of 1 ---\nVideo: 1280x720 @ 30fps, 188 frames\nConnecting to 192.168.0.103:30086 (UDP)...\nConnected! Processing video...\nProgress: 30/188 (16.0%) | Avg FPS: 9.9 | Elapsed: 3.1s | Loss: 0 | BW: 390.9KB/s | Jitter: 11.7ms\nProgress: 60/188 (31.9%) | Avg FPS: 10.8 | Elapsed: 5.6s | Loss: 0 | BW: 428.8KB/s | Jitter: 10.1ms\nProgress: 90/188 (47.9%) | Avg FPS: 11.2 | Elapsed: 8.1s | Loss: 0 | BW: 421.3KB/s | Jitter: 6.8ms\nProgress: 120/188 (63.8%) | Avg FPS: 11.4 | Elapsed: 10.6s | Loss: 0 | BW: 435.7KB/s | Jitter: 13.6ms\nProgress: 150/188 (79.8%) | Avg FPS: 11.7 | Elapsed: 12.8s | Loss: 0 | BW: 446.2KB/s | Jitter: 6.4ms\nProgress: 180/188 (95.7%) | Avg FPS: 12.2 | Elapsed: 14.8s | Loss: 0 | BW: 469.4KB/s | Jitter: 3.1ms\n\nUDP Server Metrics Summary:\nMetric                  Avg        Min        Max\n--------------------------------------------------\ninf_ms                55.19      31.76     196.66\noutput_bytes         353.90       2.00    1011.00\noutput_kb              0.35       0.00       0.99\npost_ms                2.19       1.34       2.79\npre_ms                11.26       8.20      15.21\nframes: 188\nmode: udp\n\n****************************************\nTime: 15.298362s\nFrames: 188\nMissed frames: 0\nUser FPS: 12.346124\nProcessing FPS: 14.495554\n****************************************\n\nClient Metrics Summary:\nMetric                              Avg        Min        Max\n-------------------------------------------------------------\nFPS                               12.35       0.00      22.84\nMissed frames                         0\nLatency (ms)                      70.54       0.00     215.16\nDetections                         2.78       0.00       8.00\nPacket loss                        0.00       0.00       0.00\nBandwidth (Bps)                35791.66       0.00  631016.55\nJitter (ms)                        8.50       0.00      69.33\nUpdate time (ms)                  70.54       0.00     215.16\nView time (ms)                     6.24       2.04       9.92\nDetection time (ms)               28.22       0.00      86.06\nFrame extraction time (ms)         4.97       0.09       9.96\nNetwork time (ms)                 12.47       5.17      19.97\nRender time (ms)                  30.41      10.20      49.88\nResize time (ms)                  19.90      10.12      29.99\nEncoding time (ms)                 7.53       5.05       9.98\nDecoding time (ms)                 8.87       6.07      12.00\nImage size (Mb)                    0.04       0.02       0.04\nThruput (Mb/s)                     4.60       0.00       7.78\n****************************************\n",
+    "udp_video_error": "QFontDatabase: Cannot find font directory /home/gjardim/wasm-object-detection/.venv/lib/python3.12/site-packages/cv2/qt/fonts.\nNote that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.\nQFontDatabase: Cannot find font directory /home/gjardim/wasm-object-detection/.venv/lib/python3.12/site-packages/cv2/qt/fonts.\nNote that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.\nQFontDatabase: Cannot find font directory /home/gjardim/wasm-object-detection/.venv/lib/python3.12/site-packages/cv2/qt/fonts.\nNote that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.\nQFontDatabase: Cannot find font directory /home/gjardim/wasm-object-detection/.venv/lib/python3.12/site-packages/cv2/qt/fonts.\nNote that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.\nQFontDatabase: Cannot find font directory /home/gjardim/wasm-object-detection/.venv/lib/python3.12/site-packages/cv2/qt/fonts.\nNote that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.\n"
+  },
+  {
+    "client_id": 8,
+    "status": "failed",
+    "error": "{'error': 'No nodes available under pod limits', 'pod_counts': {'gspadotto': 1, 'gustavojardim': 2, 'xub01': 1}, 'status': 'failed'}",
+    "elapsed": 0.24119234085083008
+  },
+  {
+    "client_id": 7,
+    "status": "failed",
+    "error": "{'error': 'No nodes available under pod limits', 'pod_counts': {'gspadotto': 1, 'gustavojardim': 2, 'xub01': 1}, 'status': 'failed'}",
+    "elapsed": 0.22985315322875977
+  },
+  {
+    "client_id": 9,
+    "status": "failed",
+    "error": "{'error': 'No nodes available under pod limits', 'pod_counts': {'gspadotto': 1, 'gustavojardim': 2, 'xub01': 1}, 'status': 'failed'}",
+    "elapsed": 0.08434104919433594
+  },
+  {
+    "client_id": 0,
+    "status": "failed",
+    "error": "{'error': 'No nodes with latency <= 80ms', 'latencies': [{'inference_latency_ms': 90.72017669677734, 'ip': '192.168.0.103', 'name': 'gustavojardim'}], 'status': 'failed'}",
+    "elapsed": 3.558924436569214
+  },
+  {
+    "client_id": 3,
+    "status": "failed",
+    "error": "{'error': 'No nodes available under pod limits', 'pod_counts': {'gspadotto': 1, 'gustavojardim': 2, 'xub01': 1}, 'status': 'failed'}",
+    "elapsed": 1.9489216804504395
+  },
+  {
+    "client_id": 4,
+    "status": "failed",
+    "error": "{'error': 'No nodes available under pod limits', 'pod_counts': {'gspadotto': 1, 'gustavojardim': 2, 'xub01': 1}, 'status': 'failed'}",
+    "elapsed": 0.1185445785522461
+  },
+  {
+    "client_id": 6,
+    "status": "failed",
+    "error": "{'error': 'No nodes available under pod limits', 'pod_counts': {'gspadotto': 1, 'gustavojardim': 2, 'xub01': 1}, 'status': 'failed'}",
+    "elapsed": 0.18400788307189941
+  },
+  {
+    "client_id": 5,
+    "status": "failed",
+    "error": "{'error': 'No nodes available under pod limits', 'pod_counts': {'gspadotto': 1, 'gustavojardim': 2, 'xub01': 1}, 'status': 'failed'}",
+    "elapsed": 0.27539849281311035
+  },
+  {
+    "client_id": 2,
+    "status": "success",
+    "deploy_time": 3.3571882247924805,
+    "pod_name": "wasm-inference-client-2-1769955360",
+    "node_ip": "192.168.0.103",
+    "udp_port": 30085,
+    "elapsed": 3.36480975151062,
+    "udp_video_result": "[INFO] --remote: Using HOST=192.168.0.103, PORT=30085\n\n--- Run 1 of 1 ---\nVideo: 1280x720 @ 30fps, 188 frames\nConnecting to 192.168.0.103:30085 (UDP)...\nConnected! Processing video...\nProgress: 30/188 (16.0%) | Avg FPS: 11.4 | Elapsed: 2.7s | Loss: 0 | BW: 520.1KB/s | Jitter: 26.1ms\nProgress: 60/188 (31.9%) | Avg FPS: 11.7 | Elapsed: 5.2s | Loss: 0 | BW: 480.8KB/s | Jitter: 11.4ms\nProgress: 90/188 (47.9%) | Avg FPS: 11.9 | Elapsed: 7.6s | Loss: 0 | BW: 446.6KB/s | Jitter: 7.7ms\nProgress: 120/188 (63.8%) | Avg FPS: 11.5 | Elapsed: 10.5s | Loss: 0 | BW: 438.6KB/s | Jitter: 15.4ms\nProgress: 150/188 (79.8%) | Avg FPS: 11.5 | Elapsed: 13.1s | Loss: 0 | BW: 440.8KB/s | Jitter: 8.7ms\nProgress: 180/188 (95.7%) | Avg FPS: 11.7 | Elapsed: 15.5s | Loss: 0 | BW: 443.6KB/s | Jitter: 5.8ms\n\nUDP Server Metrics Summary:\nMetric                  Avg        Min        Max\n--------------------------------------------------\ninf_ms                59.64      39.23     331.34\noutput_bytes         353.90       2.00    1011.00\noutput_kb              0.35       0.00       0.99\npost_ms                2.24       1.35       3.43\npre_ms                11.46       8.19      18.77\nframes: 188\nmode: udp\n\n****************************************\nTime: 16.216256s\nFrames: 188\nMissed frames: 0\nUser FPS: 11.636430\nProcessing FPS: 13.976281\n****************************************\n\nClient Metrics Summary:\nMetric                              Avg        Min        Max\n-------------------------------------------------------------\nFPS                               11.64       2.83      19.31\nMissed frames                         0\nLatency (ms)                      75.49      51.80     353.11\nDetections                         2.78       0.00       8.00\nPacket loss                        0.00       0.00       0.00\nBandwidth (Bps)                36684.99       0.00  672242.02\nJitter (ms)                       12.35       0.00     296.04\nUpdate time (ms)                  75.49      51.80     353.11\nView time (ms)                     6.24       2.04       9.92\nDetection time (ms)               30.19      20.72     141.24\nFrame extraction time (ms)         4.97       0.09       9.96\nNetwork time (ms)                 12.47       5.17      19.97\nRender time (ms)                  30.41      10.20      49.88\nResize time (ms)                  19.90      10.12      29.99\nEncoding time (ms)                 7.53       5.05       9.98\nDecoding time (ms)                 8.87       6.07      12.00\nImage size (Mb)                    0.04       0.02       0.04\nThruput (Mb/s)                     4.44       0.80       6.88\n****************************************\n",
+    "udp_video_error": "QFontDatabase: Cannot find font directory /home/gjardim/wasm-object-detection/.venv/lib/python3.12/site-packages/cv2/qt/fonts.\nNote that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.\nQFontDatabase: Cannot find font directory /home/gjardim/wasm-object-detection/.venv/lib/python3.12/site-packages/cv2/qt/fonts.\nNote that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.\nQFontDatabase: Cannot find font directory /home/gjardim/wasm-object-detection/.venv/lib/python3.12/site-packages/cv2/qt/fonts.\nNote that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.\nQFontDatabase: Cannot find font directory /home/gjardim/wasm-object-detection/.venv/lib/python3.12/site-packages/cv2/qt/fonts.\nNote that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.\nQFontDatabase: Cannot find font directory /home/gjardim/wasm-object-detection/.venv/lib/python3.12/site-packages/cv2/qt/fonts.\nNote that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.\n"
+  },
+  {
+    "client_id": 1,
+    "status": "success",
+    "deploy_time": 6.701100587844849,
+    "pod_name": "wasm-inference-client-1-1769955363",
+    "node_ip": "192.168.0.103",
+    "udp_port": 30086,
+    "elapsed": 6.754433870315552,
+    "udp_video_result": "[INFO] --remote: Using HOST=192.168.0.103, PORT=30086\n\n--- Run 1 of 1 ---\nVideo: 1280x720 @ 30fps, 188 frames\nConnecting to 192.168.0.103:30086 (UDP)...\nConnected! Processing video...\nProgress: 30/188 (16.0%) | Avg FPS: 9.9 | Elapsed: 3.1s | Loss: 0 | BW: 369.9KB/s | Jitter: 11.5ms\nProgress: 60/188 (31.9%) | Avg FPS: 10.1 | Elapsed: 6.0s | Loss: 0 | BW: 409.0KB/s | Jitter: 11.1ms\nProgress: 90/188 (47.9%) | Avg FPS: 10.6 | Elapsed: 8.5s | Loss: 0 | BW: 397.2KB/s | Jitter: 8.0ms\nProgress: 120/188 (63.8%) | Avg FPS: 10.9 | Elapsed: 11.0s | Loss: 0 | BW: 414.4KB/s | Jitter: 8.5ms\nProgress: 150/188 (79.8%) | Avg FPS: 11.3 | Elapsed: 13.4s | Loss: 0 | BW: 425.5KB/s | Jitter: 7.4ms\nProgress: 180/188 (95.7%) | Avg FPS: 11.9 | Elapsed: 15.2s | Loss: 0 | BW: 451.8KB/s | Jitter: 3.2ms\n\nUDP Server Metrics Summary:\nMetric                  Avg        Min        Max\n--------------------------------------------------\ninf_ms                57.26      34.02     198.53\noutput_bytes         353.90       2.00    1011.00\noutput_kb              0.35       0.00       0.99\npost_ms                2.17       1.30       3.40\npre_ms                11.24       8.14      15.95\nframes: 188\nmode: udp\n\n****************************************\nTime: 15.709175s\nFrames: 188\nMissed frames: 0\nUser FPS: 12.014422\nProcessing FPS: 14.405810\n****************************************\n\nClient Metrics Summary:\nMetric                              Avg        Min        Max\n-------------------------------------------------------------\nFPS                               12.01       4.73      22.00\nMissed frames                         0\nLatency (ms)                      72.81      45.46     211.50\nDetections                         2.78       0.00       8.00\nPacket loss                        0.00       0.00       0.00\nBandwidth (Bps)                34454.77       0.00  673775.48\nJitter (ms)                        8.02       0.00      72.11\nUpdate time (ms)                  72.81      45.46     211.50\nView time (ms)                     6.24       2.04       9.92\nDetection time (ms)               29.13      18.19      84.60\nFrame extraction time (ms)         4.97       0.09       9.96\nNetwork time (ms)                 12.47       5.17      19.97\nRender time (ms)                  30.41      10.20      49.88\nResize time (ms)                  19.90      10.12      29.99\nEncoding time (ms)                 7.53       5.05       9.98\nDecoding time (ms)                 8.87       6.07      12.00\nImage size (Mb)                    0.04       0.02       0.04\nThruput (Mb/s)                     4.58       1.74       7.75\n****************************************\n",
+    "udp_video_error": "QFontDatabase: Cannot find font directory /home/gjardim/wasm-object-detection/.venv/lib/python3.12/site-packages/cv2/qt/fonts.\nNote that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.\nQFontDatabase: Cannot find font directory /home/gjardim/wasm-object-detection/.venv/lib/python3.12/site-packages/cv2/qt/fonts.\nNote that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.\nQFontDatabase: Cannot find font directory /home/gjardim/wasm-object-detection/.venv/lib/python3.12/site-packages/cv2/qt/fonts.\nNote that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.\nQFontDatabase: Cannot find font directory /home/gjardim/wasm-object-detection/.venv/lib/python3.12/site-packages/cv2/qt/fonts.\nNote that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.\nQFontDatabase: Cannot find font directory /home/gjardim/wasm-object-detection/.venv/lib/python3.12/site-packages/cv2/qt/fonts.\nNote that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.\n"
+  },
+  {
+    "client_id": 7,
+    "status": "failed",
+    "error": "{'error': 'No nodes available under pod limits', 'pod_counts': {'gspadotto': 1, 'gustavojardim': 2, 'xub01': 1}, 'status': 'failed'}",
+    "elapsed": 0.10652899742126465
+  },
+  {
+    "client_id": 8,
+    "status": "failed",
+    "error": "{'error': 'No nodes available under pod limits', 'pod_counts': {'gspadotto': 1, 'gustavojardim': 2, 'xub01': 1}, 'status': 'failed'}",
+    "elapsed": 0.13779783248901367
+  },
+  {
+    "client_id": 9,
+    "status": "failed",
+    "error": "{'error': 'No nodes available under pod limits', 'pod_counts': {'gspadotto': 1, 'gustavojardim': 2, 'xub01': 1}, 'status': 'failed'}",
+    "elapsed": 0.09102296829223633
+  },
+  {
+    "client_id": 0,
+    "status": "failed",
+    "error": "{'error': 'No nodes available under pod limits', 'pod_counts': {'gspadotto': 1, 'gustavojardim': 2, 'xub01': 1}, 'status': 'failed'}",
+    "elapsed": 6.688875198364258
+  },
+  {
+    "client_id": 3,
+    "status": "failed",
+    "error": "{'error': 'No nodes available under pod limits', 'pod_counts': {'gspadotto': 1, 'gustavojardim': 2, 'xub01': 1}, 'status': 'failed'}",
+    "elapsed": 1.8468730449676514
+  },
+  {
+    "client_id": 4,
+    "status": "failed",
+    "error": "{'error': 'No nodes available under pod limits', 'pod_counts': {'gspadotto': 1, 'gustavojardim': 2, 'xub01': 1}, 'status': 'failed'}",
+    "elapsed": 0.08474183082580566
+  },
+  {
+    "client_id": 5,
+    "status": "failed",
+    "error": "{'error': 'No nodes available under pod limits', 'pod_counts': {'gspadotto': 1, 'gustavojardim': 2, 'xub01': 1}, 'status': 'failed'}",
+    "elapsed": 0.291149377822876
+  },
+  {
+    "client_id": 6,
+    "status": "failed",
+    "error": "{'error': 'No nodes available under pod limits', 'pod_counts': {'gspadotto': 1, 'gustavojardim': 2, 'xub01': 1}, 'status': 'failed'}",
+    "elapsed": 0.37288928031921387
+  },
+  {
+    "client_id": 2,
+    "status": "success",
+    "deploy_time": 3.3907394409179688,
+    "pod_name": "wasm-inference-client-2-1769955443",
+    "node_ip": "192.168.0.103",
+    "udp_port": 30085,
+    "elapsed": 3.4158027172088623,
+    "udp_video_result": "[INFO] --remote: Using HOST=192.168.0.103, PORT=30085\n\n--- Run 1 of 1 ---\nVideo: 1280x720 @ 30fps, 188 frames\nConnecting to 192.168.0.103:30085 (UDP)...\nConnected! Processing video...\nProgress: 30/188 (16.0%) | Avg FPS: 11.7 | Elapsed: 2.6s | Loss: 0 | BW: 538.9KB/s | Jitter: 25.0ms\nProgress: 60/188 (31.9%) | Avg FPS: 12.4 | Elapsed: 4.9s | Loss: 0 | BW: 489.7KB/s | Jitter: 15.0ms\nProgress: 90/188 (47.9%) | Avg FPS: 12.3 | Elapsed: 7.4s | Loss: 0 | BW: 460.5KB/s | Jitter: 4.2ms\nProgress: 120/188 (63.8%) | Avg FPS: 12.4 | Elapsed: 9.8s | Loss: 0 | BW: 471.3KB/s | Jitter: 5.9ms\nProgress: 150/188 (79.8%) | Avg FPS: 12.3 | Elapsed: 12.2s | Loss: 0 | BW: 472.1KB/s | Jitter: 6.4ms\nProgress: 180/188 (95.7%) | Avg FPS: 12.0 | Elapsed: 15.0s | Loss: 0 | BW: 466.1KB/s | Jitter: 11.7ms\n\nUDP Server Metrics Summary:\nMetric                  Avg        Min        Max\n--------------------------------------------------\ninf_ms                58.94      41.07     325.56\noutput_bytes         353.90       2.00    1011.00\noutput_kb              0.35       0.00       0.99\npost_ms                2.27       1.28       3.64\npre_ms                10.95       8.22      15.79\nframes: 188\nmode: udp\n\n****************************************\nTime: 15.937431s\nFrames: 188\nMissed frames: 0\nUser FPS: 11.841402\nProcessing FPS: 14.083115\n****************************************\n\nClient Metrics Summary:\nMetric                              Avg        Min        Max\n-------------------------------------------------------------\nFPS                               11.84       0.00      18.70\nMissed frames                         0\nLatency (ms)                      73.90       0.00     344.20\nDetections                         2.78       0.00       8.00\nPacket loss                        0.00       0.00       0.00\nBandwidth (Bps)                37512.66       0.00  670267.33\nJitter (ms)                       11.57       0.00     286.96\nUpdate time (ms)                  73.90       0.00     344.20\nView time (ms)                     6.24       2.04       9.92\nDetection time (ms)               29.56       0.00     137.68\nFrame extraction time (ms)         4.97       0.09       9.96\nNetwork time (ms)                 12.47       5.17      19.97\nRender time (ms)                  30.41      10.20      49.88\nResize time (ms)                  19.90      10.12      29.99\nEncoding time (ms)                 7.53       5.05       9.98\nDecoding time (ms)                 8.87       6.07      12.00\nImage size (Mb)                    0.04       0.02       0.04\nThruput (Mb/s)                     4.47       0.00       6.79\n****************************************\n",
+    "udp_video_error": "QFontDatabase: Cannot find font directory /home/gjardim/wasm-object-detection/.venv/lib/python3.12/site-packages/cv2/qt/fonts.\nNote that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.\nQFontDatabase: Cannot find font directory /home/gjardim/wasm-object-detection/.venv/lib/python3.12/site-packages/cv2/qt/fonts.\nNote that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.\nQFontDatabase: Cannot find font directory /home/gjardim/wasm-object-detection/.venv/lib/python3.12/site-packages/cv2/qt/fonts.\nNote that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.\nQFontDatabase: Cannot find font directory /home/gjardim/wasm-object-detection/.venv/lib/python3.12/site-packages/cv2/qt/fonts.\nNote that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.\nQFontDatabase: Cannot find font directory /home/gjardim/wasm-object-detection/.venv/lib/python3.12/site-packages/cv2/qt/fonts.\nNote that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.\n"
+  },
+  {
+    "client_id": 1,
+    "status": "success",
+    "deploy_time": 6.514049768447876,
+    "pod_name": "wasm-inference-client-1-1769955446",
+    "node_ip": "192.168.0.103",
+    "udp_port": 30086,
+    "elapsed": 6.591220378875732,
+    "udp_video_result": "[INFO] --remote: Using HOST=192.168.0.103, PORT=30086\n\n--- Run 1 of 1 ---\nVideo: 1280x720 @ 30fps, 188 frames\nConnecting to 192.168.0.103:30086 (UDP)...\nConnected! Processing video...\nProgress: 30/188 (16.0%) | Avg FPS: 10.7 | Elapsed: 2.9s | Loss: 0 | BW: 429.2KB/s | Jitter: 14.1ms\nProgress: 60/188 (31.9%) | Avg FPS: 11.4 | Elapsed: 5.3s | Loss: 0 | BW: 453.7KB/s | Jitter: 4.8ms\nProgress: 90/188 (47.9%) | Avg FPS: 11.6 | Elapsed: 7.9s | Loss: 0 | BW: 429.8KB/s | Jitter: 10.8ms\nProgress: 120/188 (63.8%) | Avg FPS: 11.7 | Elapsed: 10.3s | Loss: 0 | BW: 437.7KB/s | Jitter: 8.0ms\nProgress: 150/188 (79.8%) | Avg FPS: 11.4 | Elapsed: 13.2s | Loss: 0 | BW: 432.1KB/s | Jitter: 14.5ms\nProgress: 180/188 (95.7%) | Avg FPS: 12.1 | Elapsed: 15.0s | Loss: 0 | BW: 458.2KB/s | Jitter: 5.8ms\n\nUDP Server Metrics Summary:\nMetric                  Avg        Min        Max\n--------------------------------------------------\ninf_ms                56.78      31.02     204.92\noutput_bytes         353.90       2.00    1011.00\noutput_kb              0.35       0.00       0.99\npost_ms                2.19       1.31       3.06\npre_ms                10.61       7.82      15.31\nframes: 188\nmode: udp\n\n****************************************\nTime: 15.454265s\nFrames: 188\nMissed frames: 0\nUser FPS: 12.212143\nProcessing FPS: 14.582932\n****************************************\n\nClient Metrics Summary:\nMetric                              Avg        Min        Max\n-------------------------------------------------------------\nFPS                               12.21       0.00      23.54\nMissed frames                         0\nLatency (ms)                      71.25       0.00     222.96\nDetections                         2.78       0.00       8.00\nPacket loss                        0.00       0.00       0.00\nBandwidth (Bps)                34939.03       0.00  684972.74\nJitter (ms)                        9.42       0.00      93.12\nUpdate time (ms)                  71.25       0.00     222.96\nView time (ms)                     6.24       2.04       9.92\nDetection time (ms)               28.50       0.00      89.18\nFrame extraction time (ms)         4.97       0.09       9.96\nNetwork time (ms)                 12.47       5.17      19.97\nRender time (ms)                  30.41      10.20      49.88\nResize time (ms)                  19.90      10.12      29.99\nEncoding time (ms)                 7.53       5.05       9.98\nDecoding time (ms)                 8.87       6.07      12.00\nImage size (Mb)                    0.04       0.02       0.04\nThruput (Mb/s)                     4.63       0.00       8.26\n****************************************\n",
+    "udp_video_error": "QFontDatabase: Cannot find font directory /home/gjardim/wasm-object-detection/.venv/lib/python3.12/site-packages/cv2/qt/fonts.\nNote that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.\nQFontDatabase: Cannot find font directory /home/gjardim/wasm-object-detection/.venv/lib/python3.12/site-packages/cv2/qt/fonts.\nNote that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.\nQFontDatabase: Cannot find font directory /home/gjardim/wasm-object-detection/.venv/lib/python3.12/site-packages/cv2/qt/fonts.\nNote that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.\nQFontDatabase: Cannot find font directory /home/gjardim/wasm-object-detection/.venv/lib/python3.12/site-packages/cv2/qt/fonts.\nNote that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.\nQFontDatabase: Cannot find font directory /home/gjardim/wasm-object-detection/.venv/lib/python3.12/site-packages/cv2/qt/fonts.\nNote that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.\n"
+  },
+  {
+    "client_id": 7,
+    "status": "failed",
+    "error": "{'error': 'No nodes available under pod limits', 'pod_counts': {'gspadotto': 1, 'gustavojardim': 2, 'xub01': 1}, 'status': 'failed'}",
+    "elapsed": 0.18886041641235352
+  },
+  {
+    "client_id": 8,
+    "status": "failed",
+    "error": "{'error': 'No nodes available under pod limits', 'pod_counts': {'gspadotto': 1, 'gustavojardim': 2, 'xub01': 1}, 'status': 'failed'}",
+    "elapsed": 0.20085358619689941
+  },
+  {
+    "client_id": 9,
+    "status": "failed",
+    "error": "{'error': 'No nodes available under pod limits', 'pod_counts': {'gspadotto': 1, 'gustavojardim': 2, 'xub01': 1}, 'status': 'failed'}",
+    "elapsed": 0.02485036849975586
+  },
+  {
+    "client_id": 1,
+    "status": "failed",
+    "error": "{'error': 'No nodes with latency <= 80ms', 'latencies': [{'inference_latency_ms': 87.23187446594238, 'ip': '192.168.0.103', 'name': 'gustavojardim'}], 'status': 'failed'}",
+    "elapsed": 0.3458125591278076
+  },
+  {
+    "client_id": 3,
+    "status": "failed",
+    "error": "{'error': 'No nodes available under pod limits', 'pod_counts': {'gspadotto': 1, 'gustavojardim': 2, 'xub01': 1}, 'status': 'failed'}",
+    "elapsed": 0.8308568000793457
+  },
+  {
+    "client_id": 4,
+    "status": "failed",
+    "error": "{'error': 'No nodes available under pod limits', 'pod_counts': {'gspadotto': 1, 'gustavojardim': 2, 'xub01': 1}, 'status': 'failed'}",
+    "elapsed": 0.11553215980529785
+  },
+  {
+    "client_id": 5,
+    "status": "failed",
+    "error": "{'error': 'No nodes available under pod limits', 'pod_counts': {'gspadotto': 1, 'gustavojardim': 2, 'xub01': 1}, 'status': 'failed'}",
+    "elapsed": 0.11875033378601074
+  },
+  {
+    "client_id": 6,
+    "status": "failed",
+    "error": "{'error': 'No nodes available under pod limits', 'pod_counts': {'gspadotto': 1, 'gustavojardim': 2, 'xub01': 1}, 'status': 'failed'}",
+    "elapsed": 0.2824838161468506
+  },
+  {
+    "client_id": 2,
+    "status": "success",
+    "deploy_time": 2.535306215286255,
+    "pod_name": "wasm-inference-client-2-1769955524",
+    "node_ip": "192.168.0.103",
+    "udp_port": 30085,
+    "elapsed": 2.544278621673584,
+    "udp_video_result": "[INFO] --remote: Using HOST=192.168.0.103, PORT=30085\n\n--- Run 1 of 1 ---\nVideo: 1280x720 @ 30fps, 188 frames\nConnecting to 192.168.0.103:30085 (UDP)...\nConnected! Processing video...\nProgress: 30/188 (16.0%) | Avg FPS: 11.8 | Elapsed: 2.6s | Loss: 0 | BW: 501.1KB/s | Jitter: 15.5ms\nProgress: 60/188 (31.9%) | Avg FPS: 12.2 | Elapsed: 5.0s | Loss: 0 | BW: 488.8KB/s | Jitter: 10.3ms\nProgress: 90/188 (47.9%) | Avg FPS: 12.2 | Elapsed: 7.4s | Loss: 0 | BW: 452.8KB/s | Jitter: 5.9ms\nProgress: 120/188 (63.8%) | Avg FPS: 12.2 | Elapsed: 9.9s | Loss: 0 | BW: 464.4KB/s | Jitter: 7.0ms\nProgress: 150/188 (79.8%) | Avg FPS: 12.1 | Elapsed: 12.4s | Loss: 0 | BW: 467.3KB/s | Jitter: 10.4ms\nProgress: 180/188 (95.7%) | Avg FPS: 11.7 | Elapsed: 15.5s | Loss: 0 | BW: 450.0KB/s | Jitter: 13.6ms\n\nUDP Server Metrics Summary:\nMetric                  Avg        Min        Max\n--------------------------------------------------\ninf_ms                59.62      37.03     164.71\noutput_bytes         353.90       2.00    1011.00\noutput_kb              0.35       0.00       0.99\npost_ms                2.23       1.29       2.91\npre_ms                11.24       8.25      16.76\nframes: 188\nmode: udp\n\n****************************************\nTime: 16.146785s\nFrames: 188\nMissed frames: 0\nUser FPS: 11.679930\nProcessing FPS: 13.925823\n****************************************\n\nClient Metrics Summary:\nMetric                              Avg        Min        Max\n-------------------------------------------------------------\nFPS                               11.68       5.44      20.39\nMissed frames                         0\nLatency (ms)                      75.17      49.05     183.77\nDetections                         2.78       0.00       8.00\nPacket loss                        0.00       0.00       0.00\nBandwidth (Bps)                36817.46       0.00  600787.06\nJitter (ms)                       10.40       0.00     129.78\nUpdate time (ms)                  75.17      49.05     183.77\nView time (ms)                     6.24       2.04       9.92\nDetection time (ms)               30.07      19.62      73.51\nFrame extraction time (ms)         4.97       0.09       9.96\nNetwork time (ms)                 12.47       5.17      19.97\nRender time (ms)                  30.41      10.20      49.88\nResize time (ms)                  19.90      10.12      29.99\nEncoding time (ms)                 7.53       5.05       9.98\nDecoding time (ms)                 8.87       6.07      12.00\nImage size (Mb)                    0.04       0.02       0.04\nThruput (Mb/s)                     4.43       1.65       6.92\n****************************************\n",
+    "udp_video_error": "QFontDatabase: Cannot find font directory /home/gjardim/wasm-object-detection/.venv/lib/python3.12/site-packages/cv2/qt/fonts.\nNote that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.\nQFontDatabase: Cannot find font directory /home/gjardim/wasm-object-detection/.venv/lib/python3.12/site-packages/cv2/qt/fonts.\nNote that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.\nQFontDatabase: Cannot find font directory /home/gjardim/wasm-object-detection/.venv/lib/python3.12/site-packages/cv2/qt/fonts.\nNote that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.\nQFontDatabase: Cannot find font directory /home/gjardim/wasm-object-detection/.venv/lib/python3.12/site-packages/cv2/qt/fonts.\nNote that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.\nQFontDatabase: Cannot find font directory /home/gjardim/wasm-object-detection/.venv/lib/python3.12/site-packages/cv2/qt/fonts.\nNote that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.\n"
+  },
+  {
+    "client_id": 0,
+    "status": "success",
+    "deploy_time": 5.626252174377441,
+    "pod_name": "wasm-inference-client-0-1769955526",
+    "node_ip": "192.168.0.103",
+    "udp_port": 30086,
+    "elapsed": 5.715322971343994,
+    "udp_video_result": "[INFO] --remote: Using HOST=192.168.0.103, PORT=30086\n\n--- Run 1 of 1 ---\nVideo: 1280x720 @ 30fps, 188 frames\nConnecting to 192.168.0.103:30086 (UDP)...\nConnected! Processing video...\nProgress: 30/188 (16.0%) | Avg FPS: 10.1 | Elapsed: 3.0s | Loss: 0 | BW: 386.4KB/s | Jitter: 12.6ms\nProgress: 60/188 (31.9%) | Avg FPS: 10.9 | Elapsed: 5.6s | Loss: 0 | BW: 436.3KB/s | Jitter: 8.1ms\nProgress: 90/188 (47.9%) | Avg FPS: 11.3 | Elapsed: 8.1s | Loss: 0 | BW: 421.6KB/s | Jitter: 8.9ms\nProgress: 120/188 (63.8%) | Avg FPS: 11.2 | Elapsed: 10.8s | Loss: 0 | BW: 432.2KB/s | Jitter: 10.1ms\nProgress: 150/188 (79.8%) | Avg FPS: 11.2 | Elapsed: 13.4s | Loss: 0 | BW: 423.2KB/s | Jitter: 9.8ms\nProgress: 180/188 (95.7%) | Avg FPS: 11.8 | Elapsed: 15.3s | Loss: 0 | BW: 446.4KB/s | Jitter: 4.8ms\n\nUDP Server Metrics Summary:\nMetric                  Avg        Min        Max\n--------------------------------------------------\ninf_ms                57.59      30.05     199.76\noutput_bytes         353.90       2.00    1011.00\noutput_kb              0.35       0.00       0.99\npost_ms                2.22       1.29       6.38\npre_ms                11.12       8.13      15.61\nframes: 188\nmode: udp\n\n****************************************\nTime: 15.753228s\nFrames: 188\nMissed frames: 0\nUser FPS: 11.987625\nProcessing FPS: 14.423826\n****************************************\n\nClient Metrics Summary:\nMetric                              Avg        Min        Max\n-------------------------------------------------------------\nFPS                               11.99       4.67      24.07\nMissed frames                         0\nLatency (ms)                      72.89      41.55     214.02\nDetections                         2.78       0.00       8.00\nPacket loss                        0.00       0.00       0.00\nBandwidth (Bps)                37733.78       0.00  694403.02\nJitter (ms)                        8.80       0.00      90.42\nUpdate time (ms)                  72.89      41.55     214.02\nView time (ms)                     6.24       2.04       9.92\nDetection time (ms)               29.16      16.62      85.61\nFrame extraction time (ms)         4.97       0.09       9.96\nNetwork time (ms)                 12.47       5.17      19.97\nRender time (ms)                  30.41      10.20      49.88\nResize time (ms)                  19.90      10.12      29.99\nEncoding time (ms)                 7.53       5.05       9.98\nDecoding time (ms)                 8.87       6.07      12.00\nImage size (Mb)                    0.04       0.02       0.04\nThruput (Mb/s)                     4.58       1.72       8.17\n****************************************\n",
+    "udp_video_error": "QFontDatabase: Cannot find font directory /home/gjardim/wasm-object-detection/.venv/lib/python3.12/site-packages/cv2/qt/fonts.\nNote that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.\nQFontDatabase: Cannot find font directory /home/gjardim/wasm-object-detection/.venv/lib/python3.12/site-packages/cv2/qt/fonts.\nNote that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.\nQFontDatabase: Cannot find font directory /home/gjardim/wasm-object-detection/.venv/lib/python3.12/site-packages/cv2/qt/fonts.\nNote that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.\nQFontDatabase: Cannot find font directory /home/gjardim/wasm-object-detection/.venv/lib/python3.12/site-packages/cv2/qt/fonts.\nNote that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.\nQFontDatabase: Cannot find font directory /home/gjardim/wasm-object-detection/.venv/lib/python3.12/site-packages/cv2/qt/fonts.\nNote that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.\n"
+  },
+  {
+    "client_id": 8,
+    "status": "failed",
+    "error": "{'error': 'No nodes available under pod limits', 'pod_counts': {'gspadotto': 1, 'gustavojardim': 2, 'xub01': 1}, 'status': 'failed'}",
+    "elapsed": 0.21035218238830566
+  },
+  {
+    "client_id": 7,
+    "status": "failed",
+    "error": "{'error': 'No nodes available under pod limits', 'pod_counts': {'gspadotto': 1, 'gustavojardim': 2, 'xub01': 1}, 'status': 'failed'}",
+    "elapsed": 0.24013161659240723
+  },
+  {
+    "client_id": 9,
+    "status": "failed",
+    "error": "{'error': 'No nodes available under pod limits', 'pod_counts': {'gspadotto': 1, 'gustavojardim': 2, 'xub01': 1}, 'status': 'failed'}",
+    "elapsed": 0.0260772705078125
+  },
+  {
+    "client_id": 0,
+    "status": "failed",
+    "error": "{'error': 'No nodes with latency <= 80ms', 'latencies': [{'inference_latency_ms': 97.88703918457031, 'ip': '192.168.0.103', 'name': 'gustavojardim'}], 'status': 'failed'}",
+    "elapsed": 2.6282968521118164
+  },
+  {
+    "client_id": 3,
+    "status": "failed",
+    "error": "{'error': 'No nodes available under pod limits', 'pod_counts': {'gspadotto': 1, 'gustavojardim': 2, 'xub01': 1}, 'status': 'failed'}",
+    "elapsed": 1.0316121578216553
+  },
+  {
+    "client_id": 4,
+    "status": "failed",
+    "error": "{'error': 'No nodes available under pod limits', 'pod_counts': {'gspadotto': 1, 'gustavojardim': 2, 'xub01': 1}, 'status': 'failed'}",
+    "elapsed": 0.11464476585388184
+  },
+  {
+    "client_id": 6,
+    "status": "failed",
+    "error": "{'error': 'No nodes available under pod limits', 'pod_counts': {'gspadotto': 1, 'gustavojardim': 2, 'xub01': 1}, 'status': 'failed'}",
+    "elapsed": 0.27573180198669434
+  },
+  {
+    "client_id": 5,
+    "status": "failed",
+    "error": "{'error': 'No nodes available under pod limits', 'pod_counts': {'gspadotto': 1, 'gustavojardim': 2, 'xub01': 1}, 'status': 'failed'}",
+    "elapsed": 0.4027070999145508
+  },
+  {
+    "client_id": 1,
+    "status": "success",
+    "deploy_time": 2.343754291534424,
+    "pod_name": "wasm-inference-client-1-1769955605",
+    "node_ip": "192.168.0.103",
+    "udp_port": 30085,
+    "elapsed": 2.3513033390045166,
+    "udp_video_result": "[INFO] --remote: Using HOST=192.168.0.103, PORT=30085\n\n--- Run 1 of 1 ---\nVideo: 1280x720 @ 30fps, 188 frames\nConnecting to 192.168.0.103:30085 (UDP)...\nConnected! Processing video...\nProgress: 30/188 (16.0%) | Avg FPS: 13.2 | Elapsed: 2.3s | Loss: 0 | BW: 539.3KB/s | Jitter: 6.5ms\nProgress: 60/188 (31.9%) | Avg FPS: 12.7 | Elapsed: 4.8s | Loss: 0 | BW: 507.7KB/s | Jitter: 26.2ms\nProgress: 90/188 (47.9%) | Avg FPS: 12.6 | Elapsed: 7.2s | Loss: 0 | BW: 484.3KB/s | Jitter: 4.9ms\nProgress: 120/188 (63.8%) | Avg FPS: 12.5 | Elapsed: 9.7s | Loss: 0 | BW: 476.9KB/s | Jitter: 4.9ms\nProgress: 150/188 (79.8%) | Avg FPS: 11.8 | Elapsed: 12.8s | Loss: 0 | BW: 451.8KB/s | Jitter: 18.1ms\nProgress: 180/188 (95.7%) | Avg FPS: 11.8 | Elapsed: 15.3s | Loss: 0 | BW: 453.5KB/s | Jitter: 7.3ms\n\nUDP Server Metrics Summary:\nMetric                  Avg        Min        Max\n--------------------------------------------------\ninf_ms                58.61      31.88     298.46\noutput_bytes         353.90       2.00    1011.00\noutput_kb              0.35       0.00       0.99\npost_ms                2.20       1.30       3.21\npre_ms                11.02       7.88      16.94\nframes: 188\nmode: udp\n\n****************************************\nTime: 15.898446s\nFrames: 188\nMissed frames: 0\nUser FPS: 11.870237\nProcessing FPS: 14.221051\n****************************************\n\nClient Metrics Summary:\nMetric                              Avg        Min        Max\n-------------------------------------------------------------\nFPS                               11.87       3.13      22.86\nMissed frames                         0\nLatency (ms)                      74.10      43.74     319.52\nDetections                         2.78       0.00       8.00\nPacket loss                        0.00       0.00       0.00\nBandwidth (Bps)                37358.42       0.00  683252.92\nJitter (ms)                       11.04       0.00     253.08\nUpdate time (ms)                  74.10      43.74     319.52\nView time (ms)                     6.24       2.04       9.92\nDetection time (ms)               29.64      17.50     127.81\nFrame extraction time (ms)         4.97       0.09       9.96\nNetwork time (ms)                 12.47       5.17      19.97\nRender time (ms)                  30.41      10.20      49.88\nResize time (ms)                  19.90      10.12      29.99\nEncoding time (ms)                 7.53       5.05       9.98\nDecoding time (ms)                 8.87       6.07      12.00\nImage size (Mb)                    0.04       0.02       0.04\nThruput (Mb/s)                     4.53       1.08       7.67\n****************************************\n",
+    "udp_video_error": "QFontDatabase: Cannot find font directory /home/gjardim/wasm-object-detection/.venv/lib/python3.12/site-packages/cv2/qt/fonts.\nNote that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.\nQFontDatabase: Cannot find font directory /home/gjardim/wasm-object-detection/.venv/lib/python3.12/site-packages/cv2/qt/fonts.\nNote that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.\nQFontDatabase: Cannot find font directory /home/gjardim/wasm-object-detection/.venv/lib/python3.12/site-packages/cv2/qt/fonts.\nNote that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.\nQFontDatabase: Cannot find font directory /home/gjardim/wasm-object-detection/.venv/lib/python3.12/site-packages/cv2/qt/fonts.\nNote that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.\nQFontDatabase: Cannot find font directory /home/gjardim/wasm-object-detection/.venv/lib/python3.12/site-packages/cv2/qt/fonts.\nNote that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.\n"
+  },
+  {
+    "client_id": 2,
+    "status": "success",
+    "deploy_time": 5.8301146030426025,
+    "pod_name": "wasm-inference-client-2-1769955608",
+    "node_ip": "192.168.0.103",
+    "udp_port": 30086,
+    "elapsed": 5.843303442001343,
+    "udp_video_result": "[INFO] --remote: Using HOST=192.168.0.103, PORT=30086\n\n--- Run 1 of 1 ---\nVideo: 1280x720 @ 30fps, 188 frames\nConnecting to 192.168.0.103:30086 (UDP)...\nConnected! Processing video...\nProgress: 30/188 (16.0%) | Avg FPS: 10.3 | Elapsed: 3.0s | Loss: 0 | BW: 398.6KB/s | Jitter: 13.5ms\nProgress: 60/188 (31.9%) | Avg FPS: 11.3 | Elapsed: 5.4s | Loss: 0 | BW: 447.3KB/s | Jitter: 6.0ms\nProgress: 90/188 (47.9%) | Avg FPS: 11.3 | Elapsed: 8.1s | Loss: 0 | BW: 430.7KB/s | Jitter: 9.2ms\nProgress: 120/188 (63.8%) | Avg FPS: 11.1 | Elapsed: 10.9s | Loss: 0 | BW: 422.8KB/s | Jitter: 10.0ms\nProgress: 150/188 (79.8%) | Avg FPS: 11.5 | Elapsed: 13.1s | Loss: 0 | BW: 434.4KB/s | Jitter: 4.4ms\nProgress: 180/188 (95.7%) | Avg FPS: 12.2 | Elapsed: 14.9s | Loss: 0 | BW: 464.3KB/s | Jitter: 5.7ms\n\nUDP Server Metrics Summary:\nMetric                  Avg        Min        Max\n--------------------------------------------------\ninf_ms                56.63      30.32     192.80\noutput_bytes         353.90       2.00    1011.00\noutput_kb              0.35       0.00       0.99\npost_ms                2.15       1.27       4.10\npre_ms                10.47       7.83      15.73\nframes: 188\nmode: udp\n\n****************************************\nTime: 15.367751s\nFrames: 188\nMissed frames: 0\nUser FPS: 12.280192\nProcessing FPS: 14.766992\n****************************************\n\nClient Metrics Summary:\nMetric                              Avg        Min        Max\n-------------------------------------------------------------\nFPS                               12.28       4.84      24.07\nMissed frames                         0\nLatency (ms)                      71.27      41.54     206.40\nDetections                         2.78       0.00       8.00\nPacket loss                        0.00       0.00       0.00\nBandwidth (Bps)                35403.70       0.00  702484.11\nJitter (ms)                        7.95       0.00      68.50\nUpdate time (ms)                  71.27      41.54     206.40\nView time (ms)                     6.24       2.04       9.92\nDetection time (ms)               28.51      16.62      82.56\nFrame extraction time (ms)         4.97       0.09       9.96\nNetwork time (ms)                 12.47       5.17      19.97\nRender time (ms)                  30.41      10.20      49.88\nResize time (ms)                  19.90      10.12      29.99\nEncoding time (ms)                 7.53       5.05       9.98\nDecoding time (ms)                 8.87       6.07      12.00\nImage size (Mb)                    0.04       0.02       0.04\nThruput (Mb/s)                     4.69       1.78       8.51\n****************************************\n",
+    "udp_video_error": "QFontDatabase: Cannot find font directory /home/gjardim/wasm-object-detection/.venv/lib/python3.12/site-packages/cv2/qt/fonts.\nNote that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.\nQFontDatabase: Cannot find font directory /home/gjardim/wasm-object-detection/.venv/lib/python3.12/site-packages/cv2/qt/fonts.\nNote that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.\nQFontDatabase: Cannot find font directory /home/gjardim/wasm-object-detection/.venv/lib/python3.12/site-packages/cv2/qt/fonts.\nNote that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.\nQFontDatabase: Cannot find font directory /home/gjardim/wasm-object-detection/.venv/lib/python3.12/site-packages/cv2/qt/fonts.\nNote that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.\nQFontDatabase: Cannot find font directory /home/gjardim/wasm-object-detection/.venv/lib/python3.12/site-packages/cv2/qt/fonts.\nNote that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.\n"
+  },
+  {
+    "client_id": 7,
+    "status": "failed",
+    "error": "{'error': 'No nodes available under pod limits', 'pod_counts': {'gspadotto': 1, 'gustavojardim': 2, 'xub01': 1}, 'status': 'failed'}",
+    "elapsed": 0.12372946739196777
+  },
+  {
+    "client_id": 8,
+    "status": "failed",
+    "error": "{'error': 'No nodes available under pod limits', 'pod_counts': {'gspadotto': 1, 'gustavojardim': 2, 'xub01': 1}, 'status': 'failed'}",
+    "elapsed": 0.21446442604064941
+  },
+  {
+    "client_id": 9,
+    "status": "failed",
+    "error": "{'error': 'No nodes available under pod limits', 'pod_counts': {'gspadotto': 1, 'gustavojardim': 2, 'xub01': 1}, 'status': 'failed'}",
+    "elapsed": 0.026010751724243164
+  },
+  {
+    "client_id": 0,
+    "status": "failed",
+    "error": "{'error': 'No nodes with latency <= 80ms', 'latencies': [{'inference_latency_ms': 118.8356876373291, 'ip': '192.168.0.103', 'name': 'gustavojardim'}], 'status': 'failed'}",
+    "elapsed": 2.551945447921753
+  },
+  {
+    "client_id": 3,
+    "status": "failed",
+    "error": "{'error': 'No nodes available under pod limits', 'pod_counts': {'gspadotto': 1, 'gustavojardim': 2, 'xub01': 1}, 'status': 'failed'}",
+    "elapsed": 0.888585090637207
+  },
+  {
+    "client_id": 4,
+    "status": "failed",
+    "error": "{'error': 'No nodes available under pod limits', 'pod_counts': {'gspadotto': 1, 'gustavojardim': 2, 'xub01': 1}, 'status': 'failed'}",
+    "elapsed": 0.14386200904846191
+  },
+  {
+    "client_id": 5,
+    "status": "failed",
+    "error": "{'error': 'No nodes available under pod limits', 'pod_counts': {'gspadotto': 1, 'gustavojardim': 2, 'xub01': 1}, 'status': 'failed'}",
+    "elapsed": 0.32744765281677246
+  },
+  {
+    "client_id": 6,
+    "status": "failed",
+    "error": "{'error': 'No nodes available under pod limits', 'pod_counts': {'gspadotto': 1, 'gustavojardim': 2, 'xub01': 1}, 'status': 'failed'}",
+    "elapsed": 0.4756500720977783
+  },
+  {
+    "client_id": 2,
+    "status": "success",
+    "deploy_time": 2.3854458332061768,
+    "pod_name": "wasm-inference-client-2-1769955688",
+    "node_ip": "192.168.0.103",
+    "udp_port": 30085,
+    "elapsed": 2.462334156036377,
+    "udp_video_result": "[INFO] --remote: Using HOST=192.168.0.103, PORT=30085\n\n--- Run 1 of 1 ---\nVideo: 1280x720 @ 30fps, 188 frames\nConnecting to 192.168.0.103:30085 (UDP)...\nConnected! Processing video...\nProgress: 30/188 (16.0%) | Avg FPS: 11.8 | Elapsed: 2.6s | Loss: 0 | BW: 533.2KB/s | Jitter: 14.9ms\nProgress: 60/188 (31.9%) | Avg FPS: 12.4 | Elapsed: 4.9s | Loss: 0 | BW: 498.2KB/s | Jitter: 11.6ms\nProgress: 90/188 (47.9%) | Avg FPS: 12.3 | Elapsed: 7.4s | Loss: 0 | BW: 462.7KB/s | Jitter: 5.1ms\nProgress: 120/188 (63.8%) | Avg FPS: 12.1 | Elapsed: 10.0s | Loss: 0 | BW: 459.5KB/s | Jitter: 14.8ms\nProgress: 150/188 (79.8%) | Avg FPS: 12.0 | Elapsed: 12.6s | Loss: 0 | BW: 458.1KB/s | Jitter: 7.3ms\nProgress: 180/188 (95.7%) | Avg FPS: 12.0 | Elapsed: 15.0s | Loss: 0 | BW: 461.1KB/s | Jitter: 6.5ms\n\nUDP Server Metrics Summary:\nMetric                  Avg        Min        Max\n--------------------------------------------------\ninf_ms                57.14      40.36     207.16\noutput_bytes         353.90       2.00    1011.00\noutput_kb              0.35       0.00       0.99\npost_ms                2.26       1.25       6.50\npre_ms                11.63       8.14      17.96\nframes: 188\nmode: udp\n\n****************************************\nTime: 15.713369s\nFrames: 188\nMissed frames: 0\nUser FPS: 12.009779\nProcessing FPS: 14.057153\n****************************************\n\nClient Metrics Summary:\nMetric                              Avg        Min        Max\n-------------------------------------------------------------\nFPS                               12.01       0.00      18.52\nMissed frames                         0\nLatency (ms)                      72.81       0.00     225.44\nDetections                         2.78       0.00       8.00\nPacket loss                        0.00       0.00       0.00\nBandwidth (Bps)                37922.49       0.00  668052.91\nJitter (ms)                        9.92       0.00     168.25\nUpdate time (ms)                  72.81       0.00     225.44\nView time (ms)                     6.24       2.04       9.92\nDetection time (ms)               29.12       0.00      90.17\nFrame extraction time (ms)         4.97       0.09       9.96\nNetwork time (ms)                 12.47       5.17      19.97\nRender time (ms)                  30.41      10.20      49.88\nResize time (ms)                  19.90      10.12      29.99\nEncoding time (ms)                 7.53       5.05       9.98\nDecoding time (ms)                 8.87       6.07      12.00\nImage size (Mb)                    0.04       0.02       0.04\nThruput (Mb/s)                     4.46       0.00       6.85\n****************************************\n",
+    "udp_video_error": "QFontDatabase: Cannot find font directory /home/gjardim/wasm-object-detection/.venv/lib/python3.12/site-packages/cv2/qt/fonts.\nNote that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.\nQFontDatabase: Cannot find font directory /home/gjardim/wasm-object-detection/.venv/lib/python3.12/site-packages/cv2/qt/fonts.\nNote that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.\nQFontDatabase: Cannot find font directory /home/gjardim/wasm-object-detection/.venv/lib/python3.12/site-packages/cv2/qt/fonts.\nNote that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.\nQFontDatabase: Cannot find font directory /home/gjardim/wasm-object-detection/.venv/lib/python3.12/site-packages/cv2/qt/fonts.\nNote that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.\nQFontDatabase: Cannot find font directory /home/gjardim/wasm-object-detection/.venv/lib/python3.12/site-packages/cv2/qt/fonts.\nNote that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.\n"
+  },
+  {
+    "client_id": 1,
+    "status": "success",
+    "deploy_time": 5.651554107666016,
+    "pod_name": "wasm-inference-client-1-1769955690",
+    "node_ip": "192.168.0.103",
+    "udp_port": 30086,
+    "elapsed": 5.736588954925537,
+    "udp_video_result": "[INFO] --remote: Using HOST=192.168.0.103, PORT=30086\n\n--- Run 1 of 1 ---\nVideo: 1280x720 @ 30fps, 188 frames\nConnecting to 192.168.0.103:30086 (UDP)...\nConnected! Processing video...\nProgress: 30/188 (16.0%) | Avg FPS: 10.7 | Elapsed: 2.9s | Loss: 0 | BW: 410.7KB/s | Jitter: 7.9ms\nProgress: 60/188 (31.9%) | Avg FPS: 10.9 | Elapsed: 5.6s | Loss: 0 | BW: 433.6KB/s | Jitter: 17.0ms\nProgress: 90/188 (47.9%) | Avg FPS: 11.1 | Elapsed: 8.1s | Loss: 0 | BW: 421.5KB/s | Jitter: 12.0ms\nProgress: 120/188 (63.8%) | Avg FPS: 11.3 | Elapsed: 10.7s | Loss: 0 | BW: 432.1KB/s | Jitter: 7.8ms\nProgress: 150/188 (79.8%) | Avg FPS: 11.6 | Elapsed: 13.0s | Loss: 0 | BW: 441.0KB/s | Jitter: 5.1ms\nProgress: 180/188 (95.7%) | Avg FPS: 12.2 | Elapsed: 14.8s | Loss: 0 | BW: 471.6KB/s | Jitter: 6.5ms\n\nUDP Server Metrics Summary:\nMetric                  Avg        Min        Max\n--------------------------------------------------\ninf_ms                55.60      31.09     188.46\noutput_bytes         353.90       2.00    1011.00\noutput_kb              0.35       0.00       0.99\npost_ms                2.15       1.22       2.90\npre_ms                10.94       7.68      23.48\nframes: 188\nmode: udp\n\n****************************************\nTime: 15.254512s\nFrames: 188\nMissed frames: 0\nUser FPS: 12.371570\nProcessing FPS: 14.685847\n****************************************\n\nClient Metrics Summary:\nMetric                              Avg        Min        Max\n-------------------------------------------------------------\nFPS                               12.37       0.00      23.28\nMissed frames                         0\nLatency (ms)                      70.31       0.00     202.71\nDetections                         2.78       0.00       8.00\nPacket loss                        0.00       0.00       0.00\nBandwidth (Bps)                35959.42       0.00  689688.06\nJitter (ms)                        9.26       0.00      83.72\nUpdate time (ms)                  70.31       0.00     202.71\nView time (ms)                     6.24       2.04       9.92\nDetection time (ms)               28.12       0.00      81.08\nFrame extraction time (ms)         4.97       0.09       9.96\nNetwork time (ms)                 12.47       5.17      19.97\nRender time (ms)                  30.41      10.20      49.88\nResize time (ms)                  19.90      10.12      29.99\nEncoding time (ms)                 7.53       5.05       9.98\nDecoding time (ms)                 8.87       6.07      12.00\nImage size (Mb)                    0.04       0.02       0.04\nThruput (Mb/s)                     4.68       0.00       8.17\n****************************************\n",
+    "udp_video_error": "QFontDatabase: Cannot find font directory /home/gjardim/wasm-object-detection/.venv/lib/python3.12/site-packages/cv2/qt/fonts.\nNote that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.\nQFontDatabase: Cannot find font directory /home/gjardim/wasm-object-detection/.venv/lib/python3.12/site-packages/cv2/qt/fonts.\nNote that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.\nQFontDatabase: Cannot find font directory /home/gjardim/wasm-object-detection/.venv/lib/python3.12/site-packages/cv2/qt/fonts.\nNote that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.\nQFontDatabase: Cannot find font directory /home/gjardim/wasm-object-detection/.venv/lib/python3.12/site-packages/cv2/qt/fonts.\nNote that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.\nQFontDatabase: Cannot find font directory /home/gjardim/wasm-object-detection/.venv/lib/python3.12/site-packages/cv2/qt/fonts.\nNote that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.\n"
+  },
+  {
+    "client_id": 7,
+    "status": "failed",
+    "error": "{'error': 'No nodes available under pod limits', 'pod_counts': {'gspadotto': 1, 'gustavojardim': 2, 'xub01': 1}, 'status': 'failed'}",
+    "elapsed": 0.14935827255249023
+  },
+  {
+    "client_id": 8,
+    "status": "failed",
+    "error": "{'error': 'No nodes available under pod limits', 'pod_counts': {'gspadotto': 1, 'gustavojardim': 2, 'xub01': 1}, 'status': 'failed'}",
+    "elapsed": 0.24121665954589844
+  },
+  {
+    "client_id": 9,
+    "status": "failed",
+    "error": "{'error': 'No nodes available under pod limits', 'pod_counts': {'gspadotto': 1, 'gustavojardim': 2, 'xub01': 1}, 'status': 'failed'}",
+    "elapsed": 0.026276350021362305
+  }
+]

@@ -8,19 +8,19 @@ metadata:
     module.wasm.image/variant: "compat"
 spec:
   nodeSelector:
-    kubernetes.io/hostname: gjardim
+    kubernetes.io/hostname: gustavojardim
   runtimeClassName: wasmtime
   restartPolicy: Always
   containers:
     - name: inference
-      image: 192.168.0.113:32000/wasm-inference:latest
+      image: 192.168.0.112:32000/wasm-inference:latest
       imagePullPolicy: Always
       args: ["device", "--cpu", "--udp", "--debug", "--profile"]
       ports:
         - containerPort: 8080
           name: tcp
           protocol: TCP
-        - containerPort: 8081
+        - containerPort: 8082
           name: udp
           protocol: UDP
 ---
