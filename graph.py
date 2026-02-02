@@ -4,9 +4,13 @@ import os
 
 
 
+FIG_SIZE = (7, 3.5)
 
 
 
+def get_ax(fig_size=FIG_SIZE):
+    fig, ax = plt.subplots(figsize=FIG_SIZE, constrained_layout=True)
+    return ax
 
 def get_x_from_timestamp(file_data):
     t0 = file_data[0]["timestamp"]
@@ -41,25 +45,22 @@ def load(data_dir):
 
 # metric: "Qual métrica será plotada no gráfico (memory_bytes, cpu_cores_sum, ...)"
 # metric_label: "Nome a ser usado no eixo y do gráfico"
-def resource_usage_comparison(metrics_data, metric, metric_label):
+def resource_usage_comparison(metrics_data, metric, metric_label, scale=1):
     # Plot
-    fig, ax = plt.subplots()
-
-    print(metrics_data.keys())
+    ax = get_ax()
 
     files = [
-        {"data": metrics_data["wasm_resource_usage.jsonl"], "label": "Wasm"},
-        {"data": metrics_data["docker_container_resource_usage.jsonl"], "label": "Docker Container"},
-        {"data": metrics_data["wasmtime_container_resource_usage.jsonl"], "label": "Wasmtime Container"},
+        {"data": metrics_data["wasm_resource_usage.jsonl"], "label": "Standalone Wasm"},
+        {"data": metrics_data["docker_resource_usage.jsonl"], "label": "Docker Container"},
+        {"data": metrics_data["wasmtime_resource_usage.jsonl"], "label": "Wasm Container"},
     ]
 
     for file in files:
         x = get_x_from_timestamp(file["data"])
-        y = [record[metric] for record in file["data"]]
+        y = [record[metric] * scale for record in file["data"]]
         ax.plot(x, y, label=file["label"])
 
     ax.legend()
-    plt.title(f"{metric_label} usage")
     plt.ylabel(metric_label)
     plt.xlabel("Time (s)")
 
@@ -68,32 +69,35 @@ def resource_usage_comparison(metrics_data, metric, metric_label):
 
 # metric: "Qual métrica será plotada no gráfico (fps, inference_latency_ms, ...)"
 # metric_label: "Nome a ser usado no eixo y do gráfico"
-def box_plot(metrics_data, metric, metric_label, multi_client):
-    fig, ax = plt.subplots()
 
-    files = [
-        {"data": metrics_data["wasm_metrics.json"], "label": "Wasm"},
-        {"data": metrics_data["docker_container_metrics.json"], "label": "Docker Container"},
-        {"data": metrics_data["wasmtime_container_metrics.json"], "label": "Wasmtime"},
-    ]
+def box_plot(metrics_data, metric, metric_label, multi_client):
+    ax = get_ax()
 
     if multi_client:
         files = [
-            {"data": metrics_data["multi_client_k8s_metrics.json"], "label": "Multi Client K8s"},
-            {"data": metrics_data["multi_client_orchestration_metrics.json"], "label": "Multi Client Orchestration"},
+            {"data": metrics_data["multi_client_k8s_video_metrics.json"], "label": "K8s Scheduler"},
+            {"data": metrics_data["multi_client_video_metrics.json"], "label": "Custom Orchestrator"},
         ]
     else:
         files = [
-            {"data": metrics_data["wasm_metrics.json"], "label": "Wasm"},
-            {"data": metrics_data["docker_container_metrics.json"], "label": "Docker Container"},
-            {"data": metrics_data["wasmtime_container_metrics.json"], "label": "Wasmtime"},
+            {"data": metrics_data["wasm_video_metrics.json"], "label": "Standalone Wasm"},
+            {"data": metrics_data["docker_video_metrics.json"], "label": "Docker Container"},
+            {"data": metrics_data["wasmtime_video_metrics.json"], "label": "Wasm Container"},
         ]
     plot_data = []
     plot_labels = []
 
     for file in files:
-        avg_fps = [entry[metric]["avg"] for entry in file["data"]]
-        plot_data.append(avg_fps)
+        data = []
+
+        for entry in file["data"]:
+            if metric in entry.keys():
+                if type(entry[metric]) is dict:
+                    data.append(entry[metric]["avg"])
+                else:
+                    data.append(entry[metric])
+    
+        plot_data.append(data)
         plot_labels.append(file["label"])
 
     bp = ax.boxplot(plot_data, labels=plot_labels, showmeans=True, patch_artist=True)
@@ -105,18 +109,15 @@ def box_plot(metrics_data, metric, metric_label, multi_client):
         patch.set_alpha(0.85)
 
     plt.ylabel(metric_label)
-    plt.title(f"Distribution of Average {metric_label} per Run")
     plt.grid(True)
     plt.show()
 
 def deploy_results(metrics_data):
-    fig, ax = plt.subplots()
+    ax = get_ax()
 
     files = [
-        {"data": metrics_data["multi_client_k8s_scheduler_deploy_results.json"],    "label": "K8s"},
-        {"data": metrics_data["multi_client_orchestration_deploy_results.json"],    "label": "Orchestration"},
-        {"data": metrics_data["docker_container_deploy_results.json"],              "label": "Docker Container"},
-        {"data": metrics_data["wasmtime_container_deploy_results.json"],                          "label": "Wasmtime Container"},
+        {"data": metrics_data["multi_client_k8s_deploy_results.json"],    "label": "K8s Scheduler"},
+        {"data": metrics_data["multi_client_deploy_results.json"],    "label": "Custom Orchestrator"},
     ]
 
     labels = []
@@ -137,24 +138,19 @@ def deploy_results(metrics_data):
         labels.append(file["label"])
 
 
-    bars = ax.bar(labels, values)
-    ax.bar_label(bars, padding=3)
-
-    ax.set_ylabel("Success rate (%)")
-    ax.set_title("Deploy success rate")
+    ax.bar(labels, values)
+    ax.set_ylabel("Deploy success rate (%)")
 
     plt.show()
 
     
 
-def cold_start(metrics_data):
-    fig, ax = plt.subplots()
+def cold_start(metrics_data, y_label):
+    ax = get_ax()
 
     files = [
-        #{"data": metrics_data["multi_client_k8s_scheduler_deploy_results.json"],    "label": "K8s"},
-        #{"data": metrics_data["multi_client_orchestration_deploy_results.json"],    "label": "Orchestration"},
-        {"data": metrics_data["docker_container_deploy_results.json"],                        "label": "Docker"},
-        {"data": metrics_data["wasmtime_container_deploy_results.json"],                      "label": "Wasmtime Container"},
+        {"data": metrics_data["docker_cold_start.json"],        "label": "Docker Container"},
+        {"data": metrics_data["wasm_cold_start.json"],          "label": "Wasm Container"},
     ]
 
     labels = []
@@ -177,22 +173,18 @@ def cold_start(metrics_data):
         labels.append(file["label"])
 
 
-    bars = ax.bar(labels, values)
-    ax.bar_label(bars, padding=3)
+    ax.bar(labels, values)
 
-    ax.set_ylabel("Time (s)")
-    ax.set_title("Avg cold start time")
+    ax.set_ylabel(y_label)
 
     plt.show()
 
-def deploy_time(metrics_data):
-    fig, ax = plt.subplots()
+def deploy_time(metrics_data, y_label):
+    ax = get_ax()
 
     files = [
-        {"data": metrics_data["multi_client_k8s_scheduler_deploy_results.json"],    "label": "K8s"},
-        {"data": metrics_data["multi_client_orchestration_deploy_results.json"],    "label": "Orchestration"},
-        #{"data": metrics_data["docker_container_deploy_results.json"],                        "label": "Docker"},
-        #{"data": metrics_data["wasmtime_container_deploy_results.json"],                          "label": "Wasmtime"},
+        {"data": metrics_data["multi_client_k8s_deploy_results.json"],    "label": "K8s Scheduler"},
+        {"data": metrics_data["multi_client_deploy_results.json"],    "label": "Custom Orchestrator"},
     ]
 
     labels = []
@@ -207,7 +199,7 @@ def deploy_time(metrics_data):
 
             if record["status"] == "success":
                 count +=1
-                sum += record["deploy_time"]
+                sum += record["deploy_time"] if "deploy_time" in record.keys() else record["time_to_ready"]
 
         avg = sum / count
 
@@ -216,23 +208,33 @@ def deploy_time(metrics_data):
 
 
     bars = ax.bar(labels, values)
-    ax.bar_label(bars, padding=3)
-
-    ax.set_ylabel("Time (s)")
-    ax.set_title("Avg deploy time")
+    ax.set_ylabel(y_label)
 
     plt.show()
 
 def main():
+    plt.rcParams.update({
+        'font.size': 12,            
+        'axes.titlesize': 12,       
+        'axes.labelsize': 12,       
+        'legend.fontsize': 9,
+        'xtick.labelsize': 12,      
+        'ytick.labelsize': 12,       
+        'lines.linewidth': 1.8,
+    })
+
+
     metrics_data = load("metrics/")
-    #resource_usage_comparison(metrics_data, "memory_bytes", "Memory (B)")
-    #resource_usage_comparison(metrics_data, "cpu_cores_sum", "CPU Cores Sum")
-    #resource_usage_comparison(metrics_data, "cpu_system_pct", "CPU System")
-    #box_plot(metrics_data, "fps", "FPS", True)
-    #box_plot(metrics_data, "inference_latency_ms", "Latency (ms)", True)
-    #deploy_results(metrics_data)
-    #cold_start(metrics_data)
-    #deploy_time(metrics_data)
+    resource_usage_comparison(metrics_data, "memory_bytes", "Memory (MB)", scale=1 / 1_000_000)
+    resource_usage_comparison(metrics_data, "cpu_system_pct", "CPU Usage (%)")
+    box_plot(metrics_data, "fps_user", "FPS", False)
+    box_plot(metrics_data, "inference_latency_ms", "Remote inference (ms)", False)
+    box_plot(metrics_data, "missed_frames", "Timeouts per run", True)
+    box_plot(metrics_data, "fps_user", "FPS", True)
+    box_plot(metrics_data, "inference_latency_ms", "Remote inference (ms)", True)
+    deploy_results(metrics_data)
+    cold_start(metrics_data, "Cold start time (s)")
+    deploy_time(metrics_data, "Deploy time (s)")
     
 
 if __name__ == "__main__":
