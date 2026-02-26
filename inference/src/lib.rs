@@ -475,24 +475,26 @@ fn run_server() -> Result<()> {
             _ => {}
         }
     }
-    info_log!("Loading YOLOv8n (device: {})...", device);
-    let graph = match load_graph(device, debug) {
+    let requested_device = device.to_lowercase();
+
+    info_log!("Loading YOLOv8n (device: {})...", requested_device);
+    let (graph, active_device) = match load_graph(&requested_device, debug) {
         Ok(g) => {
-            info_log!("Model loaded for device: {}", device);
-            g
+            info_log!("Model loaded for device: {}", requested_device);
+            (g, requested_device.as_str())
         },
         Err(e) => {
-            if device != "cpu" {
-                error_log!("[WARN] {} failed: {}. Fallback to CPU.", device.to_uppercase(), e);
+            if requested_device != "cpu" {
+                error_log!("[WARN] {} failed: {}. Fallback to CPU.", requested_device.to_uppercase(), e);
                 let cpu_graph = load_graph("cpu", debug)?;
                 info_log!("CPU model loaded as fallback.");
-                cpu_graph
+                (cpu_graph, "cpu")
             } else {
                 return Err(anyhow!("Failed to load model: {:?}", e));
             }
         }
     };
-    if device == "gpu" {
+    if active_device == "gpu" {
         info_log!("Warming up GPU...");
         if let Ok(ctx) = graph.init_execution_context() {
             let size = (3 * 640 * 640) as usize;
@@ -504,6 +506,8 @@ fn run_server() -> Result<()> {
             }
             info_log!("GPU Warmup complete.");
         }
+    } else if requested_device == "gpu" {
+        info_log!("Skipping GPU warmup because active backend is CPU.");
     }
     if use_udp {
         let udp_port = port.unwrap_or(8081);

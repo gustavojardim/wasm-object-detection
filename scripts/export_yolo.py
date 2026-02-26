@@ -35,13 +35,13 @@ def export_yolo(device_choice):
         print(f"GPU: {gpu_name}")
         print(f"Compute Capability: {compute_cap}")
         print(f"TORCH_CUDA_ARCH_LIST set to: {torch_arch}")
-        out_path = "yolov8n_cuda.torchscript"
+        out_path = "models/yolov8n_cuda.torchscript"
     else:
         device = "cpu"
-        out_path = "yolov8n_cpu.torchscript"
+        out_path = "models/yolov8n_cpu.torchscript"
 
     print("\nLoading YOLOv8n model...")
-    model = YOLO("yolov8n.pt")
+    model = YOLO("models/yolov8n.pt")
 
     print(f"Exporting to TorchScript for device: {device} ...")
     model.export(
@@ -53,8 +53,8 @@ def export_yolo(device_choice):
     )
 
     # Find the exported file
-    src_path1 = "yolov8n.torchscript"
-    src_path2 = "yolov8n.torchscript"
+    src_path1 = "models/yolov8n.torchscript"
+    src_path2 = "models/yolov8n.torchscript"
     if os.path.exists(src_path1):
         shutil.copy(src_path1, out_path)
         print(f"✓ Model copied to: {out_path}")
