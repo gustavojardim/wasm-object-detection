@@ -19,12 +19,18 @@ def export_yolo(device_choice):
         sys.exit(1)
 
     print(f"PyTorch Version: {torch.__version__}")
+    print(f"Python Executable: {sys.executable}")
+    print(f"Torch Package Path: {torch.__file__}")
+    print(f"Torch CUDA Build: {torch.version.cuda}")
     print(f"CUDA Available: {torch.cuda.is_available()}")
     print(f"Exporting for device: {device_choice}")
 
     if device_choice == "cuda":
         if not torch.cuda.is_available():
             print("ERROR: CUDA not available on this system.")
+            if torch.version.cuda is None:
+                print("Detected CPU-only torch build. Install a Jetson CUDA-enabled wheel in this same environment.")
+                print("Tip: use `python -m pip uninstall -y torch torchvision torchaudio` then install the NVIDIA Jetson wheel.")
             sys.exit(1)
         device = "cuda:0"
         gpu_name = torch.cuda.get_device_name(0)
