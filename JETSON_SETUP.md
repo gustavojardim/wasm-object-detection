@@ -261,6 +261,65 @@ python3 test-scripts/test_udp_video.py samples/walking_people_uhd.mp4 --remote <
 
 ---
 
+## 9) Start Fresh (Cleanup)
+
+Use one of these reset levels depending on how much you want to clean.
+
+### A) Project + Python stack reset (recommended)
+
+This keeps the OS intact and removes Python/runtime drift.
+
+```bash
+# Remove Python AI packages from user/site and system pip locations
+python3 -m pip uninstall -y numpy
+sudo -H python3 -m pip uninstall -y \
+  torch torchvision torchaudio \
+  ultralytics ultralytics-thop \
+  opencv-python opencv-python-headless \
+  polars numpy
+
+# Remove leftover user-site packages (if present)
+rm -rf ~/.local/lib/python3.10/site-packages/torch*
+rm -rf ~/.local/lib/python3.10/site-packages/torchvision*
+rm -rf ~/.local/lib/python3.10/site-packages/numpy*
+rm -rf ~/.local/lib/python3.10/site-packages/ultralytics*
+
+# Clear pip cache
+rm -rf ~/.cache/pip
+
+# Clean project build artifacts (run from repo root)
+rm -rf target
+rm -f models/yolov8n_*torchscript
+```
+
+If you want to remove runtime exports from shell config too, edit `~/.bashrc` and delete:
+- `CUDA_HOME`
+- `LIBTORCH`
+- `TORCH_LIB_DIR`
+- `LIBTORCH_USE_PYTORCH`
+- `LIBTORCH_BYPASS_VERSION_CHECK`
+
+Then reload shell:
+
+```bash
+source ~/.bashrc
+```
+
+### B) Optional apt cleanup
+
+```bash
+sudo apt remove --purge -y python3-opencv
+sudo apt autoremove -y
+```
+
+### C) Full clean state (factory-like)
+
+If you want a truly clean system, reflash Jetson with SDK Manager / JetPack image.
+
+After reflash, follow this document from section 1 onward.
+
+---
+
 ## Final Notes
 
 This is the definitive project setup for Jetson in this repository:
