@@ -73,6 +73,7 @@ If your stack differs significantly (especially CUDA/libtorch generation), GPU g
 ## Deployment
 
 - See `DEPLOYMENT.md` for Kubernetes and OCI image deployment instructions.
+- See `KUBERNETES_SETUP.md` to install K3s agents on worker machines and join them to an existing cluster.
 - Use `push-to-registry.sh` to package and push the WASM app and model.
 
 ## Troubleshooting
