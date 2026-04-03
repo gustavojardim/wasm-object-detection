@@ -14,10 +14,6 @@ This project implements a WebAssembly (WASM) TCP server for real-time object det
 * **Experiments:** Procedures to validate performance and functionality claims.
 * **Troubleshooting:** Resolution matrix for CUDA linkage issues.
 
-# Artifact Badges
-
-The badges considered for this artifact are: **Available** and **Functional**. The repository contains all necessary scripts for model exportation, Rust source code compilation for the WASM target, and communication validation via the Python client.
-
 # Basic Information
 
 ### Execution Environment
@@ -118,10 +114,6 @@ Este projeto implementa um servidor TCP em WebAssembly (WASM) para detecção de
 * **Teste Mínimo:** Verificação rápida da integridade do ambiente.
 * **Experimentos:** Procedimentos para validar as reivindicações de performance e funcionalidade.
 * **Troubleshooting:** Matriz de solução de problemas para linkage CUDA.
-
-# Selos Considerados
-
-Os selos considerados para este artefato são: **Disponíveis** e **Funcionais**. O repositório contém todos os scripts necessários para a exportação de modelos, compilação do código-fonte Rust para o target WASM e validação da comunicação via cliente Python.
 
 # Informações básicas
 
