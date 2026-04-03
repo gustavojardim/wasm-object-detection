@@ -209,4 +209,4 @@ Valida a robustez do servidor TCP sob fluxo contínuo de frames.
 
 # LICENSE
 
-[Insira aqui a Licença do Projeto, ex: MIT License]
+MIT License
